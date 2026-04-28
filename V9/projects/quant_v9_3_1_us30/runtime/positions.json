@@ -1,0 +1,10 @@
+{
+    "active": True,
+    "direction": "long",
+    "lot_size": 0.25,
+    "layers": 4,
+    "pending_orders": 4,
+    "sl": 0,
+    "tp": 0,
+    "pnl": -150.5
+}

@@ -1,0 +1,35 @@
+dashboard:
+  title: "Quant V9 Operating Terminal"
+  refresh_interval_sec: 10
+  monitored_assets:
+    - XAUUSDm
+    - BTCUSDm
+    - US30m
+    - USTECm
+    - US500m
+    - EURUSDm
+    - GBPUSDm
+    - USDJPYm
+    - USDCHFm
+    - USDCADm
+    - AUDUSDm
+    - NZDUSDm
+
+paths:
+  # The dashboard will look for these files in each project's directory relative to root
+  projects_root: "projects"
+  logs:
+    audit: "logs/live_pipeline_audit.ndjson"
+    trade: "logs/trade_audit.csv"
+    risk: "logs/risk_audit.ndjson"
+  runtime:
+    state: "runtime/state.json"
+    positions: "runtime/positions.json"
+    signals: "runtime/signals.json"
+  configs:
+    risk: "config/risk_config.yaml"
+
+alerts:
+  max_daily_loss_warning_pct: 1.5
+  max_pending_orders_warning: 3
+  spread_warning_multiplier: 1.5
