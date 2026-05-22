@@ -1,0 +1,16 @@
+{
+    "symbol": "USDJPY",
+    "timestamp": "2026-05-22T19:49:13.767499",
+    "initial_capital": 10000.0,
+    "ending_equity": 9997.95748978291,
+    "realized_pnl": -2.042510217090239,
+    "profit_factor": 0.8933178671152048,
+    "max_drawdown_pct": 0.19113067679168202,
+    "max_consecutive_losses": 2,
+    "sharpe_ratio": -0.8593756758962973,
+    "sortino_ratio": -49.46525097524728,
+    "monte_carlo_median_dd": 0.19294933354121302,
+    "monte_carlo_95_dd": 0.1970392413398724,
+    "ruin_probability": 0.0,
+    "verdict": "DISABLED"
+}

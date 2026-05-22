@@ -1,0 +1,16 @@
+{
+    "symbol": "US500",
+    "timestamp": "2026-05-22T19:51:15.051662",
+    "initial_capital": 10000.0,
+    "ending_equity": 10005.723106174642,
+    "realized_pnl": 5.723106174642453,
+    "profit_factor": Infinity,
+    "max_drawdown_pct": 0.0,
+    "max_consecutive_losses": 0,
+    "sharpe_ratio": 752.6001543876348,
+    "sortino_ratio": 0.0,
+    "monte_carlo_median_dd": 0.0,
+    "monte_carlo_95_dd": 0.0,
+    "ruin_probability": 0.0,
+    "verdict": "INSTITUTIONAL_READY"
+}

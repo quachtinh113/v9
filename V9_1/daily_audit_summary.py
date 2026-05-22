@@ -5,10 +5,11 @@ from datetime import datetime, timezone
 import sys
 
 # Add a sample path to import TelegramBot
-sys.path.insert(0, r"d:\V9\projects\quant_v9_3_1_us30")
+PROJECTS_DIR = Path(__file__).resolve().parent / "projects"
+sys.path.insert(0, str(PROJECTS_DIR / "quant_v9_3_1_us30"))
 from src.utils.telegram_bot import TelegramBot
 
-ROOT_DIR = Path(r"d:\V9\projects")
+ROOT_DIR = PROJECTS_DIR
 SYMBOLS = ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD"]
 TG_TOKEN = "8711065588:AAGo-XiVpvASpB_A4ZEPmoQj15rWEBZ8U6c"
 TG_CHAT_ID = "1958994081"

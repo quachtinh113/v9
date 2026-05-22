@@ -16,4 +16,13 @@ def evaluate_signal(features: Dict[str, Any], config: Dict[str, Any] | None = No
     direction = bias if score >= threshold else "flat"
     
     dec = SignalDecision(cfg.get("symbol", "UKN"), direction, score, f"R={rs.regime},S={score}", rs.regime)
+    
+    # Enforce ML Gatekeeper
+    ml_cfg = dict(cfg.get("ml", {}))
+    tg_cfg = cfg.get("telegram", {})
+    for key in ["reduce_threshold", "reduce_size_factor"]:
+        if key in tg_cfg and key not in ml_cfg:
+            ml_cfg[key] = tg_cfg[key]
+            
+    dec = apply_ml_gatekeeper(dec, features, ml_cfg)
     return dec

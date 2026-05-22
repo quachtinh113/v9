@@ -1,0 +1,2 @@
+symbol,timestamp,initial_capital,ending_equity,realized_pnl,profit_factor,max_drawdown_pct,max_consecutive_losses,sharpe_ratio,sortino_ratio,monte_carlo_median_dd,monte_carlo_95_dd,ruin_probability,verdict
+XAUUSD,2026-05-22T19:51:38.496316,10000.0,10113.884698640088,113.88469864008766,inf,0.0,0,909.1210329390225,0.0,0.0,0.0,0.0,INSTITUTIONAL_READY

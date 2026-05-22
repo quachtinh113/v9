@@ -1,0 +1,33 @@
+{
+    "overfitting_detected": false,
+    "train_f1_score": 0.04916280726754542,
+    "stability_score": 0.9896394897717866,
+    "best_regime": "transition",
+    "worst_regime": "sideway",
+    "validation_metrics": {
+        "winrate": 0.2786885245901639,
+        "precision": 0.2786885245901639,
+        "recall": 0.008740359897172237,
+        "f1_score": 0.01694915254237288,
+        "confusion_matrix": [
+            [
+                5511,
+                44
+            ],
+            [
+                1928,
+                17
+            ]
+        ]
+    },
+    "financial_metrics": {
+        "max_drawdown": 5.721393034825871,
+        "profit_factor": 0.7727272727272727,
+        "avg_trade_duration": "4h (Simulated)"
+    },
+    "regime_distribution": {
+        "trend": 20912,
+        "sideway": 6417,
+        "transition": 2671
+    }
+}

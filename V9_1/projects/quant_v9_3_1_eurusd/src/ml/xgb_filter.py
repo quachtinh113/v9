@@ -25,9 +25,14 @@ class XGBTradeFilter:
             return float(self.model.predict(d)[0])
         except: return 1.0
 
+_FILTER_CACHE = {}
+
 def apply_ml_gatekeeper(dec: Any, features: dict, ml_cfg: dict) -> Any:
     if not ml_cfg.get('enabled', False): return dec
-    f = XGBTradeFilter(ml_cfg.get('model_path', 'models/xgb_filter.json'), True)
+    model_path = ml_cfg.get('model_path', 'models/xgb_filter.json')
+    if model_path not in _FILTER_CACHE:
+        _FILTER_CACHE[model_path] = XGBTradeFilter(model_path, True)
+    f = _FILTER_CACHE[model_path]
     ms = f.predict_quality(features, dec.score)
     dec.ml_score, dec.ml_decision = ms, "PASS"
     if ms < ml_cfg.get('block_threshold', 0.55):
@@ -35,3 +40,4 @@ def apply_ml_gatekeeper(dec: Any, features: dict, ml_cfg: dict) -> Any:
     elif ms < ml_cfg.get('reduce_threshold', 0.65):
         dec.size_multiplier, dec.ml_decision = ml_cfg.get('reduce_size_factor', 0.5), "REDUCE"
     return dec
+

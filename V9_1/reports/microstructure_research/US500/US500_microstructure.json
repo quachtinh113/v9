@@ -1,0 +1,180 @@
+{
+    "symbol": "US500",
+    "total_bars": 10000,
+    "sessions": {
+        "London Open": {
+            "count": 840,
+            "long_expectancy": -0.23214285714285715,
+            "short_expectancy": 0.08035714285714286,
+            "long_winrate": 0.30714285714285716,
+            "short_winrate": 0.43214285714285716
+        },
+        "Lunch Session": {
+            "count": 1050,
+            "long_expectancy": 0.002380952380952381,
+            "short_expectancy": -0.12857142857142856,
+            "long_winrate": 0.40095238095238095,
+            "short_winrate": 0.3485714285714286
+        },
+        "Other": {
+            "count": 5908,
+            "long_expectancy": -0.0012235322185023968,
+            "short_expectancy": -0.0790883659257373,
+            "long_winrate": 0.39962762356127285,
+            "short_winrate": 0.36831415030467163
+        },
+        "Post-News": {
+            "count": 1350,
+            "long_expectancy": -0.05740740740740741,
+            "short_expectancy": 0.03148148148148148,
+            "long_winrate": 0.37703703703703706,
+            "short_winrate": 0.41259259259259257
+        },
+        "Pre-News": {
+            "count": 852,
+            "long_expectancy": -0.1402582159624413,
+            "short_expectancy": 0.01232394366197183,
+            "long_winrate": 0.3438967136150235,
+            "short_winrate": 0.40492957746478875
+        }
+    },
+    "volatility_states": {
+        "Clustering": {
+            "count": 2526,
+            "long_expectancy": -0.09144893111638955,
+            "short_expectancy": 0.012470308788598575,
+            "long_winrate": 0.36342042755344417,
+            "short_winrate": 0.40498812351543945
+        },
+        "Normal": {
+            "count": 5512,
+            "long_expectancy": -0.007026238814751843,
+            "short_expectancy": -0.08413535302780406,
+            "long_winrate": 0.39731494920174165,
+            "short_winrate": 0.36629172714078373
+        },
+        "Squeeze": {
+            "count": 1962,
+            "long_expectancy": -0.06472986748216106,
+            "short_expectancy": -0.02522935779816514,
+            "long_winrate": 0.37410805300713557,
+            "short_winrate": 0.38990825688073394
+        }
+    },
+    "liquidity_patterns": {
+        "Downside False Breakout": {
+            "count": 133,
+            "long_expectancy": 0.42857142857142855,
+            "short_expectancy": -0.6428571428571429,
+            "long_winrate": 0.5714285714285714,
+            "short_winrate": 0.14285714285714285
+        },
+        "Downside Stop Hunt": {
+            "count": 591,
+            "long_expectancy": -0.08629441624365482,
+            "short_expectancy": -0.018612521150592216,
+            "long_winrate": 0.36548223350253806,
+            "short_winrate": 0.3925549915397631
+        },
+        "None": {
+            "count": 8182,
+            "long_expectancy": -0.04395596426017118,
+            "short_expectancy": -0.04458995290386795,
+            "long_winrate": 0.3825470545098998,
+            "short_winrate": 0.382058176484967
+        },
+        "Range Raid": {
+            "count": 375,
+            "long_expectancy": 0.08666666666666667,
+            "short_expectancy": -0.14,
+            "long_winrate": 0.43466666666666665,
+            "short_winrate": 0.344
+        },
+        "Upside False Breakout": {
+            "count": 112,
+            "long_expectancy": -0.5982142857142857,
+            "short_expectancy": 0.45089285714285715,
+            "long_winrate": 0.16071428571428573,
+            "short_winrate": 0.5803571428571429
+        },
+        "Upside Sweep": {
+            "count": 607,
+            "long_expectancy": -0.01413662070871753,
+            "short_expectancy": -0.030344433657015585,
+            "long_winrate": 0.39373970345963755,
+            "short_winrate": 0.38879736408566723
+        }
+    },
+    "time_windows": {
+        "19h20-20h20": {
+            "count": 427,
+            "long_expectancy": -0.11592505854800937,
+            "short_expectancy": 0.11826697892271663,
+            "long_winrate": 0.35362997658079626,
+            "short_winrate": 0.44730679156908665
+        },
+        "21h30-22h30": {
+            "count": 427,
+            "long_expectancy": 0.24707259953161592,
+            "short_expectancy": -0.22572579318436517,
+            "long_winrate": 0.49882903981264637,
+            "short_winrate": 0.3091334894613583
+        },
+        "23h30-00h30": {
+            "count": 397,
+            "long_expectancy": 0.08312342569269521,
+            "short_expectancy": -0.1561712846347607,
+            "long_winrate": 0.4332493702770781,
+            "short_winrate": 0.33753148614609574
+        },
+        "Other": {
+            "count": 8749,
+            "long_expectancy": -0.05551818817543858,
+            "short_expectancy": -0.04273278685558716,
+            "long_winrate": 0.3778717567722025,
+            "short_winrate": 0.38290090296033835
+        }
+    },
+    "top_edges": [
+        {
+            "category": "liquidity",
+            "trigger": "Downside False Breakout",
+            "direction": "short",
+            "expectancy_atr": -0.6428571428571429,
+            "winrate": 0.14285714285714285,
+            "sample_size": 133
+        },
+        {
+            "category": "liquidity",
+            "trigger": "Upside False Breakout",
+            "direction": "long",
+            "expectancy_atr": -0.5982142857142857,
+            "winrate": 0.16071428571428573,
+            "sample_size": 112
+        },
+        {
+            "category": "liquidity",
+            "trigger": "Upside False Breakout",
+            "direction": "short",
+            "expectancy_atr": 0.45089285714285715,
+            "winrate": 0.5803571428571429,
+            "sample_size": 112
+        },
+        {
+            "category": "liquidity",
+            "trigger": "Downside False Breakout",
+            "direction": "long",
+            "expectancy_atr": 0.42857142857142855,
+            "winrate": 0.5714285714285714,
+            "sample_size": 133
+        },
+        {
+            "category": "time_window",
+            "trigger": "21h30-22h30",
+            "direction": "long",
+            "expectancy_atr": 0.24707259953161592,
+            "winrate": 0.49882903981264637,
+            "sample_size": 427
+        }
+    ]
+}

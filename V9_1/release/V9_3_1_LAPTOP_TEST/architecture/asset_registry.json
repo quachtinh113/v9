@@ -1,0 +1,102 @@
+[
+  {
+    "symbol": "US30",
+    "project_path": "projects/quant_v9_3_1_us30",
+    "asset_class": "index",
+    "status": "APPROVED",
+    "data_status": "synced",
+    "model_status": "trained",
+    "risk_status": "nominal",
+    "dashboard_status": "active"
+  },
+  {
+    "symbol": "US100",
+    "project_path": "projects/quant_v9_3_1_us100",
+    "asset_class": "index",
+    "status": "APPROVED",
+    "data_status": "synced",
+    "model_status": "trained",
+    "risk_status": "nominal",
+    "dashboard_status": "active"
+  },
+  {
+    "symbol": "US500",
+    "project_path": "projects/quant_v9_3_1_us500",
+    "asset_class": "index",
+    "status": "APPROVED",
+    "data_status": "synced",
+    "model_status": "trained",
+    "risk_status": "nominal",
+    "dashboard_status": "active"
+  },
+  {
+    "symbol": "XAUUSD",
+    "project_path": "projects/quant_v9_3_1_xauusd",
+    "asset_class": "gold",
+    "status": "APPROVED",
+    "data_status": "synced",
+    "model_status": "trained",
+    "risk_status": "nominal",
+    "dashboard_status": "active"
+  },
+  {
+    "symbol": "AUDUSD",
+    "project_path": "projects/quant_v9_3_1_audusd",
+    "asset_class": "forex",
+    "status": "APPROVED",
+    "data_status": "synced",
+    "model_status": "trained",
+    "risk_status": "nominal",
+    "dashboard_status": "active"
+  },
+  {
+    "symbol": "USDCAD",
+    "project_path": "projects/quant_v9_3_1_usdcad",
+    "asset_class": "forex",
+    "status": "APPROVED",
+    "data_status": "synced",
+    "model_status": "trained",
+    "risk_status": "nominal",
+    "dashboard_status": "active"
+  },
+  {
+    "symbol": "USDCHF",
+    "project_path": "projects/quant_v9_3_1_usdchf",
+    "asset_class": "forex",
+    "status": "APPROVED",
+    "data_status": "synced",
+    "model_status": "trained",
+    "risk_status": "nominal",
+    "dashboard_status": "active"
+  },
+  {
+    "symbol": "EURUSD",
+    "project_path": "projects/quant_v9_3_1_eurusd",
+    "asset_class": "forex",
+    "status": "DISABLED",
+    "data_status": "flat_data_missing_m1",
+    "model_status": "untrained",
+    "risk_status": "bypass_prevention",
+    "dashboard_status": "inactive"
+  },
+  {
+    "symbol": "GBPUSD",
+    "project_path": "projects/quant_v9_3_1_gbpusd",
+    "asset_class": "forex",
+    "status": "DISABLED",
+    "data_status": "flat_data_missing_m1",
+    "model_status": "untrained",
+    "risk_status": "bypass_prevention",
+    "dashboard_status": "inactive"
+  },
+  {
+    "symbol": "USDJPY",
+    "project_path": "projects/quant_v9_3_1_usdjpy",
+    "asset_class": "forex",
+    "status": "DISABLED",
+    "data_status": "flat_data_missing_m1",
+    "model_status": "untrained",
+    "risk_status": "bypass_prevention",
+    "dashboard_status": "inactive"
+  }
+]

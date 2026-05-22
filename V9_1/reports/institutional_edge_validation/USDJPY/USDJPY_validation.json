@@ -1,0 +1,591 @@
+{
+    "false_breakout_reversals": {
+        "status": "ACCEPTED",
+        "reason": "Passes all robustness filters",
+        "sample_size": 1764,
+        "expectancy_pct": 0.11493817132948049,
+        "pf": 2.9098911292378506,
+        "sharpe": 0.5506642203664138,
+        "monte_carlo": {
+            "5th_pnl": 0.10690314937517385,
+            "mean_pnl": 0.11508694271220915,
+            "95th_pnl": 0.12278188319947747,
+            "pf_5th": 2.67874010174927,
+            "sharpe_5th": 0.5050061793831578
+        },
+        "cost_fragility": [
+            {
+                "multiplier": 0.0,
+                "expectancy": 0.13722388561519477,
+                "pf": 3.5602020154526612
+            },
+            {
+                "multiplier": 0.5,
+                "expectancy": 0.1260810284723376,
+                "pf": 3.216237764057804
+            },
+            {
+                "multiplier": 1.0,
+                "expectancy": 0.11493817132948049,
+                "pf": 2.9098911292378506
+            },
+            {
+                "multiplier": 1.5,
+                "expectancy": 0.10379531418662336,
+                "pf": 2.6353109939968933
+            },
+            {
+                "multiplier": 2.0,
+                "expectancy": 0.09265245704376622,
+                "pf": 2.387799886698841
+            },
+            {
+                "multiplier": 2.5,
+                "expectancy": 0.08150959990090907,
+                "pf": 2.163543012040279
+            },
+            {
+                "multiplier": 3.0,
+                "expectancy": 0.07036674275805192,
+                "pf": 1.9594102296962754
+            },
+            {
+                "multiplier": 3.5,
+                "expectancy": 0.05922388561519478,
+                "pf": 1.7728090531740093
+            },
+            {
+                "multiplier": 4.0,
+                "expectancy": 0.04808102847233764,
+                "pf": 1.6015739640719324
+            }
+        ],
+        "fragility_threshold": 4.0,
+        "regime_fragility": {
+            "trend": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "sideway": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "transition": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "shock": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            }
+        },
+        "session_persistence": {
+            "London Open": {
+                "count": 147,
+                "expectancy": 0.10843886802060955,
+                "winrate": 0.6802721088435374
+            },
+            "NY Open": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "Lunch Session": {
+                "count": 189,
+                "expectancy": 0.11172594208070387,
+                "winrate": 0.6931216931216931
+            },
+            "Pre-News": {
+                "count": 143,
+                "expectancy": 0.10942025722541919,
+                "winrate": 0.6853146853146853
+            },
+            "Post-News": {
+                "count": 214,
+                "expectancy": 0.10848491495466585,
+                "winrate": 0.677570093457944
+            },
+            "Other": {
+                "count": 1071,
+                "expectancy": 0.11842329504144491,
+                "winrate": 0.715219421101774
+            }
+        }
+    },
+    "liquidity_sweeps": {
+        "status": "REJECTED",
+        "reason": "Unstable in Monte Carlo (5th percentile expectancy: -0.025%)",
+        "sample_size": 2077,
+        "expectancy_pct": -0.016197039961526244,
+        "pf": 0.8648657957876441,
+        "sharpe": -0.07168053210397711,
+        "monte_carlo": {
+            "5th_pnl": -0.024778512547973582,
+            "mean_pnl": -0.016211827855486718,
+            "95th_pnl": -0.007779300851908076,
+            "pf_5th": 0.7998552620604398,
+            "sharpe_5th": -0.11038760180433925
+        },
+        "cost_fragility": [
+            {
+                "multiplier": 0.0,
+                "expectancy": 0.0060263591718391855,
+                "pf": 1.0563906433068733
+            },
+            {
+                "multiplier": 0.5,
+                "expectancy": -0.0050853403948435405,
+                "pf": 0.9551412879335776
+            },
+            {
+                "multiplier": 1.0,
+                "expectancy": -0.016197039961526244,
+                "pf": 0.8648657957876441
+            },
+            {
+                "multiplier": 1.5,
+                "expectancy": -0.02730873952820896,
+                "pf": 0.783871785427873
+            },
+            {
+                "multiplier": 2.0,
+                "expectancy": -0.03842043909489167,
+                "pf": 0.7107978579440571
+            },
+            {
+                "multiplier": 2.5,
+                "expectancy": -0.049532138661574396,
+                "pf": 0.6445364549896327
+            },
+            {
+                "multiplier": 3.0,
+                "expectancy": -0.06064383822825711,
+                "pf": 0.5841773312327798
+            },
+            {
+                "multiplier": 3.5,
+                "expectancy": -0.07175553779493983,
+                "pf": 0.5289654884078442
+            },
+            {
+                "multiplier": 4.0,
+                "expectancy": -0.08286723736162255,
+                "pf": 0.4782694311089133
+            }
+        ],
+        "fragility_threshold": 0.5,
+        "regime_fragility": {
+            "trend": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "sideway": {
+                "count": 1,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "transition": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "shock": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            }
+        },
+        "session_persistence": {
+            "London Open": {
+                "count": 180,
+                "expectancy": -0.028694973659016007,
+                "winrate": 0.37777777777777777
+            },
+            "NY Open": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "Lunch Session": {
+                "count": 241,
+                "expectancy": -0.03422708243007263,
+                "winrate": 0.3775933609958506
+            },
+            "Pre-News": {
+                "count": 152,
+                "expectancy": -0.03119227937505629,
+                "winrate": 0.375
+            },
+            "Post-News": {
+                "count": 279,
+                "expectancy": -0.014870173299511475,
+                "winrate": 0.3978494623655914
+            },
+            "Other": {
+                "count": 1225,
+                "expectancy": -0.009255040865508053,
+                "winrate": 0.433469387755102
+            }
+        }
+    },
+    "stop_hunts": {
+        "status": "REJECTED",
+        "reason": "Unstable in Monte Carlo (5th percentile expectancy: -0.027%)",
+        "sample_size": 1261,
+        "expectancy_pct": -0.016384258865696166,
+        "pf": 0.8632550286138221,
+        "sharpe": -0.07257374564567054,
+        "monte_carlo": {
+            "5th_pnl": -0.026798097570983996,
+            "mean_pnl": -0.01616256240654526,
+            "95th_pnl": -0.005542742496557702,
+            "pf_5th": 0.7849735623069675,
+            "sharpe_5th": -0.1196185064247685
+        },
+        "cost_fragility": [
+            {
+                "multiplier": 0.0,
+                "expectancy": 0.005864749857539357,
+                "pf": 1.0549022216010011
+            },
+            {
+                "multiplier": 0.5,
+                "expectancy": -0.005259754504078416,
+                "pf": 0.9535845093321902
+            },
+            {
+                "multiplier": 1.0,
+                "expectancy": -0.016384258865696166,
+                "pf": 0.8632550286138221
+            },
+            {
+                "multiplier": 1.5,
+                "expectancy": -0.02750876322731393,
+                "pf": 0.7822181634057468
+            },
+            {
+                "multiplier": 2.0,
+                "expectancy": -0.038633267588931694,
+                "pf": 0.7091101023975762
+            },
+            {
+                "multiplier": 2.5,
+                "expectancy": -0.04975777195054946,
+                "pf": 0.6428214632583512
+            },
+            {
+                "multiplier": 3.0,
+                "expectancy": -0.06088227631216722,
+                "pf": 0.5824406045462346
+            },
+            {
+                "multiplier": 3.5,
+                "expectancy": -0.07200678067378499,
+                "pf": 0.5272114475210109
+            },
+            {
+                "multiplier": 4.0,
+                "expectancy": -0.08313128503540275,
+                "pf": 0.47650165218767176
+            }
+        ],
+        "fragility_threshold": 0.5,
+        "regime_fragility": {
+            "trend": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "sideway": {
+                "count": 1,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "transition": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "shock": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            }
+        },
+        "session_persistence": {
+            "London Open": {
+                "count": 106,
+                "expectancy": -0.045076386594702034,
+                "winrate": 0.33962264150943394
+            },
+            "NY Open": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "Lunch Session": {
+                "count": 144,
+                "expectancy": -0.022944808329289985,
+                "winrate": 0.4027777777777778
+            },
+            "Pre-News": {
+                "count": 84,
+                "expectancy": -0.037511225858803884,
+                "winrate": 0.35714285714285715
+            },
+            "Post-News": {
+                "count": 174,
+                "expectancy": -0.01561880897512339,
+                "winrate": 0.39655172413793105
+            },
+            "Other": {
+                "count": 753,
+                "expectancy": -0.008910737473274498,
+                "winrate": 0.4342629482071713
+            }
+        }
+    },
+    "atr_squeeze_expansion": {
+        "status": "REJECTED",
+        "reason": "Low sample size (0 < 100)"
+    },
+    "london_judo_reversal": {
+        "status": "REJECTED",
+        "reason": "Unstable in Monte Carlo (5th percentile expectancy: -0.006%)",
+        "sample_size": 402,
+        "expectancy_pct": 0.0134819784124584,
+        "pf": 1.125079996407486,
+        "sharpe": 0.05821218064559129,
+        "monte_carlo": {
+            "5th_pnl": -0.005632333665882221,
+            "mean_pnl": 0.01349060200075133,
+            "95th_pnl": 0.03302834933957721,
+            "pf_5th": 0.9514393932522832,
+            "sharpe_5th": -0.024551799604071053
+        },
+        "cost_fragility": [
+            {
+                "multiplier": 0.0,
+                "expectancy": 0.031481978412458395,
+                "pf": 1.3202828177127872
+            },
+            {
+                "multiplier": 0.5,
+                "expectancy": 0.022481978412458387,
+                "pf": 1.2181856780521134
+            },
+            {
+                "multiplier": 1.0,
+                "expectancy": 0.0134819784124584,
+                "pf": 1.125079996407486
+            },
+            {
+                "multiplier": 1.5,
+                "expectancy": 0.004481978412458402,
+                "pf": 1.0398280843256713
+            },
+            {
+                "multiplier": 2.0,
+                "expectancy": -0.004518021587541603,
+                "pf": 0.9614764212730328
+            },
+            {
+                "multiplier": 2.5,
+                "expectancy": -0.013518021587541595,
+                "pf": 0.8892198379689378
+            },
+            {
+                "multiplier": 3.0,
+                "expectancy": -0.022518021587541594,
+                "pf": 0.8223737454529552
+            },
+            {
+                "multiplier": 3.5,
+                "expectancy": -0.03151802158754159,
+                "pf": 0.7603523773875375
+            },
+            {
+                "multiplier": 4.0,
+                "expectancy": -0.040518021587541614,
+                "pf": 0.7026515794543958
+            }
+        ],
+        "fragility_threshold": 2.0,
+        "regime_fragility": {
+            "trend": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "sideway": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "transition": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "shock": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            }
+        },
+        "session_persistence": {
+            "London Open": {
+                "count": 402,
+                "expectancy": 0.0134819784124584,
+                "winrate": 0.472636815920398
+            },
+            "NY Open": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "Lunch Session": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "Pre-News": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "Post-News": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "Other": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            }
+        }
+    },
+    "rollover_reversal": {
+        "status": "REJECTED",
+        "reason": "Unstable in Monte Carlo (5th percentile expectancy: -0.003%)",
+        "sample_size": 217,
+        "expectancy_pct": 0.024034397063451986,
+        "pf": 1.2318639191112795,
+        "sharpe": 0.103104295691158,
+        "monte_carlo": {
+            "5th_pnl": -0.0033479730067580444,
+            "mean_pnl": 0.02428032364078263,
+            "95th_pnl": 0.05130716573247058,
+            "pf_5th": 0.9712788384776535,
+            "sharpe_5th": -0.014386006948558587
+        },
+        "cost_fragility": [
+            {
+                "multiplier": 0.0,
+                "expectancy": 0.04800674729386673,
+                "pf": 1.5228169697825336
+            },
+            {
+                "multiplier": 0.5,
+                "expectancy": 0.03602057217865935,
+                "pf": 1.3685335135265981
+            },
+            {
+                "multiplier": 1.0,
+                "expectancy": 0.024034397063451986,
+                "pf": 1.2318639191112795
+            },
+            {
+                "multiplier": 1.5,
+                "expectancy": 0.012048221948244613,
+                "pf": 1.1099547247141606
+            },
+            {
+                "multiplier": 2.0,
+                "expectancy": 6.204683303724179e-05,
+                "pf": 1.0005372418282457
+            },
+            {
+                "multiplier": 2.5,
+                "expectancy": -0.011924128282170134,
+                "pf": 0.9017850556190058
+            },
+            {
+                "multiplier": 3.0,
+                "expectancy": -0.023910303397377507,
+                "pf": 0.8122112585946414
+            },
+            {
+                "multiplier": 3.5,
+                "expectancy": -0.035896478512584894,
+                "pf": 0.7305930662223428
+            },
+            {
+                "multiplier": 4.0,
+                "expectancy": -0.04788265362779225,
+                "pf": 0.6559156645520633
+            }
+        ],
+        "fragility_threshold": 2.5,
+        "regime_fragility": {
+            "trend": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "sideway": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "transition": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "shock": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            }
+        },
+        "session_persistence": {
+            "London Open": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "NY Open": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "Lunch Session": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "Pre-News": {
+                "count": 0,
+                "expectancy": 0.0,
+                "winrate": 0.0
+            },
+            "Post-News": {
+                "count": 1,
+                "expectancy": 0.21157845332582223,
+                "winrate": 1.0
+            },
+            "Other": {
+                "count": 216,
+                "expectancy": 0.02316613754371879,
+                "winrate": 0.5046296296296297
+            }
+        }
+    }
+}

@@ -43,44 +43,54 @@ def main() -> None:
     args = parser.parse_args()
 
     root = Path(__file__).resolve().parent
-    risk_cfg = load_yaml(root / 'config' / 'risk.yaml')
-    session_cfg = load_yaml(root / 'config' / 'sessions.yaml')
+    symbol_cfg = load_yaml(root / 'config' / 'symbol.yaml')
+    risk_cfg = symbol_cfg.get('risk', {})
     demo_cfg_path = root / 'config' / 'mt5_demo.yaml'
     demo_cfg = load_yaml(demo_cfg_path) if demo_cfg_path.exists() else load_yaml(root / 'config' / 'mt5_demo.yaml.example')
     journal = TradeJournal(root / 'logs' / 'demo_journal.jsonl')
 
-    signal = latest_signal(root)
-    journal.write('signal_generated', signal)
-
-    if signal['direction'] == 'none' or signal['stop_loss'] is None:
-        print(f"{signal['symbol']} no actionable signal. score={signal['score']}")
-        journal.write('signal_blocked', {'reason': 'no_signal', 'signal': signal})
+    # Fetch latest plan and decision
+    csv_path = resolve_csv_source(root, str(symbol_cfg['symbol']))
+    df = load_ohlcv_csv(str(csv_path))
+    features = build_feature_table(df)
+    row = features.iloc[-1].to_dict()
+    strategy_name = str(symbol_cfg['symbol']).lower() + '_strategy'
+    strategy_module = __import__(f'src.strategies.{strategy_name}', fromlist=['generate_trade_plan'])
+    plan, decision = strategy_module.generate_trade_plan(row, symbol_cfg)
+    
+    if plan is None or decision.direction == 'flat':
+        print(f"{symbol_cfg['symbol']} no actionable signal.")
         return
-
-    windows = session_cfg.get('entry_windows_vn', []) or session_cfg.get('entry_windows', {}).get('new_york', [])
-    if windows and not is_session_allowed(signal['hhmm'], windows):
-        print(f"{signal['symbol']} signal blocked by session guard at {signal['hhmm']}")
-        journal.write('signal_blocked', {'reason': 'session_guard', 'signal': signal})
-        return
-
-    hard = float(risk_cfg.get('hard_drawdown_pct', 8.0))
-    if should_kill(daily_dd_pct=0.0, hard_limit_pct=hard):
-        print(f"{signal['symbol']} blocked by kill switch")
-        journal.write('signal_blocked', {'reason': 'kill_switch', 'signal': signal})
-        return
+        
+    # Evaluate risk gateway
+    from src.core.risk_engine import RiskGateway
+    gateway = RiskGateway(risk_cfg)
+    account_data = {"daily_dd_pct": 0.0, "weekly_dd_pct": 0.0, "loss_streak": 0}
+    market_data = {
+        "session_flag": row.get("session_flag", "london"),
+        "spread_bps": float(symbol_cfg.get("backtest", {}).get("spread_bps", 1.0)),
+        "slippage_bps": float(symbol_cfg.get("backtest", {}).get("slippage_bps", 0.5)),
+        "atr_ratio": float(row.get("atr_ratio", 1.0))
+    }
+    risk_decision = gateway.full_gate(account_data, market_data)
 
     enabled = bool(demo_cfg.get('mt5', {}).get('enabled', False)) and args.mode == 'mt5'
-    adapter = MT5Adapter(mt5_config=demo_cfg.get('mt5', {}), execution_config=demo_cfg.get('execution', {}), enabled=enabled)
-    router = OrderRouter(adapter, demo_cfg.get('execution', {}))
-    sync = PositionSync()
-
-    result = router.route(signal)
-    sync.update_from_execution(result)
-    journal.write('order_routed', {'signal': signal, 'result': result, 'positions': sync.snapshot()})
-
+    mt5_settings = demo_cfg.get('mt5', {})
+    adapter = MT5Adapter(
+        login=mt5_settings.get('login'),
+        password=mt5_settings.get('password'),
+        server=mt5_settings.get('server'),
+        path=mt5_settings.get('path'),
+        enabled=enabled
+    )
+    adapter.connect()
+    
+    router = OrderRouter(adapter, demo_cfg.get('execution', {}), journal)
+    result = router.route_order(plan, decision, risk_decision, bar_ts=str(row['timestamp']))
+    
     print(
-        f"{signal['symbol']} demo={args.mode} status={result['status']} "
-        f"direction={signal['direction']} score={signal['score']} positions={len(sync.snapshot())}"
+        f"{symbol_cfg['symbol']} demo={args.mode} status={result.get('status')} "
+        f"direction={decision.direction} score={decision.score}"
     )
 
 

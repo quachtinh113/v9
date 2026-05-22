@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Command Center - Quant V9</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon"></div>
+                <div class="logo-text">
+                    <span class="brand">NOWTRADING</span>
+                    <span class="version">QUANT CORE V9.3.1</span>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="#" class="nav-item active" id="nav-dashboard">
+                    <span class="icon">📊</span> Command Center
+                </a>
+                <a href="#" class="nav-item" id="nav-assets">
+                    <span class="icon">🛡️</span> Asset Matrix
+                </a>
+                <a href="#" class="nav-item" id="nav-risk">
+                    <span class="icon">⚙️</span> Risk Settings
+                </a>
+            </nav>
+            <div class="system-status">
+                <div class="status-indicator">
+                    <span class="status-dot pulsing"></span>
+                    <span class="status-label">SYS_READY_LIVE</span>
+                </div>
+                <div class="server-time" id="server-time">19:52:16</div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-title">
+                    <h1>PORTFOLIO COMMAND CENTER</h1>
+                    <p class="subtitle">Institutional Risk-First Execution Dashboard</p>
+                </div>
+                <div class="header-controls">
+                    <button class="btn btn-primary" onclick="window.location.reload();">
+                        <span>🔄</span> Sync Telemetry
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Top Cards Row -->
+                <section class="kpi-grid">
+                    <div class="kpi-card" id="kpi-aum">
+                        <div class="card-bg-glow"></div>
+                        <span class="kpi-label">TOTAL AUM</span>
+                        <h2 class="kpi-value" id="val-aum">$0.00</h2>
+                        <span class="kpi-trend trend-neutral">Active Allocation</span>
+                    </div>
+                    <div class="kpi-card" id="kpi-pnl">
+                        <div class="card-bg-glow"></div>
+                        <span class="kpi-label">CUMULATIVE PNL</span>
+                        <h2 class="kpi-value pnl-positive" id="val-pnl">$0.00</h2>
+                        <span class="kpi-trend trend-up">▲ Institutional Backtest</span>
+                    </div>
+                    <div class="kpi-card" id="kpi-var">
+                        <div class="card-bg-glow"></div>
+                        <span class="kpi-label">VALUE AT RISK (VaR)</span>
+                        <h2 class="kpi-value" id="val-var">0.00%</h2>
+                        <span class="kpi-trend trend-down">▼ 95% worst-case DD</span>
+                    </div>
+                    <div class="kpi-card" id="kpi-exposure">
+                        <div class="card-bg-glow"></div>
+                        <span class="kpi-label">APPROVED CHANNELS</span>
+                        <h2 class="kpi-value" id="val-channels">0 / 0</h2>
+                        <span class="kpi-trend trend-neutral" id="val-channels-pct">0% active rate</span>
+                    </div>
+                </section>
+
+                <!-- Analytics Row -->
+                <div class="analytics-row">
+                    <!-- Left: Asset Table -->
+                    <div class="card asset-card">
+                        <div class="card-header">
+                            <h3>Asset Allocations & Verdicts</h3>
+                            <span class="badge badge-info">10 Targets Loaded</span>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table" id="assets-table">
+                                <thead>
+                                    <tr>
+                                        <th>Symbol</th>
+                                        <th>Asset Class</th>
+                                        <th>Verdict</th>
+                                        <th>Sharpe</th>
+                                        <th>Profit Factor</th>
+                                        <th>AUM Allocation</th>
+                                        <th>Weight</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="assets-body">
+                                    <!-- Dynamic rows loaded by app.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right: Allocation Pie Chart & Guards -->
+                    <div class="card-column">
+                        <div class="card chart-card">
+                            <div class="card-header">
+                                <h3>PnL Distribution by Symbol</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="pnlPieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulation & Risk Row -->
+                <div class="details-row">
+                    <!-- Left: Equity Curve Simulation -->
+                    <div class="card simulator-card">
+                        <div class="card-header">
+                            <h3>Simulated Equity Growth Curve</h3>
+                            <div class="simulator-controls">
+                                <label for="allocation-slider">Global Multiplier: </label>
+                                <span class="slider-val" id="global-multiplier-val">1.0x</span>
+                                <input type="range" id="allocation-slider" min="0.1" max="3.0" step="0.1" value="1.0">
+                            </div>
+                        </div>
+                        <div class="chart-container-large">
+                            <canvas id="equityChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Right: Guard Details & Live Console -->
+                    <div class="card-column">
+                        <!-- Guard Panel -->
+                        <div class="card guard-card">
+                            <div class="card-header">
+                                <h3>Risk Engine Guards Monitor: <span id="selected-symbol-guard">US30</span></h3>
+                            </div>
+                            <div class="guards-grid" id="guards-display">
+                                <div class="guard-item">
+                                    <span class="guard-name">Spread Guard</span>
+                                    <span class="guard-status status-active" id="guard-spread">ACTIVE</span>
+                                </div>
+                                <div class="guard-item">
+                                    <span class="guard-name">Slippage Guard</span>
+                                    <span class="guard-status status-active" id="guard-slippage">ACTIVE</span>
+                                </div>
+                                <div class="guard-item">
+                                    <span class="guard-name">ATR Shock Block</span>
+                                    <span class="guard-status status-active" id="guard-atr">ACTIVE</span>
+                                </div>
+                                <div class="guard-item">
+                                    <span class="guard-name">Max Daily Loss</span>
+                                    <span class="guard-value" id="guard-daily-limit">1.8%</span>
+                                </div>
+                                <div class="guard-item">
+                                    <span class="guard-name">Weekly Soft Stop</span>
+                                    <span class="guard-value" id="guard-weekly-limit">4.0%</span>
+                                </div>
+                                <div class="guard-item">
+                                    <span class="guard-name">Hard Drawdown Veto</span>
+                                    <span class="guard-value" id="guard-hard-limit">8.0%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Console -->
+                        <div class="card console-card">
+                            <div class="card-header">
+                                <h3>System Live Audit Stream</h3>
+                            </div>
+                            <div class="console-output" id="console-output">
+                                <!-- Loaded dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="/app.js"></script>
+</body>
+</html>

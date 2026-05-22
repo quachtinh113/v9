@@ -1,6 +1,10 @@
 """Smoke test: verify all pipeline stages import and run correctly."""
 import sys
-sys.path.insert(0, r"d:\05_Quant\quant_v9_3_1_repos\quant_v9_3_1_gbpusd")
+from pathlib import Path
+
+# Resolve GBPUSD project path relative to script directory
+gbpusd_dir = Path(__file__).resolve().parent / "projects" / "quant_v9_3_1_gbpusd"
+sys.path.insert(0, str(gbpusd_dir))
 
 print("=" * 60)
 print("  SMOKE TEST: Quant v9.3.1 GBPUSD Pipeline")
@@ -9,7 +13,7 @@ print("=" * 60)
 # Test 1: DATA stage
 print("\n[1/5] DATA: Loading CSV...")
 from src.data.loaders import load_ohlcv_csv, validate_ohlcv
-df = load_ohlcv_csv(r"d:\05_Quant\quant_v9_3_1_repos\quant_v9_3_1_gbpusd\data\raw\GBPUSD_M1_sample.csv")
+df = load_ohlcv_csv(str(gbpusd_dir / "data" / "raw" / "GBPUSD_M1_sample.csv"))
 diag = validate_ohlcv(df)
 print(f"  Loaded {len(df)} rows | clean={diag['clean']} | issues={diag['issues']}")
 
@@ -27,7 +31,7 @@ print(f"  All expected columns present: {expected_cols}")
 print("\n[3/5] REGIME -> SIGNAL -> AI FILTER -> POSITION...")
 from src.strategies.gbpusd_strategy import generate_trade_plan
 from src.utils.config import load_yaml
-config = load_yaml(r"d:\05_Quant\quant_v9_3_1_repos\quant_v9_3_1_gbpusd\config\symbol.yaml")
+config = load_yaml(str(gbpusd_dir / "config" / "symbol.yaml"))
 row = ft.iloc[-1].to_dict()
 plan, decision = generate_trade_plan(row, config)
 print(f"  Decision: dir={decision.direction} score={decision.score:.1f} regime={decision.regime}")
@@ -40,7 +44,7 @@ else:
 # Test 4: RISK gateway
 print("\n[4/5] RISK: Testing RiskGateway...")
 from src.core.risk_engine import RiskGateway
-risk_cfg = load_yaml(r"d:\05_Quant\quant_v9_3_1_repos\quant_v9_3_1_gbpusd\config\risk.yaml")
+risk_cfg = load_yaml(str(gbpusd_dir / "config" / "risk.yaml"))
 gateway = RiskGateway(risk_cfg)
 # Test ALLOW
 rd = gateway.full_gate(
@@ -70,8 +74,7 @@ assert rd3.action == "HARD_KILL"
 print("\n[5/5] AUDIT: Testing PipelineAuditLog...")
 from src.execution.trade_journal import PipelineAuditLog
 import tempfile, os
-from pathlib import Path
-audit_path = Path(r"d:\05_Quant\quant_v9_3_1_repos\quant_v9_3_1_gbpusd\logs\test_audit.ndjson")
+audit_path = gbpusd_dir / "logs" / "test_audit.ndjson"
 audit = PipelineAuditLog(audit_path)
 audit.write_tick(
     bar_ts="2025-01-01T00:00:00",
@@ -89,5 +92,5 @@ assert "trend" in content
 print(f"  Audit log verified ({len(content)} bytes)")
 
 print("\n" + "=" * 60)
-print("  ALL SMOKE TESTS PASSED ✓")
+print("  ALL SMOKE TESTS PASSED [OK]")
 print("=" * 60)

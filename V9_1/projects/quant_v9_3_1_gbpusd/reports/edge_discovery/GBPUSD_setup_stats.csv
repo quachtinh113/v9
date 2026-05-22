@@ -1,0 +1,7 @@
+setup,trade_count,winrate,profit_factor,sharpe,avg_holding_time,expectancy,mc_worst_case_dd,mc_ruin_probability,verdict,reason
+trend continuation,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,REJECTED,No trades
+breakout,1,0.0,0.0,0.0,122.0,-9.826641019243993,0.09826641019244561,0.0,REJECTED,"Negative Expectancy, Insufficient Sample (<3)"
+mean reversion,2,0.5,1.8259461691999825,4.6396810749900474,46.5,3.85738195033764,0.09340516595830195,0.0,REJECTED,Insufficient Sample (<3)
+session breakout,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,REJECTED,No trades
+RSI recovery,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,REJECTED,No trades
+volatility expansion,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,REJECTED,No trades

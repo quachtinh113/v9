@@ -1,0 +1,34 @@
+{
+    "symbol": "USDCHF",
+    "timestamp": "2026-05-22T19:50:22.439133",
+    "execution_efficiency": {
+        "average_spread_bps": 1.0,
+        "average_slippage_bps": 0.5,
+        "average_latency_bps": 0.55,
+        "total_trades": 3,
+        "total_net_pnl": 5.688771833280256,
+        "expectancy_dollars": 1.8962572777600855,
+        "cost_adjusted_expectancy": 1.8460547739951332
+    },
+    "ranking_distribution": {
+        "A+": 3,
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "REJECT": 1
+    },
+    "session_profitability": {
+        "london": 5.688771833280256
+    },
+    "edge_analysis": [
+        {
+            "regime": "sideway",
+            "direction": "long",
+            "total_signals": 4,
+            "executed": 3,
+            "gross_pnl": 5.839379344575113,
+            "net_pnl": 5.688771833280256,
+            "status": "SURVIVED"
+        }
+    ]
+}

@@ -35,3 +35,19 @@ def resolve_csv_source(repo_root, symbol, csv_path=None):
         df.to_csv(target, index=False)
         print(f"Generated sample data for {symbol}")
     return target
+
+def validate_ohlcv(df: pd.DataFrame) -> dict:
+    """Validate loaded OHLCV DataFrame columns and content."""
+    missing = REQUIRED_COLS - set(df.columns)
+    issues = []
+    if missing:
+        issues.append(f"Missing columns: {missing}")
+    
+    nan_cols = df.columns[df.isna().any()].tolist()
+    if nan_cols:
+        issues.append(f"NaNs in columns: {nan_cols}")
+        
+    return {
+        "clean": len(issues) == 0,
+        "issues": "; ".join(issues) if issues else "None"
+    }

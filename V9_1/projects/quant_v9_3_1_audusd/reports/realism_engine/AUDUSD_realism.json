@@ -1,0 +1,16 @@
+{
+    "symbol": "AUDUSD",
+    "timestamp": "2026-05-22T19:49:36.802130",
+    "initial_capital": 10000.0,
+    "ending_equity": 10005.705448373797,
+    "realized_pnl": 5.705448373797481,
+    "profit_factor": Infinity,
+    "max_drawdown_pct": 0.0,
+    "max_consecutive_losses": 0,
+    "sharpe_ratio": 971.9303807483464,
+    "sortino_ratio": 0.0,
+    "monte_carlo_median_dd": 0.0,
+    "monte_carlo_95_dd": 0.0,
+    "ruin_probability": 0.0,
+    "verdict": "INSTITUTIONAL_READY"
+}

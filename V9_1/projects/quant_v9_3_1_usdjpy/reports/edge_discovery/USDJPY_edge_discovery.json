@@ -1,0 +1,135 @@
+{
+    "symbol": "USDJPY",
+    "setup_statistics": {
+        "trend continuation": {
+            "trade_count": 0,
+            "winrate": 0.0,
+            "profit_factor": 0.0,
+            "sharpe": 0.0,
+            "avg_holding_time": 0.0,
+            "expectancy": 0.0,
+            "mc_worst_case_dd": 0.0,
+            "mc_ruin_probability": 0.0,
+            "verdict": "REJECTED",
+            "reason": "No trades"
+        },
+        "breakout": {
+            "trade_count": 1,
+            "winrate": 0.0,
+            "profit_factor": 0.0,
+            "sharpe": 0.0,
+            "avg_holding_time": 122.0,
+            "expectancy": -9.791374386872576,
+            "mc_worst_case_dd": 0.09791374386872122,
+            "mc_ruin_probability": 0.0,
+            "verdict": "REJECTED",
+            "reason": "Negative Expectancy, Insufficient Sample (<3)"
+        },
+        "mean reversion": {
+            "trade_count": 2,
+            "winrate": 0.5,
+            "profit_factor": 1.8283672262458168,
+            "sharpe": 4.6492979862276105,
+            "avg_holding_time": 46.5,
+            "expectancy": 3.8744320848907137,
+            "mc_worst_case_dd": 0.09354382844067004,
+            "mc_ruin_probability": 0.0,
+            "verdict": "REJECTED",
+            "reason": "Insufficient Sample (<3)"
+        },
+        "session breakout": {
+            "trade_count": 0,
+            "winrate": 0.0,
+            "profit_factor": 0.0,
+            "sharpe": 0.0,
+            "avg_holding_time": 0.0,
+            "expectancy": 0.0,
+            "mc_worst_case_dd": 0.0,
+            "mc_ruin_probability": 0.0,
+            "verdict": "REJECTED",
+            "reason": "No trades"
+        },
+        "RSI recovery": {
+            "trade_count": 0,
+            "winrate": 0.0,
+            "profit_factor": 0.0,
+            "sharpe": 0.0,
+            "avg_holding_time": 0.0,
+            "expectancy": 0.0,
+            "mc_worst_case_dd": 0.0,
+            "mc_ruin_probability": 0.0,
+            "verdict": "REJECTED",
+            "reason": "No trades"
+        },
+        "volatility expansion": {
+            "trade_count": 0,
+            "winrate": 0.0,
+            "profit_factor": 0.0,
+            "sharpe": 0.0,
+            "avg_holding_time": 0.0,
+            "expectancy": 0.0,
+            "mc_worst_case_dd": 0.0,
+            "mc_ruin_probability": 0.0,
+            "verdict": "REJECTED",
+            "reason": "No trades"
+        }
+    },
+    "session_statistics": {
+        "Asia": {
+            "trade_count": 2,
+            "winrate": 0.5,
+            "net_pnl": 7.311872626976083,
+            "expectancy": 3.6559363134880414
+        },
+        "London": {
+            "trade_count": 0,
+            "winrate": 0.0,
+            "net_pnl": 0.0,
+            "expectancy": 0.0
+        },
+        "New York": {
+            "trade_count": 0,
+            "winrate": 0.0,
+            "net_pnl": 0.0,
+            "expectancy": 0.0
+        },
+        "Lunch": {
+            "trade_count": 1,
+            "winrate": 0.0,
+            "net_pnl": -9.354382844067231,
+            "expectancy": -9.354382844067231
+        },
+        "Post-news": {
+            "trade_count": 0,
+            "winrate": 0.0,
+            "net_pnl": 0.0,
+            "expectancy": 0.0
+        }
+    },
+    "alpha_profile": {
+        "best_setup": "mean reversion",
+        "worst_setup": "breakout",
+        "best_session": "Asia",
+        "worst_session": "Lunch",
+        "volatility_preference": "LOW_VOLATILITY"
+    },
+    "rejected_setups": [
+        "RSI recovery",
+        "volatility expansion",
+        "session breakout",
+        "mean reversion",
+        "trend continuation",
+        "breakout"
+    ],
+    "portfolio_metrics": {
+        "total_trades": 0,
+        "winrate": 0.0,
+        "net_pnl": 0.0,
+        "profit_factor": 0.0,
+        "sharpe_ratio": 0.0,
+        "max_drawdown_pct": 0.0,
+        "mc_worst_case_dd": 0.0,
+        "ruin_probability": 0.0,
+        "verdict": "DISABLED"
+    }
+}

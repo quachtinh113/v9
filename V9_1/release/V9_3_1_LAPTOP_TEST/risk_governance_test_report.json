@@ -1,0 +1,17 @@
+{
+    "timestamp": "2026-05-22T20:05:42",
+    "risk_gateway_checks": {
+        "pass_decision": "VERIFIED_ALLOW",
+        "soft_block_decision": "VERIFIED_BLOCK",
+        "hard_kill_decision": "VERIFIED_VETO",
+        "guards": {
+            "spread_guard": "ACTIVE",
+            "slippage_guard": "ACTIVE",
+            "atr_shock_guard": "ACTIVE",
+            "daily_drawdown_guard": "ACTIVE",
+            "loss_streak_guard": "ACTIVE",
+            "latency_guard": "ACTIVE"
+        }
+    },
+    "compliance_rule": "Every order passes RiskGateway first (ENFORCED)"
+}

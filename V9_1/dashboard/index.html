@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Command Center - Quant V9</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon"></div>
+                <div class="logo-text">
+                    <span class="brand">NOWTRADING</span>
+                    <span class="version">QUANT CORE V9.3.1</span>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="#" class="nav-item active" id="nav-dashboard">
+                    <span class="icon">📊</span> Command Center
+                </a>
+                <a href="#" class="nav-item" id="nav-assets">
+                    <span class="icon">🛡️</span> Asset Matrix
+                </a>
+                <a href="#" class="nav-item" id="nav-risk">
+                    <span class="icon">⚙️</span> Risk Settings
+                </a>
+                <a href="#" class="nav-item" id="nav-architecture">
+                    <span class="icon">🌐</span> Architecture
+                </a>
+            </nav>
+            <div class="system-status">
+                <div class="status-indicator">
+                    <span class="status-dot pulsing"></span>
+                    <span class="status-label">SYS_READY_LIVE</span>
+                </div>
+                <div class="server-time" id="server-time">19:52:16</div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-title">
+                    <h1>PORTFOLIO COMMAND CENTER</h1>
+                    <p class="subtitle">Institutional Risk-First Execution Dashboard</p>
+                </div>
+                <div class="header-controls">
+                    <button class="btn btn-primary" onclick="window.location.reload();">
+                        <span>🔄</span> Sync Telemetry
+                    </button>
+                </div>
+            </header>
+
+            <!-- Tab Contents -->
+            <div class="tab-content active" id="tab-content-dashboard">
+                <div class="dashboard-grid">
+                    <!-- Top Cards Row -->
+                    <section class="kpi-grid">
+                        <div class="kpi-card" id="kpi-aum">
+                            <div class="card-bg-glow"></div>
+                            <span class="kpi-label">TOTAL AUM</span>
+                            <h2 class="kpi-value" id="val-aum">$0.00</h2>
+                            <span class="kpi-trend trend-neutral">Active Allocation</span>
+                        </div>
+                        <div class="kpi-card" id="kpi-pnl">
+                            <div class="card-bg-glow"></div>
+                            <span class="kpi-label">CUMULATIVE PNL</span>
+                            <h2 class="kpi-value pnl-positive" id="val-pnl">$0.00</h2>
+                            <span class="kpi-trend trend-up">▲ Institutional Backtest</span>
+                        </div>
+                        <div class="kpi-card" id="kpi-var">
+                            <div class="card-bg-glow"></div>
+                            <span class="kpi-label">VALUE AT RISK (VaR)</span>
+                            <h2 class="kpi-value" id="val-var">0.00%</h2>
+                            <span class="kpi-trend trend-down">▼ 95% worst-case DD</span>
+                        </div>
+                        <div class="kpi-card" id="kpi-exposure">
+                            <div class="card-bg-glow"></div>
+                            <span class="kpi-label">APPROVED CHANNELS</span>
+                            <h2 class="kpi-value" id="val-channels">0 / 0</h2>
+                            <span class="kpi-trend trend-neutral" id="val-channels-pct">0% active rate</span>
+                        </div>
+                    </section>
+
+                    <!-- Analytics Row -->
+                    <div class="analytics-row">
+                        <!-- Left: Asset Table -->
+                        <div class="card asset-card">
+                            <div class="card-header">
+                                <h3>Asset Allocations & Verdicts</h3>
+                                <span class="badge badge-info">10 Targets Loaded</span>
+                            </div>
+                            <div class="table-container">
+                                <table class="data-table" id="assets-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Symbol</th>
+                                            <th>Asset Class</th>
+                                            <th>Verdict</th>
+                                            <th>Sharpe</th>
+                                            <th>Profit Factor</th>
+                                            <th>AUM Allocation</th>
+                                            <th>Weight</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="assets-body">
+                                        <!-- Dynamic rows loaded by app.js -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Right: Allocation Pie Chart & Guards -->
+                        <div class="card-column">
+                            <div class="card chart-card">
+                                <div class="card-header">
+                                    <h3>PnL Distribution by Symbol</h3>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="pnlPieChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Simulation & Risk Row -->
+                    <div class="details-row">
+                        <!-- Left: Equity Curve Simulation -->
+                        <div class="card simulator-card">
+                            <div class="card-header">
+                                <h3>Simulated Equity Growth Curve</h3>
+                                <div class="simulator-controls">
+                                    <label for="allocation-slider">Global Multiplier: </label>
+                                    <span class="slider-val" id="global-multiplier-val">1.0x</span>
+                                    <input type="range" id="allocation-slider" min="0.1" max="3.0" step="0.1" value="1.0">
+                                </div>
+                            </div>
+                            <div class="chart-container-large">
+                                <canvas id="equityChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Right: Guard Details & Live Console -->
+                        <div class="card-column">
+                            <!-- Guard Panel -->
+                            <div class="card guard-card">
+                                <div class="card-header">
+                                    <h3>Risk Engine Guards Monitor: <span id="selected-symbol-guard">US30</span></h3>
+                                </div>
+                                <div class="guards-grid" id="guards-display">
+                                    <div class="guard-item">
+                                        <span class="guard-name">Spread Guard</span>
+                                        <span class="guard-status status-active" id="guard-spread">ACTIVE</span>
+                                    </div>
+                                    <div class="guard-item">
+                                        <span class="guard-name">Slippage Guard</span>
+                                        <span class="guard-status status-active" id="guard-slippage">ACTIVE</span>
+                                    </div>
+                                    <div class="guard-item">
+                                        <span class="guard-name">ATR Shock Block</span>
+                                        <span class="guard-status status-active" id="guard-atr">ACTIVE</span>
+                                    </div>
+                                    <div class="guard-item">
+                                        <span class="guard-name">Max Daily Loss</span>
+                                        <span class="guard-value" id="guard-daily-limit">1.8%</span>
+                                    </div>
+                                    <div class="guard-item">
+                                        <span class="guard-name">Weekly Soft Stop</span>
+                                        <span class="guard-value" id="guard-weekly-limit">4.0%</span>
+                                    </div>
+                                    <div class="guard-item">
+                                        <span class="guard-name">Hard Drawdown Veto</span>
+                                        <span class="guard-value" id="guard-hard-limit">8.0%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Console -->
+                            <div class="card console-card">
+                                <div class="card-header">
+                                    <h3>System Live Audit Stream</h3>
+                                </div>
+                                <div class="console-output" id="console-output">
+                                    <!-- Loaded dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Asset Matrix Full Registry -->
+            <div class="tab-content" id="tab-content-assets" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Institutional Asset Matrix</h3>
+                        <span class="badge badge-info">10 Asset Channels</span>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14px;">Detailed configuration and validation pipeline status of the 10 loaded asset channels.</p>
+                    <div class="table-container">
+                        <table class="data-table" id="asset-matrix-full-table">
+                            <thead>
+                                <tr>
+                                    <th>Symbol</th>
+                                    <th>Asset Class</th>
+                                    <th>Status</th>
+                                    <th>Data Status</th>
+                                    <th>Model Status</th>
+                                    <th>Risk Status</th>
+                                    <th>Dashboard Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="asset-matrix-full-body">
+                                <!-- Loaded via app.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Risk Governance Profile -->
+            <div class="tab-content" id="tab-content-risk" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Risk Engine Settings & Governance</h3>
+                        <span class="badge badge-info">Risk-First Model</span>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14px;">Default global threshold profiles configured across assets. Check specific asset profiles by selecting symbols on the Command Center.</p>
+                    <div class="guards-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                        <div class="guard-item">
+                            <span class="guard-name" style="font-size: 12px; color: var(--accent-cyan);">Spread Protection Guard</span>
+                            <span class="guard-status status-active">ACTIVE</span>
+                            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Blocks execution if current spread exceeds the limit (Nominal limit: 5.0 bps).</p>
+                        </div>
+                        <div class="guard-item">
+                            <span class="guard-name" style="font-size: 12px; color: var(--accent-cyan);">Slippage Protection Guard</span>
+                            <span class="guard-status status-active">ACTIVE</span>
+                            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Blocks execution if estimated execution slippage is excessive (Nominal limit: 3.0 bps).</p>
+                        </div>
+                        <div class="guard-item">
+                            <span class="guard-name" style="font-size: 12px; color: var(--accent-cyan);">ATR Shock Guard</span>
+                            <span class="guard-status status-active">ACTIVE</span>
+                            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Vetoes trade entries during sudden market volatility spikes (ATR Ratio > 2.0).</p>
+                        </div>
+                        <div class="guard-item">
+                            <span class="guard-name" style="font-size: 12px; color: var(--accent-cyan);">Max Daily Loss Limit</span>
+                            <span class="guard-value">1.8% / 2.0%</span>
+                            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Limits peak-to-trough account drawdown in a single day. Reset daily.</p>
+                        </div>
+                        <div class="guard-item">
+                            <span class="guard-name" style="font-size: 12px; color: var(--accent-cyan);">Weekly Soft Stop Limit</span>
+                            <span class="guard-value">4.0%</span>
+                            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Soft block triggered when weekly losses exceed 4.0% of peak equity.</p>
+                        </div>
+                        <div class="guard-item">
+                            <span class="guard-name" style="font-size: 12px; color: var(--accent-cyan);">Hard Drawdown Limit Veto</span>
+                            <span class="guard-value">8.0%</span>
+                            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Absolute safety kill switch halting all bot trading instantly. Requires manual reset.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Architecture Control Center -->
+            <div class="tab-content" id="tab-content-architecture" style="display: none;">
+                <!-- 1. System Pipeline Flow diagram -->
+                <div class="card" style="margin-bottom: 20px;">
+                    <div class="card-header">
+                        <h3>System Pipeline Execution Flow</h3>
+                        <span class="badge badge-info">100% Enforced</span>
+                    </div>
+                    <div class="flow-container">
+                        <div class="flow-node">
+                            <div class="node-title">Regime Engine</div>
+                            <div class="node-subtitle">Market Classification</div>
+                        </div>
+                        <div class="flow-arrow">➔</div>
+                        <div class="flow-node">
+                            <div class="node-title">Signal Engine</div>
+                            <div class="node-subtitle">Setup Triggers</div>
+                        </div>
+                        <div class="flow-arrow">➔</div>
+                        <div class="flow-node node-ml">
+                            <div class="node-title">ML Gatekeeper</div>
+                            <div class="node-subtitle">XGBoost Filter</div>
+                        </div>
+                        <div class="flow-arrow">➔</div>
+                        <div class="flow-node node-risk">
+                            <div class="node-title">RiskGateway</div>
+                            <div class="node-subtitle">7 Guards Check</div>
+                        </div>
+                        <div class="flow-arrow">➔</div>
+                        <div class="flow-node">
+                            <div class="node-title">OrderRouter</div>
+                            <div class="node-subtitle">Payload Packing</div>
+                        </div>
+                        <div class="flow-arrow">➔</div>
+                        <div class="flow-node">
+                            <div class="node-title">MT5Adapter</div>
+                            <div class="node-subtitle">Broker Terminal</div>
+                        </div>
+                        <div class="flow-arrow">➔</div>
+                        <div class="flow-node">
+                            <div class="node-title">Audit Logger</div>
+                            <div class="node-subtitle">NDJSON Stream</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-row" style="margin-bottom: 20px;">
+                    <!-- 2. Module Health Grid -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Module Registry & Health</h3>
+                        </div>
+                        <div class="module-health-grid" id="module-health-grid">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+
+                    <!-- 3. Release Stage Progress & Alerts -->
+                    <div class="card-column">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Active Release Stage</h3>
+                            </div>
+                            <div class="release-progress">
+                                <div class="release-step completed">
+                                    <div class="step-dot">✓</div>
+                                    <span>DEV</span>
+                                </div>
+                                <div class="release-step completed">
+                                    <div class="step-dot">✓</div>
+                                    <span>RC1</span>
+                                </div>
+                                <div class="release-step active">
+                                    <div class="step-dot">●</div>
+                                    <span>LAPTOP</span>
+                                </div>
+                                <div class="release-step">
+                                    <div class="step-dot">○</div>
+                                    <span>PAPER</span>
+                                </div>
+                                <div class="release-step">
+                                    <div class="step-dot">○</div>
+                                    <span>DEMO</span>
+                                </div>
+                                <div class="release-step">
+                                    <div class="step-dot">○</div>
+                                    <span>LIVE</span>
+                                </div>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 15px; text-align: center;">
+                                Mode: <strong style="color: var(--accent-cyan);">PAPER TESTING LOCAL RELEASE</strong> (Live capital disabled)
+                            </div>
+                        </div>
+
+                        <!-- Forbidden Bypass Warnings -->
+                        <div class="card warning-card">
+                            <div class="card-header">
+                                <h3 style="color: #f43f5e; display: flex; align-items: center; gap: 8px;">
+                                    ⚠️ FORBIDDEN BYPASS WARNINGS
+                                </h3>
+                            </div>
+                            <div class="warning-content">
+                                <div class="warning-item">
+                                    <strong>RULE BYPASS_RISK_GATEWAY:</strong>
+                                    <span>SignalEngine ➔ OrderRouter direct route is hard-blocked. All setups must pass through RiskGateway.</span>
+                                </div>
+                                <div class="warning-item">
+                                    <strong>RULE DIRECT_ADAPTER_ACCESS:</strong>
+                                    <span>SignalEngine ➔ MT5Adapter execution is locked. Directly invoking terminal adapter without routing or auditing will trigger security blockout.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="/app.js"></script>
+</body>
+</html>

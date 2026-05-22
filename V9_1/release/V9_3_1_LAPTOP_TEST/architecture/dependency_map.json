@@ -1,0 +1,58 @@
+{
+  "required_flow": [
+    "RegimeEngine",
+    "SignalEngine",
+    "MLGatekeeper",
+    "RiskGateway",
+    "PositionEngine",
+    "OrderRouter",
+    "MT5Adapter",
+    "AuditLogger"
+  ],
+  "module_calls": {
+    "LivePipeline": {
+      "calls": ["RegimeEngine", "SignalEngine", "MLGatekeeper", "RiskGateway", "OrderRouter", "AuditLogger"],
+      "purpose": "Coordinates the standard streaming tick workflow."
+    },
+    "SignalEngine": {
+      "calls": ["RegimeEngine"],
+      "purpose": "Retrieves active market regime to check signal conditions."
+    },
+    "MLGatekeeper": {
+      "calls": [],
+      "purpose": "Applies a quality filter model offline and scores entries."
+    },
+    "RiskGateway": {
+      "calls": [],
+      "purpose": "Checks daily drawdowns, streak lockouts, spread/slippage thresholds."
+    },
+    "OrderRouter": {
+      "calls": ["MT5Adapter", "AuditLogger"],
+      "purpose": "Packages transaction params and transmits allowed entries to MT5."
+    },
+    "MT5Adapter": {
+      "calls": [],
+      "purpose": "Executes orders on broker terminal or local mock fallback."
+    }
+  },
+  "forbidden_bypass_rules": [
+    {
+      "rule_id": "BYPASS_RISK_GATEWAY",
+      "source": "SignalEngine",
+      "destination": "OrderRouter",
+      "description": "Directly execution of trades from the Signal Engine to the Order Router. Bypassing RiskGateway and ML Gatekeeper is strictly forbidden. Violation will cause immediate shutdown."
+    },
+    {
+      "rule_id": "BYPASS_ML_FILTER",
+      "source": "SignalEngine",
+      "destination": "RiskGateway",
+      "description": "Sending trade setups directly to RiskGateway without filtering through ML Gatekeeper. Sizing adjustments and bad setup blocks must be done first."
+    },
+    {
+      "rule_id": "DIRECT_ADAPTER_ACCESS",
+      "source": "SignalEngine",
+      "destination": "MT5Adapter",
+      "description": "Direct terminal adapter execution. Completely bypasses order routing, risk, and audit checks. Highly critical safety violation."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+    "symbol": "XAUUSD",
+    "timestamp": "2026-05-22T19:51:38.496316",
+    "initial_capital": 10000.0,
+    "ending_equity": 10113.884698640088,
+    "realized_pnl": 113.88469864008766,
+    "profit_factor": Infinity,
+    "max_drawdown_pct": 0.0,
+    "max_consecutive_losses": 0,
+    "sharpe_ratio": 909.1210329390225,
+    "sortino_ratio": 0.0,
+    "monte_carlo_median_dd": 0.0,
+    "monte_carlo_95_dd": 0.0,
+    "ruin_probability": 0.0,
+    "verdict": "INSTITUTIONAL_READY"
+}

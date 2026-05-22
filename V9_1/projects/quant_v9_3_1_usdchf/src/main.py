@@ -23,5 +23,9 @@ def main():
         result = run_backtest(config, strategy_module, csv_path=str(csv))
         export_summary_json(result, root / "reports" / "latest")
         print(f"Backtest Complete for {config['symbol']} | PnL: {result['net_pnl']:.2f}")
+    elif args.mode == "live":
+        from src.pipeline_live import LivePipeline
+        pipeline = LivePipeline(root)
+        pipeline.run_loop()
 
 if __name__ == "__main__": main()

@@ -3,7 +3,7 @@ import shutil
 from pathlib import Path
 
 SOURCE_ROOT = Path(r"d:\05_Quant\quant_v9_3_1_repos")
-TARGET_ROOT = Path(r"d:\V9\projects")
+TARGET_ROOT = Path(__file__).resolve().parent / "projects"
 
 SYMBOLS = ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD"]
 

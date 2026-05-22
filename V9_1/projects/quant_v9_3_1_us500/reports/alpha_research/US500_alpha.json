@@ -1,0 +1,34 @@
+{
+    "symbol": "US500",
+    "timestamp": "2026-05-22T19:51:15.051662",
+    "execution_efficiency": {
+        "average_spread_bps": 1.0,
+        "average_slippage_bps": 0.5,
+        "average_latency_bps": 0.55,
+        "total_trades": 3,
+        "total_net_pnl": 5.723106174641899,
+        "expectancy_dollars": 1.9077020582139663,
+        "cost_adjusted_expectancy": 1.8574995544490138
+    },
+    "ranking_distribution": {
+        "A+": 3,
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "REJECT": 1
+    },
+    "session_profitability": {
+        "london": 5.723106174641899
+    },
+    "edge_analysis": [
+        {
+            "regime": "sideway",
+            "direction": "long",
+            "total_signals": 4,
+            "executed": 3,
+            "gross_pnl": 5.873713685936756,
+            "net_pnl": 5.723106174641899,
+            "status": "SURVIVED"
+        }
+    ]
+}

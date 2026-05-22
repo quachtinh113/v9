@@ -1,3 +1,3 @@
-def compute_rsi(s, p=14): return s.pct_change().fillna(0) # placeholder
-def compute_adx(df, p=14): return df["close"].pct_change().fillna(0) # placeholder
-def compute_atr(df, p=14): return df["close"].pct_change().fillna(0) # placeholder
+from src.indicators.rsi import compute_rsi
+from src.indicators.adx import compute_adx
+from src.indicators.atr import compute_atr

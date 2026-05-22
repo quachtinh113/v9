@@ -1,0 +1,122 @@
+[
+    {
+        "symbol": "GBPUSD",
+        "PF": 0.7727272727272727,
+        "WR": 0.2786885245901639,
+        "DD": 5.721393034825871,
+        "stability": 0.9896394897717866,
+        "risk_adjusted_score": 0.03699290225872653,
+        "best_regime": "transition",
+        "worst_regime": "sideway",
+        "overfitting_warning": "NO",
+        "verdict": "DISABLED"
+    },
+    {
+        "symbol": "EURUSD",
+        "PF": 0.7727272727272727,
+        "WR": 0.2786885245901639,
+        "DD": 5.721393034825871,
+        "stability": 0.9896394897717866,
+        "risk_adjusted_score": 0.03699290225872653,
+        "best_regime": "transition",
+        "worst_regime": "sideway",
+        "overfitting_warning": "NO",
+        "verdict": "DISABLED"
+    },
+    {
+        "symbol": "USDJPY",
+        "PF": 0.7727272727272727,
+        "WR": 0.2786885245901639,
+        "DD": 5.721393034825871,
+        "stability": 0.9896394897717866,
+        "risk_adjusted_score": 0.03699290225872653,
+        "best_regime": "transition",
+        "worst_regime": "sideway",
+        "overfitting_warning": "NO",
+        "verdict": "DISABLED"
+    },
+    {
+        "symbol": "AUDUSD",
+        "PF": Infinity,
+        "WR": 0,
+        "DD": 0.0,
+        "stability": 1.0,
+        "risk_adjusted_score": NaN,
+        "best_regime": "N/A",
+        "worst_regime": "N/A",
+        "overfitting_warning": "NO",
+        "verdict": "RESEARCH_ONLY"
+    },
+    {
+        "symbol": "USDCAD",
+        "PF": Infinity,
+        "WR": 0,
+        "DD": 0.0,
+        "stability": 1.0,
+        "risk_adjusted_score": NaN,
+        "best_regime": "N/A",
+        "worst_regime": "N/A",
+        "overfitting_warning": "NO",
+        "verdict": "RESEARCH_ONLY"
+    },
+    {
+        "symbol": "USDCHF",
+        "PF": Infinity,
+        "WR": 0,
+        "DD": 0.0,
+        "stability": 1.0,
+        "risk_adjusted_score": NaN,
+        "best_regime": "N/A",
+        "worst_regime": "N/A",
+        "overfitting_warning": "NO",
+        "verdict": "RESEARCH_ONLY"
+    },
+    {
+        "symbol": "US30",
+        "PF": Infinity,
+        "WR": 0,
+        "DD": 0.0,
+        "stability": 1.0,
+        "risk_adjusted_score": NaN,
+        "best_regime": "N/A",
+        "worst_regime": "N/A",
+        "overfitting_warning": "NO",
+        "verdict": "RESEARCH_ONLY"
+    },
+    {
+        "symbol": "US100",
+        "PF": Infinity,
+        "WR": 0,
+        "DD": 0.0,
+        "stability": 1.0,
+        "risk_adjusted_score": NaN,
+        "best_regime": "N/A",
+        "worst_regime": "N/A",
+        "overfitting_warning": "NO",
+        "verdict": "RESEARCH_ONLY"
+    },
+    {
+        "symbol": "US500",
+        "PF": Infinity,
+        "WR": 0,
+        "DD": 0.0,
+        "stability": 1.0,
+        "risk_adjusted_score": NaN,
+        "best_regime": "N/A",
+        "worst_regime": "N/A",
+        "overfitting_warning": "NO",
+        "verdict": "RESEARCH_ONLY"
+    },
+    {
+        "symbol": "XAUUSD",
+        "PF": Infinity,
+        "WR": 0,
+        "DD": 0.0,
+        "stability": 1.0,
+        "risk_adjusted_score": NaN,
+        "best_regime": "N/A",
+        "worst_regime": "N/A",
+        "overfitting_warning": "NO",
+        "verdict": "RESEARCH_ONLY"
+    }
+]

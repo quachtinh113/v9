@@ -1,0 +1,16 @@
+{
+    "symbol": "USDCHF",
+    "timestamp": "2026-05-22T19:50:22.437132",
+    "initial_capital": 10000.0,
+    "ending_equity": 10005.68877183328,
+    "realized_pnl": 5.688771833280043,
+    "profit_factor": Infinity,
+    "max_drawdown_pct": 0.0,
+    "max_consecutive_losses": 0,
+    "sharpe_ratio": 1074.7450508610088,
+    "sortino_ratio": 0.0,
+    "monte_carlo_median_dd": 0.0,
+    "monte_carlo_95_dd": 0.0,
+    "ruin_probability": 0.0,
+    "verdict": "INSTITUTIONAL_READY"
+}

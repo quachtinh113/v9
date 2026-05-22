@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alpha Research Report - GBPUSD</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 30px; background-color: #0d1117; color: #c9d1d9; }
+        h1, h2, h3 { color: #58a6ff; }
+        .container { max-width: 900px; margin: 0 auto; background: #161b22; padding: 25px; border-radius: 8px; border: 1px solid #30363d; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 25px; }
+        th, td { padding: 12px; border: 1px solid #30363d; text-align: left; }
+        th { background-color: #21262d; color: #f0f6fc; }
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; }
+        .SURVIVED { background-color: #238636; color: #ffffff; }
+        .DIED_FROM_COSTS { background-color: #d29922; color: #0d1117; }
+        .UNPROFITABLE { background-color: #da3633; color: #ffffff; }
+        .FILTERED_OUT { background-color: #30363d; color: #8b949e; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Alpha Research Audit - GBPUSD</h1>
+        <p>Generated at: 2026-05-22T19:47:55.201513</p>
+        
+        <h3>Execution Efficiency Analysis</h3>
+        <table>
+            <tr><td>Average Spread (bps)</td><td>1.00</td></tr>
+            <tr><td>Average Slippage (bps)</td><td>0.50</td></tr>
+            <tr><td>Average Latency (bps)</td><td>0.55</td></tr>
+            <tr><td>Total Trades Executed</td><td>3</td></tr>
+            <tr><td>Net Expectancy (per trade)</td><td>$-0.70</td></tr>
+            <tr><td>Cost-Adjusted Expectancy</td><td>$-1.16</td></tr>
+        </table>
+        
+        <h3>Signal Ranking Distribution</h3>
+        <table>
+            <tr><th>Rank</th><th>Count</th></tr>
+            <tr><td>A+ (High Quality Breakout)</td><td>3</td></tr>
+            <tr><td>A (High Quality Regime)</td><td>0</td></tr>
+            <tr><td>B (Medium Confidence)</td><td>0</td></tr>
+            <tr><td>C (Low Confidence)</td><td>0</td></tr>
+            <tr><td>REJECT (Violated constraints)</td><td>107</td></tr>
+        </table>
+
+        <h3>Edge Analysis: Setup Performance</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Regime</th>
+                    <th>Direction</th>
+                    <th>Signals</th>
+                    <th>Executed</th>
+                    <th>Gross PnL</th>
+                    <th>Net PnL</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+        
+                <tr>
+                    <td>sideway</td>
+                    <td>long</td>
+                    <td>18</td>
+                    <td>2</td>
+                    <td>$8.61</td>
+                    <td>$7.71</td>
+                    <td><span class="status-badge SURVIVED">SURVIVED</span></td>
+                </tr>
+            
+                <tr>
+                    <td>trend</td>
+                    <td>long</td>
+                    <td>92</td>
+                    <td>1</td>
+                    <td>$-9.36</td>
+                    <td>$-9.83</td>
+                    <td><span class="status-badge UNPROFITABLE">UNPROFITABLE</span></td>
+                </tr>
+            
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+        

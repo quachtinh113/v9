@@ -1,0 +1,20 @@
+{
+    "timestamp": "2026-05-22T20:05:42",
+    "python_version": "3.12.10",
+    "dependencies": {
+        "pandas": "installed",
+        "numpy": "installed",
+        "xgboost": "installed",
+        "yaml": "installed"
+    },
+    "paths": {
+        "root": "D:\\05_Quant\\v9\\V9_1",
+        "projects": "D:\\05_Quant\\v9\\V9_1\\projects",
+        "dashboard": "D:\\05_Quant\\v9\\V9_1\\dashboard",
+        "reports": "D:\\05_Quant\\v9\\V9_1\\reports"
+    },
+    "asset_projects_detected": 10,
+    "mt5_status": "Paper Fallback Active",
+    "port_8000_status": "Available / Used",
+    "write_permissions": "Verified"
+}
