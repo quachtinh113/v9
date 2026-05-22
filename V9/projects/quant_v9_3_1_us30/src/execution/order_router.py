@@ -33,7 +33,33 @@ class OrderRouter:
                 self.telegram.send_message(f"⚠️ <b>HARD KILL</b> [{symbol}]\nReason: {risk_decision.reasons}")
             return {"status": f"blocked_{risk_decision.action.lower()}"}
 
-        if self.execution_config.get("send_notifications", False) and self.telegram:
-            self.telegram.send_message(f"🚀 <b>Order Routed</b> [{symbol}]\nAction: {decision.action}")
+        # Build order payload with sanitized comment
+        comment_prefix = self.execution_config.get('comment_prefix', 'quant')
+        sanitized_ts = bar_ts.replace(':', '_').replace(' ', '_')
+        comment = f"{comment_prefix}_{sanitized_ts}"[:30]  # limit to 30 chars
+        order_req = {
+            "symbol": symbol,
+            "direction": decision.direction,
+            "price": plan.entry,
+            "sl": plan.stop_loss,
+            "tp": plan.take_profit,
+            "volume": self.execution_config.get("volume", 0.01),
+            "magic": self.execution_config.get("magic_number", 93030),
+            "deviation": self.execution_config.get("deviation", 20),
+            "comment": comment,
+        }
 
-        return {"status": "paper_only"}
+        # Send to MT5 adapter
+        res = self.adapter.send_order(order_req)
+
+        # Log to journal if present
+        if self.journal:
+            self.journal.write(bar_ts, {**order_req, "response": res})
+
+        # Optional Telegram notification
+        if self.execution_config.get("send_notifications", False) and self.telegram:
+            self.telegram.send_message(
+                f"🚀 <b>Order Routed</b> [{symbol}]\nStatus: {res.get('status')} Price: {res.get('price')}"
+            )
+
+        return res

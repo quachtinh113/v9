@@ -43,7 +43,11 @@ class OrderRouter:
             "volume": self.execution_config.get("volume", 0.01),
             "magic": self.execution_config.get("magic_number", 93030),
             "deviation": self.execution_config.get("deviation", 20),
-            "comment": f"{self.execution_config.get('comment_prefix', 'quant')}_{bar_ts}"
+            # Sanitize comment to meet MT5 length and character constraints
+            comment_prefix = self.execution_config.get('comment_prefix', 'quant')
+            sanitized_ts = bar_ts.replace(':', '_').replace(' ', '_')
+            comment = f"{comment_prefix}_{sanitized_ts}"[:30]  # limit to 30 chars
+            "comment": comment,
         }
 
         # Route to adapter
