@@ -7,11 +7,11 @@
         "pf": 1.633372926821751,
         "sharpe": 0.24657095908237472,
         "monte_carlo": {
-            "5th_pnl": 0.03851971750472308,
-            "mean_pnl": 0.06750697966699543,
-            "95th_pnl": 0.09637140517414008,
-            "pf_5th": 1.3228456284770949,
-            "sharpe_5th": 0.13961511429601442
+            "5th_pnl": 0.03717900554247363,
+            "mean_pnl": 0.06734250184922963,
+            "95th_pnl": 0.09594918979859644,
+            "pf_5th": 1.310439818730849,
+            "sharpe_5th": 0.13495959425831194
         },
         "cost_fragility": [
             {
@@ -124,11 +124,11 @@
         "pf": 0.7226942145321076,
         "sharpe": -0.1623021671408918,
         "monte_carlo": {
-            "5th_pnl": -0.05498261440416196,
-            "mean_pnl": -0.0431375449630278,
-            "95th_pnl": -0.03182867530937957,
-            "pf_5th": 0.6545850387874768,
-            "sharpe_5th": -0.21238101052707864
+            "5th_pnl": -0.055059799750725384,
+            "mean_pnl": -0.04289140245374457,
+            "95th_pnl": -0.03066962748701395,
+            "pf_5th": 0.6543922797527589,
+            "sharpe_5th": -0.21254608500711134
         },
         "cost_fragility": [
             {
@@ -235,17 +235,17 @@
     },
     "stop_hunts": {
         "status": "REJECTED",
-        "reason": "Unstable in Monte Carlo (5th percentile expectancy: -0.066%)",
+        "reason": "Unstable in Monte Carlo (5th percentile expectancy: -0.067%)",
         "sample_size": 591,
         "expectancy_pct": -0.04857123490967896,
         "pf": 0.6907090696035738,
         "sharpe": -0.1852050415411049,
         "monte_carlo": {
-            "5th_pnl": -0.0661130071573007,
-            "mean_pnl": -0.04904112072070958,
-            "95th_pnl": -0.03174327708308475,
-            "pf_5th": 0.5986646009417612,
-            "sharpe_5th": -0.25814344224632124
+            "5th_pnl": -0.06675732578543708,
+            "mean_pnl": -0.04882268650098646,
+            "95th_pnl": -0.030164755953381566,
+            "pf_5th": 0.5963042645543678,
+            "sharpe_5th": -0.2601468014684705
         },
         "cost_fragility": [
             {
@@ -356,17 +356,17 @@
     },
     "london_judo_reversal": {
         "status": "REJECTED",
-        "reason": "Unstable in Monte Carlo (5th percentile expectancy: -0.112%)",
+        "reason": "Unstable in Monte Carlo (5th percentile expectancy: -0.106%)",
         "sample_size": 169,
         "expectancy_pct": -0.07704545045554426,
         "pf": 0.5455074863301443,
         "sharpe": -0.30594976569421345,
         "monte_carlo": {
-            "5th_pnl": -0.11220057399903112,
-            "mean_pnl": -0.07803518352484301,
-            "95th_pnl": -0.04578273962428871,
-            "pf_5th": 0.3940138152034124,
-            "sharpe_5th": -0.47991061687278086
+            "5th_pnl": -0.10646834849529951,
+            "mean_pnl": -0.07635655878288625,
+            "95th_pnl": -0.04556822866989503,
+            "pf_5th": 0.4166415665873899,
+            "sharpe_5th": -0.44945231919075435
         },
         "cost_fragility": [
             {

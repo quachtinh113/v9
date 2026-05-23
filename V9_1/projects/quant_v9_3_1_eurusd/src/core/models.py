@@ -20,7 +20,18 @@ class SignalDecision:
     regime: str = "unknown"
     ml_score: float = 1.0
     ml_decision: str = "OFF"
+    ml_reason: str = "N/A"
     size_multiplier: float = 1.0
+    entry_allowed: bool = False
+    gate_status: str = "REJECTED"
+    blocked_reasons: List[str] = field(default_factory=list)
+    rsi_mtf_pass: bool = False
+    adx_pass: bool = False
+    atr_pass: bool = False
+    session_pass: bool = False
+    direction_alignment_pass: bool = False
+    risk_action: str = "N/A"
+    position_plan_valid: bool = False
 
 @dataclass
 class RiskDecision:

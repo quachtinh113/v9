@@ -1,16 +1,16 @@
 {
     "symbol": "US30",
-    "timestamp": "2026-05-22T19:50:44.910890",
+    "timestamp": "2026-05-23T08:34:21.352327",
     "initial_capital": 10000.0,
-    "ending_equity": 11926.06970757229,
-    "realized_pnl": 1926.0697075722892,
+    "ending_equity": 10000.0,
+    "realized_pnl": 0.0,
     "profit_factor": Infinity,
     "max_drawdown_pct": 0.0,
     "max_consecutive_losses": 0,
-    "sharpe_ratio": 83.16278848115672,
+    "sharpe_ratio": 0.0,
     "sortino_ratio": 0.0,
     "monte_carlo_median_dd": 0.0,
     "monte_carlo_95_dd": 0.0,
     "ruin_probability": 0.0,
-    "verdict": "INSTITUTIONAL_READY"
+    "verdict": "SANDBOX_ONLY"
 }

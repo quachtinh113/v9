@@ -181,7 +181,7 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
             edge_by_sym = {item["symbol"]: item for item in edge_data}
 
             # 2. Scan all project configs for settings/guards
-            symbols = ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD"]
+            symbols = ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD", "BTCUSD"]
             assets_status = []
             
             for sym in symbols:
@@ -221,7 +221,7 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
 
                 assets_status.append({
                     "symbol": sym,
-                    "type": "forex" if sym in ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF"] else ("gold" if sym == "XAUUSD" else "index"),
+                    "type": "forex" if sym in ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF"] else ("gold" if sym == "XAUUSD" else ("crypto" if sym == "BTCUSD" else "index")),
                     "verdict": e_stat.get("portfolio_metrics", {}).get("verdict", r_stat.get("verdict", "DISABLED")),
                     "profit_factor": r_stat.get("profit_factor", 0.0),
                     "max_drawdown": r_stat.get("max_drawdown_pct", 0.0),

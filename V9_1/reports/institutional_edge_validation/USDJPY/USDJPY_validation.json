@@ -7,11 +7,11 @@
         "pf": 2.9098911292378506,
         "sharpe": 0.5506642203664138,
         "monte_carlo": {
-            "5th_pnl": 0.10690314937517385,
-            "mean_pnl": 0.11508694271220915,
-            "95th_pnl": 0.12278188319947747,
-            "pf_5th": 2.67874010174927,
-            "sharpe_5th": 0.5050061793831578
+            "5th_pnl": 0.10717116880712922,
+            "mean_pnl": 0.11491853212705737,
+            "95th_pnl": 0.12296636309816557,
+            "pf_5th": 2.680944581763145,
+            "sharpe_5th": 0.5054199117319752
         },
         "cost_fragility": [
             {
@@ -118,17 +118,17 @@
     },
     "liquidity_sweeps": {
         "status": "REJECTED",
-        "reason": "Unstable in Monte Carlo (5th percentile expectancy: -0.025%)",
+        "reason": "Unstable in Monte Carlo (5th percentile expectancy: -0.024%)",
         "sample_size": 2077,
         "expectancy_pct": -0.016197039961526244,
         "pf": 0.8648657957876441,
         "sharpe": -0.07168053210397711,
         "monte_carlo": {
-            "5th_pnl": -0.024778512547973582,
-            "mean_pnl": -0.016211827855486718,
-            "95th_pnl": -0.007779300851908076,
-            "pf_5th": 0.7998552620604398,
-            "sharpe_5th": -0.11038760180433925
+            "5th_pnl": -0.023555256439586142,
+            "mean_pnl": -0.015932403579076236,
+            "95th_pnl": -0.007561791477132032,
+            "pf_5th": 0.8086539104745802,
+            "sharpe_5th": -0.10491003777125882
         },
         "cost_fragility": [
             {
@@ -235,17 +235,17 @@
     },
     "stop_hunts": {
         "status": "REJECTED",
-        "reason": "Unstable in Monte Carlo (5th percentile expectancy: -0.027%)",
+        "reason": "Unstable in Monte Carlo (5th percentile expectancy: -0.026%)",
         "sample_size": 1261,
         "expectancy_pct": -0.016384258865696166,
         "pf": 0.8632550286138221,
         "sharpe": -0.07257374564567054,
         "monte_carlo": {
-            "5th_pnl": -0.026798097570983996,
-            "mean_pnl": -0.01616256240654526,
-            "95th_pnl": -0.005542742496557702,
-            "pf_5th": 0.7849735623069675,
-            "sharpe_5th": -0.1196185064247685
+            "5th_pnl": -0.026046091428393064,
+            "mean_pnl": -0.016204587003896292,
+            "95th_pnl": -0.005742869290657675,
+            "pf_5th": 0.7903825502490474,
+            "sharpe_5th": -0.11630449491687864
         },
         "cost_fragility": [
             {
@@ -356,17 +356,17 @@
     },
     "london_judo_reversal": {
         "status": "REJECTED",
-        "reason": "Unstable in Monte Carlo (5th percentile expectancy: -0.006%)",
+        "reason": "Unstable in Monte Carlo (5th percentile expectancy: -0.005%)",
         "sample_size": 402,
         "expectancy_pct": 0.0134819784124584,
         "pf": 1.125079996407486,
         "sharpe": 0.05821218064559129,
         "monte_carlo": {
-            "5th_pnl": -0.005632333665882221,
-            "mean_pnl": 0.01349060200075133,
-            "95th_pnl": 0.03302834933957721,
-            "pf_5th": 0.9514393932522832,
-            "sharpe_5th": -0.024551799604071053
+            "5th_pnl": -0.004771177810478557,
+            "mean_pnl": 0.014028912435793586,
+            "95th_pnl": 0.03199080906963122,
+            "pf_5th": 0.9588801661223343,
+            "sharpe_5th": -0.020729845275095294
         },
         "cost_fragility": [
             {
@@ -473,17 +473,17 @@
     },
     "rollover_reversal": {
         "status": "REJECTED",
-        "reason": "Unstable in Monte Carlo (5th percentile expectancy: -0.003%)",
+        "reason": "Unstable in Monte Carlo (5th percentile expectancy: -0.001%)",
         "sample_size": 217,
         "expectancy_pct": 0.024034397063451986,
         "pf": 1.2318639191112795,
         "sharpe": 0.103104295691158,
         "monte_carlo": {
-            "5th_pnl": -0.0033479730067580444,
-            "mean_pnl": 0.02428032364078263,
-            "95th_pnl": 0.05130716573247058,
-            "pf_5th": 0.9712788384776535,
-            "sharpe_5th": -0.014386006948558587
+            "5th_pnl": -0.0010981388296594898,
+            "mean_pnl": 0.02452939545263673,
+            "95th_pnl": 0.05005061522931076,
+            "pf_5th": 0.9903984397575465,
+            "sharpe_5th": -0.00476158869230447
         },
         "cost_fragility": [
             {

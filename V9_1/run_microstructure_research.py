@@ -14,7 +14,7 @@ sys.path.insert(0, str(PROJECTS_DIR / "quant_v9_3_1_us30"))
 
 from src.core.microstructure import MicrostructureDetector, simulate_expectancy
 
-SYMBOLS = ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD"]
+SYMBOLS = ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD", "BTCUSD"]
 
 def load_symbol_data(symbol: str) -> pd.DataFrame:
     """Find and load the M1 CSV for a given symbol."""

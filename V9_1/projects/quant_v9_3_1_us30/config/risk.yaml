@@ -5,3 +5,13 @@ loss_streak_pause: 3
 slippage_guard_enabled: true
 spread_guard_enabled: true
 weekly_soft_stop_pct: 4.0
+
+# Explicitly hardened trading configs
+spread_limit_bps: 5.0
+slippage_limit_bps: 3.0
+atr_ratio_limit: 2.0
+max_open_positions: 2
+max_daily_trades: 5
+max_symbol_exposure: 0.05
+news_blackout_enabled: true
+transition_trade_enabled: false

@@ -3,12 +3,12 @@ SETLOCAL EnableDelayedExpansion
 
 title Quant Fleet Controller V9.3.1
 echo ============================================================
-echo   INSTITUTIONAL MULTI-AGENT TRADING FLEET (10 AGENTS)
+echo   INSTITUTIONAL MULTI-AGENT TRADING FLEET (11 AGENTS)
 echo ============================================================
 echo.
 
 set ROOT_DIR=%~dp0projects
-set SYMBOLS=gbpusd eurusd usdjpy audusd usdcad usdchf us30 us100 us500 xauusd
+set SYMBOLS=gbpusd eurusd usdjpy audusd usdcad usdchf us30 us100 us500 xauusd btcusd
 
 echo [1/10] Starting GBPUSD Agent...
 start "AGENT-GBPUSD" cmd /k "cd /d %ROOT_DIR%\quant_v9_3_1_gbpusd && set PYTHONPATH=.&& python -m src.main --mode live"
@@ -37,8 +37,11 @@ start "AGENT-US100" cmd /k "cd /d %ROOT_DIR%\quant_v9_3_1_us100 && set PYTHONPAT
 echo [9/10] Starting US500 Agent...
 start "AGENT-US500" cmd /k "cd /d %ROOT_DIR%\quant_v9_3_1_us500 && set PYTHONPATH=.&& python -m src.main --mode live"
 
-echo [10/10] Starting XAUUSD Agent...
+echo [10/11] Starting XAUUSD Agent...
 start "AGENT-XAUUSD" cmd /k "cd /d %ROOT_DIR%\quant_v9_3_1_xauusd && set PYTHONPATH=.&& python -m src.main --mode live"
+
+echo [11/11] Starting BTCUSD Agent...
+start "AGENT-BTCUSD" cmd /k "cd /d %ROOT_DIR%\quant_v9_3_1_btcusd && set PYTHONPATH=.&& python -m src.main --mode live"
 
 echo.
 echo ============================================================

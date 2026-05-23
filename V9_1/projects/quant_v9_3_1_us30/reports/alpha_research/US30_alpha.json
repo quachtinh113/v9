@@ -1,34 +1,22 @@
 {
     "symbol": "US30",
-    "timestamp": "2026-05-22T19:50:44.910890",
+    "timestamp": "2026-05-23T08:34:21.352327",
     "execution_efficiency": {
-        "average_spread_bps": 1.0,
-        "average_slippage_bps": 0.5,
-        "average_latency_bps": 0.55,
-        "total_trades": 3,
-        "total_net_pnl": 1926.0697075722896,
-        "expectancy_dollars": 642.0232358574299,
-        "cost_adjusted_expectancy": 622.946284426748
+        "average_spread_bps": 0.0,
+        "average_slippage_bps": 0.0,
+        "average_latency_bps": 0.0,
+        "total_trades": 0,
+        "total_net_pnl": 0.0,
+        "expectancy_dollars": 0.0,
+        "cost_adjusted_expectancy": 0.0
     },
     "ranking_distribution": {
-        "A+": 3,
+        "A+": 0,
         "A": 0,
         "B": 0,
         "C": 0,
-        "REJECT": 1
+        "REJECT": 0
     },
-    "session_profitability": {
-        "london": 1926.0697075722896
-    },
-    "edge_analysis": [
-        {
-            "regime": "sideway",
-            "direction": "long",
-            "total_signals": 4,
-            "executed": 3,
-            "gross_pnl": 1983.3005618643356,
-            "net_pnl": 1926.0697075722896,
-            "status": "SURVIVED"
-        }
-    ]
+    "session_profitability": {},
+    "edge_analysis": []
 }

@@ -5,7 +5,7 @@ from pathlib import Path
 SOURCE_ROOT = Path(r"d:\05_Quant\quant_v9_3_1_repos")
 TARGET_ROOT = Path(__file__).resolve().parent / "projects"
 
-SYMBOLS = ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD"]
+SYMBOLS = ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD", "BTCUSD"]
 
 def migrate_projects():
     TARGET_ROOT.mkdir(parents=True, exist_ok=True)

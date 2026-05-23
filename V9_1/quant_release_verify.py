@@ -25,7 +25,7 @@ def run_safety_lock_checks():
                     print(f"[WARN] Potential live credentials found in .env")
     
     # 2. Check risk.yaml and symbol.yaml
-    for sym in ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD"]:
+    for sym in ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD", "BTCUSD"]:
         proj_path = PROJECTS_DIR / f"quant_v9_3_1_{sym.lower()}"
         symbol_yaml = proj_path / "config" / "symbol.yaml"
         if symbol_yaml.exists():
@@ -72,7 +72,7 @@ def run_environment_checks():
     
     # Detect asset projects
     detected = 0
-    symbols = ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD"]
+    symbols = ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD", "BTCUSD"]
     for sym in symbols:
         if (PROJECTS_DIR / f"quant_v9_3_1_{sym.lower()}").exists():
             detected += 1
@@ -265,7 +265,7 @@ def generate_release_package():
             
     # Copy projects workspace configs
     (RELEASE_DIR / "projects").mkdir(exist_ok=True)
-    for sym in ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD"]:
+    for sym in ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD", "BTCUSD"]:
         proj_src = PROJECTS_DIR / f"quant_v9_3_1_{sym.lower()}"
         proj_dst = RELEASE_DIR / "projects" / f"quant_v9_3_1_{sym.lower()}"
         if proj_src.exists():

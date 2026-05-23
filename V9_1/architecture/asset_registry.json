@@ -98,5 +98,15 @@
     "model_status": "untrained",
     "risk_status": "bypass_prevention",
     "dashboard_status": "inactive"
+  },
+  {
+    "symbol": "BTCUSD",
+    "project_path": "projects/quant_v9_3_1_btcusd",
+    "asset_class": "crypto",
+    "status": "APPROVED",
+    "data_status": "synced",
+    "model_status": "trained",
+    "risk_status": "nominal",
+    "dashboard_status": "active"
   }
 ]

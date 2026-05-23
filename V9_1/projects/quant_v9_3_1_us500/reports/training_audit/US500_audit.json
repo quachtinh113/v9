@@ -1,33 +1,32 @@
 {
-    "overfitting_detected": false,
-    "train_f1_score": 0.002886002886002886,
-    "stability_score": 1.0,
-    "best_regime": "N/A",
-    "worst_regime": "N/A",
+    "overfitting_detected": true,
+    "train_f1_score": 0.8903345724907064,
+    "stability_score": 0.8932572770478684,
+    "best_regime": "trend",
+    "worst_regime": "sideway",
     "validation_metrics": {
-        "winrate": 0,
-        "precision": 0.0,
-        "recall": 0.0,
-        "f1_score": 0.0,
+        "winrate": 0.46060606060606063,
+        "precision": 0.46060606060606063,
+        "recall": 0.4393063583815029,
+        "f1_score": 0.44970414201183434,
         "confusion_matrix": [
             [
-                2291,
-                0
+                229,
+                89
             ],
             [
-                209,
-                0
+                97,
+                76
             ]
         ]
     },
     "financial_metrics": {
-        "max_drawdown": 0.0,
-        "profit_factor": Infinity,
+        "max_drawdown": 6.517311608961303,
+        "profit_factor": 1.7078651685393258,
         "avg_trade_duration": "4h (Simulated)"
     },
     "regime_distribution": {
-        "sideway": 5062,
-        "trend": 3995,
-        "transition": 943
+        "trend": 1590,
+        "sideway": 375
     }
 }

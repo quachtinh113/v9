@@ -37,7 +37,7 @@ def test_risk_gateway_yaml_guards():
     gateway = RiskGateway(cfg_disabled)
     
     account = {"daily_dd_pct": 0.0, "weekly_dd_pct": 0.0, "loss_streak": 0}
-    market = {"spread_bps": 10.0, "slippage_bps": 10.0, "atr_ratio": 5.0}
+    market = {"spread_bps": 10.0, "slippage_bps": 10.0, "atr_ratio": 5.0, "session_flag": "london"}
     
     decision = gateway.full_gate(account, market)
     assert decision.action == "ALLOW"
@@ -54,15 +54,15 @@ def test_risk_gateway_yaml_guards():
     }
     gateway = RiskGateway(cfg_enabled)
     
-    decision_spread = gateway.full_gate(account, {"spread_bps": 5.5, "slippage_bps": 1.0, "atr_ratio": 1.0})
+    decision_spread = gateway.full_gate(account, {"spread_bps": 5.5, "slippage_bps": 1.0, "atr_ratio": 1.0, "session_flag": "london"})
     assert decision_spread.action == "SOFT_BLOCK"
     assert "spread_guard_trigger" in decision_spread.reasons
     
-    decision_slippage = gateway.full_gate(account, {"spread_bps": 1.0, "slippage_bps": 3.5, "atr_ratio": 1.0})
+    decision_slippage = gateway.full_gate(account, {"spread_bps": 1.0, "slippage_bps": 3.5, "atr_ratio": 1.0, "session_flag": "london"})
     assert decision_slippage.action == "SOFT_BLOCK"
     assert "slippage_guard_trigger" in decision_slippage.reasons
     
-    decision_atr = gateway.full_gate(account, {"spread_bps": 1.0, "slippage_bps": 1.0, "atr_ratio": 2.5})
+    decision_atr = gateway.full_gate(account, {"spread_bps": 1.0, "slippage_bps": 1.0, "atr_ratio": 2.5, "session_flag": "london"})
     assert decision_atr.action == "SOFT_BLOCK"
     assert "atr_shock_trigger" in decision_atr.reasons
 
@@ -202,7 +202,18 @@ def test_backtest_engine_lockout_resets(monkeypatch):
             "low": 9800.0,
             "atr_ratio": 1.0,
             "session_flag": "london",
-            "signal_flag": "long" if i % 2 == 0 else "flat"
+            "signal_flag": "long" if i % 2 == 0 else "flat",
+            "rsi14_m15": 55.0,
+            "bb_width_m15": 0.01,
+            "macd_hist_m15": 0.0,
+            "adx14_h1": 30.0,
+            "adx14_h4": 25.0,
+            "atr14_m1": 15.0,
+            "atr14_h1": 20.0,
+            "atr14_h4": 30.0,
+            "bias": "long",
+            "bias_h1": "long",
+            "bias_h4": "long"
         })
         
     # Day 2: generate bars after boundary transition
@@ -215,7 +226,18 @@ def test_backtest_engine_lockout_resets(monkeypatch):
             "low": 9800.0 if i > 0 else 10000.0,  # Trigger exit for Day 2 trade
             "atr_ratio": 1.0,
             "session_flag": "london",
-            "signal_flag": "long" if i == 0 else "flat"
+            "signal_flag": "long" if i == 0 else "flat",
+            "rsi14_m15": 55.0,
+            "bb_width_m15": 0.01,
+            "macd_hist_m15": 0.0,
+            "adx14_h1": 30.0,
+            "adx14_h4": 25.0,
+            "atr14_m1": 15.0,
+            "atr14_h1": 20.0,
+            "atr14_h4": 30.0,
+            "bias": "long",
+            "bias_h1": "long",
+            "bias_h4": "long"
         })
         
     df_bars = pd.DataFrame(bars)
