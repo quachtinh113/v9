@@ -19,11 +19,15 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         # Route endpoints
         if self.path == "/" or self.path == "/index.html":
-            self.serve_file(ROOT_DIR / "dashboard" / "index.html", "text/html")
+            # If server is running on port 8369, serve architecture.html instead
+            target_html = "architecture.html" if self.server.server_address[1] == 8369 else "index.html"
+            self.serve_file(ROOT_DIR / "dashboard" / target_html, "text/html")
         elif self.path == "/app.css":
             self.serve_file(ROOT_DIR / "dashboard" / "app.css", "text/css")
         elif self.path == "/app.js":
             self.serve_file(ROOT_DIR / "dashboard" / "app.js", "application/javascript")
+        elif self.path == "/architecture.js":
+            self.serve_file(ROOT_DIR / "dashboard" / "architecture.js", "application/javascript")
         elif self.path == "/api/portfolio_status":
             self.serve_api_status()
         else:
@@ -39,6 +43,103 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                 self.serve_file(target_path, mime_type)
             else:
                 self.send_error(404, "File Not Found")
+
+    def do_POST(self):
+        if self.path == "/api/update_config":
+            try:
+                content_length = int(self.headers.get('Content-Length', 0))
+                post_data = self.rfile.read(content_length)
+                payload = json.loads(post_data.decode('utf-8'))
+                
+                symbol = payload.get("symbol")
+                if not symbol:
+                    self.send_error(400, "Missing symbol parameter")
+                    return
+                
+                # Check target path
+                repo_name = f"quant_v9_3_1_{symbol.lower()}"
+                project_path = PROJECTS_DIR / repo_name
+                
+                if not project_path.exists():
+                    self.send_error(404, f"Project not found for symbol {symbol}")
+                    return
+                
+                # Update risk.yaml
+                risk_yaml_path = project_path / "config" / "risk.yaml"
+                if risk_yaml_path.exists():
+                    with open(risk_yaml_path, "r", encoding="utf-8") as f:
+                        risk_cfg = yaml.safe_load(f) or {}
+                    
+                    # Update fields
+                    if "daily_loss_limit_pct" in payload:
+                        risk_cfg["daily_loss_limit_pct"] = float(payload["daily_loss_limit_pct"])
+                    if "weekly_soft_stop_pct" in payload:
+                        risk_cfg["weekly_soft_stop_pct"] = float(payload["weekly_soft_stop_pct"])
+                    if "hard_drawdown_pct" in payload:
+                        risk_cfg["hard_drawdown_pct"] = float(payload["hard_drawdown_pct"])
+                    if "spread_guard_enabled" in payload:
+                        risk_cfg["spread_guard_enabled"] = bool(payload["spread_guard_enabled"])
+                    if "slippage_guard_enabled" in payload:
+                        risk_cfg["slippage_guard_enabled"] = bool(payload["slippage_guard_enabled"])
+                    if "atr_shock_block_enabled" in payload:
+                        risk_cfg["atr_shock_block_enabled"] = bool(payload["atr_shock_block_enabled"])
+                    
+                    with open(risk_yaml_path, "w", encoding="utf-8") as f:
+                        yaml.safe_dump(risk_cfg, f, default_flow_style=False)
+                        
+                # Update symbol.yaml
+                symbol_yaml_path = project_path / "config" / "symbol.yaml"
+                if symbol_yaml_path.exists():
+                    with open(symbol_yaml_path, "r", encoding="utf-8") as f:
+                        symbol_cfg = yaml.safe_load(f) or {}
+                    
+                    # ml section
+                    if "ml_enabled" in payload:
+                        if "ml" not in symbol_cfg:
+                            symbol_cfg["ml"] = {}
+                        symbol_cfg["ml"]["enabled"] = bool(payload["ml_enabled"])
+                        
+                    # risk section
+                    if "risk_per_trade_pct" in payload:
+                        if "risk" not in symbol_cfg:
+                            symbol_cfg["risk"] = {}
+                        symbol_cfg["risk"]["risk_per_trade_pct"] = float(payload["risk_per_trade_pct"])
+                        
+                    if "max_daily_loss_pct" in payload:
+                        if "risk" not in symbol_cfg:
+                            symbol_cfg["risk"] = {}
+                        symbol_cfg["risk"]["max_daily_loss_pct"] = float(payload["max_daily_loss_pct"])
+                        
+                    # position section
+                    if "stop_atr_mult" in payload:
+                        if "position" not in symbol_cfg:
+                            symbol_cfg["position"] = {}
+                        symbol_cfg["position"]["stop_atr_mult"] = float(payload["stop_atr_mult"])
+                    if "tp_atr_mult" in payload:
+                        if "position" not in symbol_cfg:
+                            symbol_cfg["position"] = {}
+                        symbol_cfg["position"]["tp_atr_mult"] = float(payload["tp_atr_mult"])
+                    if "timeout_minutes" in payload:
+                        if "position" not in symbol_cfg:
+                            symbol_cfg["position"] = {}
+                        symbol_cfg["position"]["timeout_minutes"] = int(payload["timeout_minutes"])
+                        
+                    with open(symbol_yaml_path, "w", encoding="utf-8") as f:
+                        yaml.safe_dump(symbol_cfg, f, default_flow_style=False)
+                        
+                # Return success response
+                resp = {"status": "success", "message": f"Configurations updated for {symbol}"}
+                resp_bytes = json.dumps(resp).encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(resp_bytes)))
+                self.end_headers()
+                self.wfile.write(resp_bytes)
+                
+            except Exception as e:
+                self.send_error(500, f"Failed to update config: {str(e)}")
+        else:
+            self.send_error(404, "Not Found")
 
     def serve_file(self, file_path, mime_type):
         try:

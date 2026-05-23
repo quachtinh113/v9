@@ -1,7 +1,7 @@
+atr_shock_block_enabled: true
 daily_loss_limit_pct: 2.0
-weekly_soft_stop_pct: 4.0
 hard_drawdown_pct: 8.0
 loss_streak_pause: 3
-spread_guard_enabled: true
 slippage_guard_enabled: true
-atr_shock_block_enabled: true
+spread_guard_enabled: true
+weekly_soft_stop_pct: 4.0

@@ -1,5 +1,5 @@
 {
-    "timestamp": "2026-05-22T20:05:42",
+    "timestamp": "2026-05-23T06:51:32",
     "routing_chain": "Signal -> ML Gatekeeper -> RiskGateway -> OrderRouter -> MT5Adapter -> AuditLog",
     "checks": {
         "no_direct_execution": "WARNING",

@@ -259,7 +259,7 @@ def generate_release_package():
             shutil.copytree(ROOT_DIR / folder, RELEASE_DIR / folder)
             
     # Copy batch files
-    for file in ["start_all_bots.bat", "stop_all_bots.bat", "run_dashboard.py"]:
+    for file in ["start_all_bots.bat", "stop_all_bots.bat", "run_dashboard.py", "deploy_gcp.py"]:
         if (ROOT_DIR / file).exists():
             shutil.copy2(ROOT_DIR / file, RELEASE_DIR / file)
             
@@ -328,16 +328,13 @@ This is the pre-release packaging for running NowTrading Quant Core V9.3.1 on a 
     (RELEASE_DIR / "README_LAPTOP_TEST.md").write_text(readme_content)
     
     # 3. Write RELEASE_NOTES.md
-    release_notes = """# RELEASE NOTES - QUANT V9.3.1 LAPTOP TEST SPRINT 1
+    release_notes = """# RELEASE NOTES - NOWTRADING QUANT CORE V2.0 (ANTIGRAVITY 2.0)
 
-## Sprint 1 Key Features & Fixes
-1. **Drawdown Lockout Reset**: Daily and weekly drawdowns automatically reset at midnight.
-2. **Correct Profit Factor Formula**: Calculated using net win divided by net loss dollar values.
-3. **Risk Guards**: Active spread limit, slippage limit, and ATR volatility checks inside `risk_engine.py`.
-4. **ML Gatekeeper**: XGBoost model signal filtering with 50x caching.
-5. **Realism Outcome Training Labels**: Evaluated based on true look-forward boundaries instead of random numbers.
-6. **Live Execution Compliance**: Enforced routing flow: Signal -> ML -> Risk -> Router.
-7. **Paper Fallback**: Graceful MT5 offline handling.
+## Upgrades in Version 2.0:
+1. **Premium Glassmorphism Dashboard**: Redesigned Command Center with frosted glass, smooth animations, and active status tracking.
+2. **Interactive Configuration Editor**: Support for direct, live updates of risk and trading parameters (ML filter, risk per trade, stop/tp ATR thresholds, loss limits) directly from the dashboard UI, saved securely to the YAML configs.
+3. **Portfolio Stress-Testing Simulator**: Projections of equity curves, VaR, and risk guard alerts under simulated market volatility, slippage shocks, and Black Swan vetoes.
+4. **GCP VPS Deployment Pipeline**: Integrated cloud deployment script (`deploy_gcp.py`) supporting gcloud CLI integration for remote VM hosting.
 """
     (RELEASE_DIR / "RELEASE_NOTES.md").write_text(release_notes)
     
