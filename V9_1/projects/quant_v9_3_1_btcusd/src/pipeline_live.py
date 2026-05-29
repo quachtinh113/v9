@@ -53,6 +53,22 @@ class LivePipeline:
             try:
                 assert os.getenv("ALLOW_REAL_TRADING") == "true", "ALLOW_REAL_TRADING is not true"
                 assert os.getenv("HUMAN_LIVE_CONFIRM") == "YES_I_ACCEPT_LIVE_RISK", "HUMAN_LIVE_CONFIRM is not YES_I_ACCEPT_LIVE_RISK"
+                assert os.getenv("LIVE_DEMO_ALLOWED") == "true", "LIVE_DEMO_ALLOWED is not true"
+                
+                import MetaTrader5 as mt5
+                acc_info = mt5.account_info()
+                if acc_info is None:
+                    raise AssertionError("Could not retrieve MetaTrader5 account info for live mode verification")
+                
+                trade_mode = getattr(acc_info, 'trade_mode', None)
+                if trade_mode == mt5.ACCOUNT_TRADE_MODE_REAL or trade_mode == 2:
+                    raise AssertionError(f"BLOCKED: Live execution attempted on a REAL account (trade_mode={trade_mode})")
+                
+                server = str(getattr(acc_info, 'server', '')).lower()
+                if "real" in server or "live" in server or "prod" in server:
+                    raise AssertionError(f"BLOCKED: Live execution attempted on a REAL server ({getattr(acc_info, 'server')})")
+                
+                print(f"[SECURITY CONTROL] Live demo verification successful. Server: {getattr(acc_info, 'server')}, Login: {getattr(acc_info, 'login')}")
             except AssertionError as e:
                 self.audit_log.write_blocked("LIVE_PERMISSION_NOT_CONFIRMED", self.symbol, stage="EXECUTION", details={"error": str(e)})
                 raise RuntimeError(f"LIVE_PERMISSION_NOT_CONFIRMED: Live mode blocked for {self.symbol} due to assertion failure: {e}")
@@ -76,8 +92,43 @@ class LivePipeline:
         print(f"Real Order Send Enabled: {self.execution_mode == 'live'}")
 
     def tick(self):
+        tick_ok = False
+        data_stale = False
+        regime_result = "N/A"
+        signal_result = "N/A"
+        risk_decision = "N/A"
+        execution_mode = self.execution_mode
+        order_send_called = False
+        broker_symbol = self.symbol
+        ml_mode = "observe_only"
+        ml_score = 0.0
+        
+        self.last_tick_metrics = {
+            "broker_symbol": self.symbol,
+            "data_stale": False,
+            "regime_result": "N/A",
+            "signal_result": "N/A",
+            "ml_mode": "observe_only",
+            "ml_score": 0.0,
+            "risk_decision": "N/A",
+            "order_send_called": False
+        }
+        
         try:
-            return self._tick_internal()
+            self._tick_internal()
+            tick_ok = True
+            
+            # Read variables set during the run
+            metrics = getattr(self, "last_tick_metrics", {})
+            broker_symbol = metrics.get("broker_symbol", self.symbol)
+            data_stale = metrics.get("data_stale", False)
+            regime_result = metrics.get("regime_result", "N/A")
+            signal_result = metrics.get("signal_result", "N/A")
+            ml_mode = metrics.get("ml_mode", "observe_only")
+            ml_score = metrics.get("ml_score", 0.0)
+            risk_decision = metrics.get("risk_decision", "N/A")
+            order_send_called = metrics.get("order_send_called", False)
+            
         except Exception as e:
             from src.core.models import DataIncompleteError
             if not isinstance(e, DataIncompleteError):
@@ -98,8 +149,33 @@ class LivePipeline:
                     )
             logger.error(f"Error in tick: {e}")
             raise e
+        finally:
+            if hasattr(self, 'audit_log') and self.audit_log:
+                self.audit_log.write_loop_audit(
+                    symbol=self.symbol,
+                    tick_ok=tick_ok,
+                    broker_symbol=broker_symbol,
+                    data_stale=data_stale,
+                    regime_result=regime_result,
+                    signal_result=signal_result,
+                    ml_mode=ml_mode,
+                    ml_score=ml_score,
+                    risk_decision=risk_decision,
+                    execution_mode=execution_mode,
+                    order_send_called=order_send_called
+                )
 
     def _tick_internal(self):
+        self.last_tick_metrics = {
+            "broker_symbol": self.symbol,
+            "data_stale": False,
+            "regime_result": "N/A",
+            "signal_result": "N/A",
+            "ml_mode": "observe_only",
+            "ml_score": 0.0,
+            "risk_decision": "N/A",
+            "order_send_called": False
+        }
         # MT5 Live Data Adapter Integration
         if not hasattr(self, 'live_adapter'):
             from src.data.mt5_live_adapter import MT5LiveAdapter
@@ -211,6 +287,14 @@ class LivePipeline:
         ml_ok = True
         if decision and decision.ml_decision == "BLOCK" and "ML Error" in getattr(decision, "ml_reason", ""):
             ml_ok = False
+
+        self.last_tick_metrics["broker_symbol"] = broker_symbol
+        self.last_tick_metrics["data_stale"] = stale_veto
+        if decision:
+            self.last_tick_metrics["regime_result"] = decision.regime
+            self.last_tick_metrics["signal_result"] = decision.direction
+            self.last_tick_metrics["ml_score"] = float(getattr(decision, "ml_score", 0.0))
+            self.last_tick_metrics["ml_mode"] = "observe_only"
 
         # Stage bypass/block auditing
         if not (plan and decision.direction in {"long", "short"}):
@@ -347,6 +431,8 @@ class LivePipeline:
                 risk_decision.action = "HARD_KILL"
                 risk_decision.reasons.append("stale_data")
 
+            self.last_tick_metrics["risk_decision"] = risk_decision.action
+
             # Risk Stage Veto Auditing
             if risk_decision.action != "ALLOW":
                 self.audit_log.write_blocked(
@@ -433,6 +519,7 @@ class LivePipeline:
             if risk_decision.action == "ALLOW":
                 # 5. Execution Gate Logging
                 logger.info(f"[GATE:EXECUTION] {self.symbol} - Approved. Sending order size: {plan.size}")
+                self.last_tick_metrics["order_send_called"] = True
                 res = self.router.route_order(plan, decision, risk_decision, bar_ts=str(ts))
                 print(f"Order Routing Result: {res}")
             else:

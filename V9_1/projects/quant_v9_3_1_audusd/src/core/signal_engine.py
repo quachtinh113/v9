@@ -215,8 +215,9 @@ def evaluate_signal(features: Dict[str, Any], config: Dict[str, Any] | None = No
     
     # Update entry_allowed based on ML gatekeeper decision
     if dec.ml_decision == "BLOCK":
-        dec.direction = "flat"
-        dec.entry_allowed = False
-        dec.blocked_reasons.append("ML_gatekeeper_block")
+        # Temporarily set ML gate to OBSERVE_ONLY, not BLOCK
+        # dec.direction = "flat"
+        # dec.entry_allowed = False
+        dec.blocked_reasons.append("ML_gatekeeper_block (OBSERVE_ONLY)")
         
     return dec

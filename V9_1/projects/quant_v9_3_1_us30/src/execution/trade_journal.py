@@ -23,3 +23,28 @@ class PipelineAuditLog:
         except:
             pass
 
+    def write_loop_audit(self, symbol, tick_ok, broker_symbol, data_stale, regime_result, signal_result, ml_mode, ml_score, risk_decision, execution_mode, order_send_called, details=None):
+        import json
+        from datetime import datetime, timezone
+        entry = {
+            "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
+            "symbol": symbol,
+            "stage": "LOOP_AUDIT",
+            "tick_ok": tick_ok,
+            "broker_symbol": broker_symbol,
+            "data_stale": data_stale,
+            "regime_result": regime_result,
+            "signal_result": signal_result,
+            "ml_mode": ml_mode,
+            "ml_score": ml_score,
+            "risk_decision": risk_decision,
+            "execution_mode": execution_mode,
+            "order_send_called": order_send_called,
+            "details": details or {}
+        }
+        try:
+            with open(self.p, "a") as f:
+                f.write(json.dumps(entry) + "\n")
+        except:
+            pass
+
