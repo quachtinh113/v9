@@ -1,0 +1,15 @@
+2026-05-29 17:05:42,779 [INFO] MT5 Adapter connected and logged in successfully.
+2026-05-29 17:05:49,910 [INFO] [GATE:REGIME] XAUUSD - Regime: trend (ADX H1: 39.4, ATR Ratio: 0.13)
+2026-05-29 17:05:49,911 [INFO] [GATE:SIGNAL] XAUUSD - Direction: long, Score: 80.0, Blocks: ['ML_gatekeeper_block (OBSERVE_ONLY)']
+2026-05-29 17:05:49,911 [INFO] [GATE:ML] XAUUSD - Score: 0.4069, Decision: BLOCK, Reason: ML score 0.4069 below block threshold 0.50
+2026-05-29 17:05:49,916 [INFO] [GATE:RISK] XAUUSD - Action: ALLOW, Reasons: []
+2026-05-29 17:05:49,916 [INFO] [GATE:EXECUTION] XAUUSD - Approved. Sending order size: 5.58
+2026-05-29 17:05:49,916 INFO {"symbol": "XAUUSD", "order_type": "long", "volume": 0.01, "price": 4528.719, "sl": 4524.238573133656, "tp": 4535.439640299516, "comment": "QV9_XAUUSD_LONG", "comment_len": 15, "runtime_mode": "paper"}
+2026-05-29 17:05:49,916 [INFO] {"symbol": "XAUUSD", "order_type": "long", "volume": 0.01, "price": 4528.719, "sl": 4524.238573133656, "tp": 4535.439640299516, "comment": "QV9_XAUUSD_LONG", "comment_len": 15, "runtime_mode": "paper"}
+2026-05-29 17:06:50,198 [INFO] [GATE:REGIME] XAUUSD - Regime: trend (ADX H1: 39.4, ATR Ratio: 0.12)
+2026-05-29 17:06:50,198 [INFO] [GATE:SIGNAL] XAUUSD - Direction: long, Score: 80.0, Blocks: ['ML_gatekeeper_block (OBSERVE_ONLY)']
+2026-05-29 17:06:50,200 [INFO] [GATE:ML] XAUUSD - Score: 0.4069, Decision: BLOCK, Reason: ML score 0.4069 below block threshold 0.50
+2026-05-29 17:06:50,200 [INFO] [GATE:RISK] XAUUSD - Action: ALLOW, Reasons: []
+2026-05-29 17:06:50,200 [INFO] [GATE:EXECUTION] XAUUSD - Approved. Sending order size: 5.85
+2026-05-29 17:06:50,201 INFO {"symbol": "XAUUSD", "order_type": "long", "volume": 0.01, "price": 4528.585, "sl": 4524.3135849004775, "tp": 4534.992122649283, "comment": "QV9_XAUUSD_LONG", "comment_len": 15, "runtime_mode": "paper"}
+2026-05-29 17:06:50,201 [INFO] {"symbol": "XAUUSD", "order_type": "long", "volume": 0.01, "price": 4528.585, "sl": 4524.3135849004775, "tp": 4534.992122649283, "comment": "QV9_XAUUSD_LONG", "comment_len": 15, "runtime_mode": "paper"}

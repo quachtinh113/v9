@@ -19,6 +19,7 @@ target_projects = [
 ]
 
 files_to_sync = [
+    "src/main.py",
     "src/core/models.py",
     "src/data/mt5_live_adapter.py",
     "src/execution/mt5_adapter.py",
@@ -26,7 +27,8 @@ files_to_sync = [
     "src/execution/trade_journal.py",
     "src/pipeline_live.py",
     "tests/test_execution_logic.py",
-    "src/core/signal_engine.py"
+    "src/core/signal_engine.py",
+    "src/ml/xgb_filter.py"
 ]
 
 for target in target_projects:

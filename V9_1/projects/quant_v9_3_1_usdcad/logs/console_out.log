@@ -1,0 +1,11 @@
+Runtime Mode   : paper
+Execution Mode : Paper
+MT5 Account    : 272576224
+MT5 Server     : Exness-MT5Trial14
+Allow Real Trading : false
+Runtime Mode   : paper
+Data Source    : MT5_REALTIME
+Execution Mode : PAPER
+Real Order Send Enabled: False
+[DIAGNOSTIC] symbol=USDCAD | timestamp=2026-05-29 10:01:00+00:00 | regime=trend | rsi_m15=68.15 | rsi_h1=N/A | rsi_h4=N/A | adx=34.21 | atr=0.000088 | raw_signal=flat | signal_score=60 | ml_score=0.5974 | ml_threshold=0.50 | ml_decision=PASS | risk_decision=N/A | final_action=BLOCKED_BY_SIGNAL | block_reason=['trend_biases_mismatch_m15=long_h1=short_h4=short', 'score_below_threshold_60_vs_70']
+[DIAGNOSTIC] symbol=USDCAD | timestamp=2026-05-29 10:06:00+00:00 | regime=trend | rsi_m15=68.15 | rsi_h1=N/A | rsi_h4=N/A | adx=34.21 | atr=0.000088 | raw_signal=flat | signal_score=60 | ml_score=0.5974 | ml_threshold=0.50 | ml_decision=PASS | risk_decision=N/A | final_action=BLOCKED_BY_SIGNAL | block_reason=['trend_biases_mismatch_m15=long_h1=short_h4=short', 'score_below_threshold_60_vs_70']

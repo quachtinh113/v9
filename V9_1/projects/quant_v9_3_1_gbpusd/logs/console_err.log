@@ -1,0 +1,12 @@
+2026-05-29 17:05:42,779 [INFO] MT5 Adapter connected and logged in successfully.
+2026-05-29 17:05:49,755 [INFO] [GATE:REGIME] GBPUSD - Regime: off_session (ADX H1: 28.0, ATR Ratio: 0.05)
+2026-05-29 17:05:49,756 [INFO] [GATE:SIGNAL] GBPUSD - Direction: flat, Score: 30.0, Blocks: ['off_session_regime_no_trade', 'invalid_session_off', 'no_trade_in_regime_off_session', 'score_below_threshold_30_vs_70']
+2026-05-29 17:05:49,756 [INFO] [GATE:ML] GBPUSD - Score: 0.1733, Decision: PASS, Reason: Signal is already flat
+2026-05-29 17:05:49,756 [INFO] [GATE:EXECUTION] GBPUSD - Flat or no signal. No order sent.
+2026-05-29 17:06:50,113 [INFO] [GATE:REGIME] GBPUSD - Regime: trend (ADX H1: 24.0, ATR Ratio: 0.14)
+2026-05-29 17:06:50,113 [INFO] [GATE:SIGNAL] GBPUSD - Direction: short, Score: 80.0, Blocks: ['ML_gatekeeper_block (OBSERVE_ONLY)']
+2026-05-29 17:06:50,113 [INFO] [GATE:ML] GBPUSD - Score: 0.2115, Decision: BLOCK, Reason: ML score 0.2115 below block threshold 0.50
+2026-05-29 17:06:50,121 [INFO] [GATE:RISK] GBPUSD - Action: ALLOW, Reasons: []
+2026-05-29 17:06:50,121 [INFO] [GATE:EXECUTION] GBPUSD - Approved. Sending order size: 104100.05
+2026-05-29 17:06:50,123 INFO {"symbol": "GBPUSD", "order_type": "short", "volume": 0.01, "price": 1.34148, "sl": 1.3417201535893188, "tp": 1.3411026157882133, "comment": "QV9_GBPUSD_SHORT", "comment_len": 16, "runtime_mode": "paper"}
+2026-05-29 17:06:50,123 [INFO] {"symbol": "GBPUSD", "order_type": "short", "volume": 0.01, "price": 1.34148, "sl": 1.3417201535893188, "tp": 1.3411026157882133, "comment": "QV9_GBPUSD_SHORT", "comment_len": 16, "runtime_mode": "paper"}

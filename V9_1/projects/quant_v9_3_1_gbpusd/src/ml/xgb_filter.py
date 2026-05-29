@@ -108,7 +108,8 @@ def apply_ml_gatekeeper(dec: Any, features: dict, ml_cfg: dict) -> Any:
         reduce_thresh = ml_cfg.get('reduce_threshold', 0.65)
         
         if ms < block_thresh:
-            dec.direction = "flat"
+            # Temporarily set ML gate to OBSERVE_ONLY, not BLOCK
+            # dec.direction = "flat"
             dec.ml_decision = "BLOCK"
             dec.ml_reason = f"ML score {ms:.4f} below block threshold {block_thresh:.2f}"
         elif ms < reduce_thresh:

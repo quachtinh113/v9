@@ -1,0 +1,9 @@
+2026-05-29 17:05:42,779 [INFO] MT5 Adapter connected and logged in successfully.
+2026-05-29 17:05:49,115 [INFO] [GATE:REGIME] USDJPY - Regime: transition (ADX H1: 29.0, ATR Ratio: 0.12)
+2026-05-29 17:05:49,116 [INFO] [GATE:SIGNAL] USDJPY - Direction: flat, Score: 40.0, Blocks: ['transition_regime_disabled', 'no_trade_in_regime_transition', 'score_below_threshold_40_vs_70']
+2026-05-29 17:05:49,116 [INFO] [GATE:ML] USDJPY - Score: 0.3532, Decision: PASS, Reason: Signal is already flat
+2026-05-29 17:05:49,116 [INFO] [GATE:EXECUTION] USDJPY - Flat or no signal. No order sent.
+2026-05-29 17:06:49,287 [INFO] [GATE:REGIME] USDJPY - Regime: transition (ADX H1: 29.0, ATR Ratio: 0.13)
+2026-05-29 17:06:49,287 [INFO] [GATE:SIGNAL] USDJPY - Direction: flat, Score: 40.0, Blocks: ['transition_regime_disabled', 'no_trade_in_regime_transition', 'score_below_threshold_40_vs_70']
+2026-05-29 17:06:49,287 [INFO] [GATE:ML] USDJPY - Score: 0.3532, Decision: PASS, Reason: Signal is already flat
+2026-05-29 17:06:49,287 [INFO] [GATE:EXECUTION] USDJPY - Flat or no signal. No order sent.

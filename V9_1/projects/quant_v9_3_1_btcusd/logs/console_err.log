@@ -1,0 +1,9 @@
+2026-05-29 17:05:42,778 [INFO] MT5 Adapter connected and logged in successfully.
+2026-05-29 17:05:49,759 [INFO] [GATE:REGIME] BTCUSD - Regime: trend (ADX H1: 28.7, ATR Ratio: 0.07)
+2026-05-29 17:05:49,759 [INFO] [GATE:SIGNAL] BTCUSD - Direction: flat, Score: 60.0, Blocks: ['trend_biases_mismatch_m15=long_h1=short_h4=short', 'score_below_threshold_60_vs_70']
+2026-05-29 17:05:49,759 [INFO] [GATE:ML] BTCUSD - Score: 0.4872, Decision: PASS, Reason: Signal is already flat
+2026-05-29 17:05:49,759 [INFO] [GATE:EXECUTION] BTCUSD - Flat or no signal. No order sent.
+2026-05-29 17:06:50,135 [INFO] [GATE:REGIME] BTCUSD - Regime: trend (ADX H1: 28.7, ATR Ratio: 0.07)
+2026-05-29 17:06:50,135 [INFO] [GATE:SIGNAL] BTCUSD - Direction: flat, Score: 60.0, Blocks: ['trend_biases_mismatch_m15=long_h1=short_h4=short', 'score_below_threshold_60_vs_70']
+2026-05-29 17:06:50,135 [INFO] [GATE:ML] BTCUSD - Score: 0.4872, Decision: PASS, Reason: Signal is already flat
+2026-05-29 17:06:50,135 [INFO] [GATE:EXECUTION] BTCUSD - Flat or no signal. No order sent.

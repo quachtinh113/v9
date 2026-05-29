@@ -1,0 +1,9 @@
+2026-05-29 17:05:42,778 [INFO] MT5 Adapter connected and logged in successfully.
+2026-05-29 17:05:49,704 [INFO] [GATE:REGIME] USDCAD - Regime: trend (ADX H1: 34.2, ATR Ratio: 0.11)
+2026-05-29 17:05:49,704 [INFO] [GATE:SIGNAL] USDCAD - Direction: flat, Score: 60.0, Blocks: ['trend_biases_mismatch_m15=long_h1=short_h4=short', 'score_below_threshold_60_vs_70']
+2026-05-29 17:05:49,704 [INFO] [GATE:ML] USDCAD - Score: 0.5974, Decision: PASS, Reason: Signal is already flat
+2026-05-29 17:05:49,704 [INFO] [GATE:EXECUTION] USDCAD - Flat or no signal. No order sent.
+2026-05-29 17:06:49,893 [INFO] [GATE:REGIME] USDCAD - Regime: trend (ADX H1: 34.2, ATR Ratio: 0.11)
+2026-05-29 17:06:49,893 [INFO] [GATE:SIGNAL] USDCAD - Direction: flat, Score: 60.0, Blocks: ['trend_biases_mismatch_m15=long_h1=short_h4=short', 'score_below_threshold_60_vs_70']
+2026-05-29 17:06:49,893 [INFO] [GATE:ML] USDCAD - Score: 0.5974, Decision: PASS, Reason: Signal is already flat
+2026-05-29 17:06:49,893 [INFO] [GATE:EXECUTION] USDCAD - Flat or no signal. No order sent.

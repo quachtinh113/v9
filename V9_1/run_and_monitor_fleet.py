@@ -62,7 +62,6 @@ def start_bots():
             assert os.getenv("HUMAN_LIVE_CONFIRM") == "YES_I_ACCEPT_LIVE_RISK", "HUMAN_LIVE_CONFIRM is not YES_I_ACCEPT_LIVE_RISK"
             print("[SECURITY CHECK] Live mode authorized and verified.")
         except AssertionError as e:
-            import json
             from datetime import datetime, timezone
             global_log = Path("c:/Quant Trade/v9/V9_1/logs/live_pipeline_audit.ndjson")
             global_log.parent.mkdir(parents=True, exist_ok=True)
@@ -207,23 +206,23 @@ def generate_report(counts, alerts, start_time, final=False):
     alert_messages = []
     # 1. No raw signals for 6 hours
     if duration >= 21600 and total_raw == 0:
-        alert_messages.append("⚠️ WARNING: No raw signals generated for over 6 hours.")
+        alert_messages.append("[WARN] WARNING: No raw signals generated for over 6 hours.")
     # 2. ML reject rate > 85%
     if total_raw >= 10 and (total_ml_rejected / total_raw) > 0.85:
-        alert_messages.append(f"⚠️ WARNING: ML Filter rejection rate is extremely high ({total_ml_rejected/total_raw*100:.1f}%).")
+        alert_messages.append(f"[WARN] WARNING: ML Filter rejection rate is extremely high ({total_ml_rejected/total_raw*100:.1f}%).")
     # 3. Heartbeat missing/stale for any bot
     stale_bots = []
     for sym, last_time in counts["symbol_freshness"].items():
         if time.time() - last_time > 300:
             stale_bots.append(sym)
     if stale_bots:
-        alert_messages.append(f"⚠️ WARNING: Heartbeats missing or stale (>5 min) for: {', '.join(stale_bots)}.")
+        alert_messages.append(f"[WARN] WARNING: Heartbeats missing or stale (>5 min) for: {', '.join(stale_bots)}.")
     # 4. Crashed bots
     if alerts["crashed_bots"]:
-        alert_messages.append(f"🚨 CRITICAL: Deployed bot processes crashed: {', '.join(alerts['crashed_bots'])}.")
+        alert_messages.append(f"[CRITICAL] CRITICAL: Deployed bot processes crashed: {', '.join(alerts['crashed_bots'])}.")
     # 5. Risk hard kill active
     if counts["block_reasons"].get("HARD_KILL", 0) > 0:
-        alert_messages.append("🚨 CRITICAL: Risk HARD_KILL veto was triggered during operations.")
+        alert_messages.append("[CRITICAL] CRITICAL: Risk HARD_KILL veto was triggered during operations.")
     
     status_str = "SUCCESSFUL" if (total_raw > 0 and total_ml_approved > 0 and total_exec_ready > 0 and not alerts["crashed_bots"]) else "PENDING/OBSERVING"
     if final:
@@ -371,7 +370,7 @@ def tail_logs(processes, counts, last_setup_times, alerts, start_time):
                 if p.poll() is not None:
                     if sym not in alerts["crashed_bots"]:
                         alerts["crashed_bots"].add(sym)
-                        print(f"🚨 WARNING: Bot [{sym}] has crashed or stopped! Exit code: {p.poll()}")
+                        print(f"[WARN] WARNING: Bot [{sym}] has crashed or stopped! Exit code: {p.poll()}")
                         err_log_path = root_dir / f"quant_v9_3_1_{sym.lower()}" / "logs" / "console_err.log"
                         if err_log_path.exists():
                             with open(err_log_path, "r", errors="ignore") as ef:

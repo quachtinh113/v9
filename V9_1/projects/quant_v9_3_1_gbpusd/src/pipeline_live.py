@@ -51,6 +51,7 @@ class LivePipeline:
         self.audit_log = PipelineAuditLog(root / "logs" / "live_pipeline_audit.ndjson")
         if self.execution_mode == "live":
             try:
+                assert self.runtime_mode == "live", f"BLOCKED: self.runtime_mode must be 'live' (current: {self.runtime_mode})"
                 assert os.getenv("ALLOW_REAL_TRADING") == "true", "ALLOW_REAL_TRADING is not true"
                 assert os.getenv("HUMAN_LIVE_CONFIRM") == "YES_I_ACCEPT_LIVE_RISK", "HUMAN_LIVE_CONFIRM is not YES_I_ACCEPT_LIVE_RISK"
                 assert os.getenv("LIVE_DEMO_ALLOWED") == "true", "LIVE_DEMO_ALLOWED is not true"
@@ -61,6 +62,8 @@ class LivePipeline:
                     raise AssertionError("Could not retrieve MetaTrader5 account info for live mode verification")
                 
                 trade_mode = getattr(acc_info, 'trade_mode', None)
+                if trade_mode != mt5.ACCOUNT_TRADE_MODE_DEMO and trade_mode != 0:
+                    raise AssertionError(f"BLOCKED: Live execution ONLY allowed on DEMO account (trade_mode={trade_mode})")
                 if trade_mode == mt5.ACCOUNT_TRADE_MODE_REAL or trade_mode == 2:
                     raise AssertionError(f"BLOCKED: Live execution attempted on a REAL account (trade_mode={trade_mode})")
                 
@@ -111,7 +114,10 @@ class LivePipeline:
             "ml_mode": "observe_only",
             "ml_score": 0.0,
             "risk_decision": "N/A",
-            "order_send_called": False
+            "order_send_called": False,
+            "ml_ok": True,
+            "mt5_ok": False,
+            "tick_age": 999999999
         }
         
         try:
@@ -150,6 +156,56 @@ class LivePipeline:
             logger.error(f"Error in tick: {e}")
             raise e
         finally:
+            # 1. Write Heartbeats
+            try:
+                import json
+                from datetime import datetime, timezone
+                metrics = getattr(self, "last_tick_metrics", {})
+                (self.root / "logs").mkdir(parents=True, exist_ok=True)
+                hb_entry = {
+                    "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
+                    "symbol": self.symbol,
+                    "ml_ok": metrics.get("ml_ok", True),
+                    "mt5_ok": metrics.get("mt5_ok", False),
+                    "tick_age": metrics.get("tick_age", 999999999)
+                }
+                with open(self.root / "logs" / "heartbeat.jsonl", "w") as f_hb:
+                    f_hb.write(json.dumps(hb_entry) + "\n")
+            except Exception as e:
+                if hasattr(self, 'audit_log') and self.audit_log:
+                    self.audit_log.write_blocked(
+                        reason="LOCAL_HEARTBEAT_FAILED",
+                        symbol=self.symbol,
+                        stage="DATA",
+                        details={"error": str(e)}
+                    )
+
+            try:
+                import json, time
+                from datetime import datetime, timezone
+                global_hb = self.root.parents[2] / "logs" / "heartbeat.jsonl"
+                global_hb.parent.mkdir(parents=True, exist_ok=True)
+                hb_entry = {
+                    "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
+                    "symbol": self.symbol
+                }
+                for _ in range(5):
+                    try:
+                        with open(global_hb, "w") as f_ghb:
+                            f_ghb.write(json.dumps(hb_entry) + "\n")
+                        break
+                    except IOError as e:
+                        time.sleep(0.1)
+            except Exception as e:
+                if hasattr(self, 'audit_log') and self.audit_log:
+                    self.audit_log.write_blocked(
+                        reason="GLOBAL_HEARTBEAT_FAILED",
+                        symbol=self.symbol,
+                        stage="DATA",
+                        details={"error": str(e)}
+                    )
+
+            # 2. Write Loop Audit Log
             if hasattr(self, 'audit_log') and self.audit_log:
                 self.audit_log.write_loop_audit(
                     symbol=self.symbol,
@@ -325,59 +381,10 @@ class LivePipeline:
                 }
             )
 
-        # ------------------ DYNAMIC OBSERVE HEARTBEATS ------------------
-        # 1. Local Heartbeat
-        try:
-            import json
-            from datetime import datetime, timezone
-            (self.root / "logs").mkdir(parents=True, exist_ok=True)
-            hb_entry = {
-                "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
-                "symbol": self.symbol,
-                "ml_ok": ml_ok,
-                "mt5_ok": mt5_connected,
-                "tick_age": tick_age_seconds
-            }
-            with open(self.root / "logs" / "heartbeat.jsonl", "w") as f_hb:
-                f_hb.write(json.dumps(hb_entry) + "\n")
-        except Exception as e:
-            self.audit_log.write_blocked(
-                reason="LOCAL_HEARTBEAT_FAILED",
-                symbol=self.symbol,
-                stage="DATA",
-                details={"error": str(e)}
-            )
-
-        # 2. Global Heartbeat robustly
-        try:
-            import json, time
-            from datetime import datetime, timezone
-            global_hb = self.root.parents[2] / "logs" / "heartbeat.jsonl"
-            global_hb.parent.mkdir(parents=True, exist_ok=True)
-            hb_entry = {
-                "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
-                "symbol": self.symbol
-            }
-            for _ in range(5):
-                try:
-                    with open(global_hb, "w") as f_ghb:
-                        f_ghb.write(json.dumps(hb_entry) + "\n")
-                    break
-                except IOError as e:
-                    self.audit_log.write_blocked(
-                        reason="GLOBAL_HEARTBEAT_IO_ERROR",
-                        symbol=self.symbol,
-                        stage="DATA",
-                        details={"error": str(e)}
-                    )
-                    time.sleep(0.1)
-        except Exception as e:
-            self.audit_log.write_blocked(
-                reason="GLOBAL_HEARTBEAT_FAILED",
-                symbol=self.symbol,
-                stage="DATA",
-                details={"error": str(e)}
-            )
+        # Heartbeat variables are stored in self.last_tick_metrics and written in the finally block of tick()
+        self.last_tick_metrics["ml_ok"] = ml_ok
+        self.last_tick_metrics["mt5_ok"] = mt5_connected
+        self.last_tick_metrics["tick_age"] = tick_age_seconds
 
         # ------------------ PIPELINE GATE LOGGING ------------------
         # 1. Regime Gate

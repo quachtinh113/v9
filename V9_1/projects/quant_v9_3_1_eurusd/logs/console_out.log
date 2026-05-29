@@ -1,0 +1,11 @@
+Runtime Mode   : paper
+Execution Mode : Paper
+MT5 Account    : 272576224
+MT5 Server     : Exness-MT5Trial14
+Allow Real Trading : false
+Runtime Mode   : paper
+Data Source    : MT5_REALTIME
+Execution Mode : PAPER
+Real Order Send Enabled: False
+[DIAGNOSTIC] symbol=EURUSD | timestamp=2026-05-29 09:59:00+00:00 | regime=transition | rsi_m15=44.81 | rsi_h1=N/A | rsi_h4=N/A | adx=18.74 | atr=0.000113 | raw_signal=flat | signal_score=40 | ml_score=0.4095 | ml_threshold=0.50 | ml_decision=PASS | risk_decision=N/A | final_action=BLOCKED_BY_SIGNAL | block_reason=['transition_regime_disabled', 'no_trade_in_regime_transition', 'score_below_threshold_40_vs_70']
+[DIAGNOSTIC] symbol=EURUSD | timestamp=2026-05-29 10:06:00+00:00 | regime=sideway | rsi_m15=50.29 | rsi_h1=N/A | rsi_h4=N/A | adx=17.67 | atr=0.000120 | raw_signal=flat | signal_score=50 | ml_score=0.1943 | ml_threshold=0.50 | ml_decision=PASS | risk_decision=N/A | final_action=BLOCKED_BY_SIGNAL | block_reason=['rsi_not_in_mean_reversion_bounds_50.3', 'rsi_neutral_in_sideway', 'score_below_threshold_50_vs_70']

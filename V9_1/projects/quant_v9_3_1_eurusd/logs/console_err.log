@@ -1,0 +1,9 @@
+2026-05-29 17:05:42,777 [INFO] MT5 Adapter connected and logged in successfully.
+2026-05-29 17:05:49,889 [INFO] [GATE:REGIME] EURUSD - Regime: transition (ADX H1: 18.7, ATR Ratio: 0.11)
+2026-05-29 17:05:49,890 [INFO] [GATE:SIGNAL] EURUSD - Direction: flat, Score: 40.0, Blocks: ['transition_regime_disabled', 'no_trade_in_regime_transition', 'score_below_threshold_40_vs_70']
+2026-05-29 17:05:49,890 [INFO] [GATE:ML] EURUSD - Score: 0.4095, Decision: PASS, Reason: Signal is already flat
+2026-05-29 17:05:49,891 [INFO] [GATE:EXECUTION] EURUSD - Flat or no signal. No order sent.
+2026-05-29 17:06:50,211 [INFO] [GATE:REGIME] EURUSD - Regime: sideway (ADX H1: 17.7, ATR Ratio: 0.11)
+2026-05-29 17:06:50,211 [INFO] [GATE:SIGNAL] EURUSD - Direction: flat, Score: 50.0, Blocks: ['rsi_not_in_mean_reversion_bounds_50.3', 'rsi_neutral_in_sideway', 'score_below_threshold_50_vs_70']
+2026-05-29 17:06:50,211 [INFO] [GATE:ML] EURUSD - Score: 0.1943, Decision: PASS, Reason: Signal is already flat
+2026-05-29 17:06:50,211 [INFO] [GATE:EXECUTION] EURUSD - Flat or no signal. No order sent.
