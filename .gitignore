@@ -8,6 +8,7 @@ __pycache__/
 
 # Quant V9 Fleet runtime logs and database exclusions
 logs/
+diagnostics/
 *.log
 *.jsonl
 *.ndjson
