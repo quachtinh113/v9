@@ -114,12 +114,12 @@
         "volatility_preference": "LOW_VOLATILITY"
     },
     "rejected_setups": [
-        "breakout",
-        "trend continuation",
         "session breakout",
+        "trend continuation",
+        "mean reversion",
         "volatility expansion",
-        "RSI recovery",
-        "mean reversion"
+        "breakout",
+        "RSI recovery"
     ],
     "portfolio_metrics": {
         "total_trades": 0,

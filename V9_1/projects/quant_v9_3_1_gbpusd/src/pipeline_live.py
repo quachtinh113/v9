@@ -1,5 +1,5 @@
 from __future__ import annotations
-import logging, time, argparse
+import logging, time, argparse, os
 from pathlib import Path
 from src.utils.config import load_yaml
 from src.utils.telegram_bot import TelegramBot
@@ -13,8 +13,10 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 logger = logging.getLogger(__name__)
 
 class LivePipeline:
-    def __init__(self, root: Path):
+    def __init__(self, root: Path, runtime_mode: str = "live"):
         self.root = root
+        self.runtime_mode = runtime_mode
+        self.execution_mode = "paper" if runtime_mode == "paper" else "live"
         self.config = load_yaml(root / "config" / "symbol.yaml")
         # Telegram & Model Path Setup
         tg_cfg = self.config.get("telegram", {})
@@ -43,8 +45,17 @@ class LivePipeline:
             enabled=mt5_cfg.get("enabled", False)
         )
         self.adapter.connect()
+        # Pass execution mode into router config
+        exec_cfg["mode"] = self.execution_mode
         self.journal = TradeJournal(root / "logs" / "live_journal.jsonl")
         self.audit_log = PipelineAuditLog(root / "logs" / "live_pipeline_audit.ndjson")
+        if self.execution_mode == "live":
+            try:
+                assert os.getenv("ALLOW_REAL_TRADING") == "true", "ALLOW_REAL_TRADING is not true"
+                assert os.getenv("HUMAN_LIVE_CONFIRM") == "YES_I_ACCEPT_LIVE_RISK", "HUMAN_LIVE_CONFIRM is not YES_I_ACCEPT_LIVE_RISK"
+            except AssertionError as e:
+                self.audit_log.write_blocked("LIVE_PERMISSION_NOT_CONFIRMED", self.symbol, stage="EXECUTION", details={"error": str(e)})
+                raise RuntimeError(f"LIVE_PERMISSION_NOT_CONFIRMED: Live mode blocked for {self.symbol} due to assertion failure: {e}")
         self.router = OrderRouter(self.adapter, exec_cfg, self.journal, telegram=self.telegram)
         
         from src.core.risk_engine import RiskGateway
@@ -58,13 +69,97 @@ class LivePipeline:
         
         if self.telegram.enabled:
             self.telegram.send_message(f"✅ <b>Pipeline Started</b> [{self.symbol}]\nMT5: {'Live' if self.adapter.enabled else 'Paper'}")
+        # Startup summary prints
+        print(f"Runtime Mode   : {self.runtime_mode}")
+        print("Data Source    : MT5_REALTIME")
+        print(f"Execution Mode : {'PAPER' if self.execution_mode == 'paper' else 'LIVE'}")
+        print(f"Real Order Send Enabled: {self.execution_mode == 'live'}")
 
     def tick(self):
-        csv = resolve_csv_source(self.root, self.symbol)
-        df = load_ohlcv_csv(csv)
-        ft = build_feature_table(df)
-        if ft.empty: return
+        try:
+            return self._tick_internal()
+        except Exception as e:
+            from src.core.models import DataIncompleteError
+            if not isinstance(e, DataIncompleteError):
+                stage = "DATA"
+                if "Risk" in type(e).__name__ or "risk" in str(e).lower():
+                    stage = "RISK"
+                elif "Order" in type(e).__name__ or "router" in str(e).lower():
+                    stage = "EXECUTION"
+                elif "Strategy" in type(e).__name__:
+                    stage = "SIGNAL"
+                
+                if hasattr(self, 'audit_log') and self.audit_log:
+                    self.audit_log.write_blocked(
+                        reason="UNHANDLED_EXCEPTION",
+                        symbol=self.symbol,
+                        stage=stage,
+                        details={"error_type": type(e).__name__, "message": str(e)}
+                    )
+            logger.error(f"Error in tick: {e}")
+            raise e
+
+    def _tick_internal(self):
+        # MT5 Live Data Adapter Integration
+        if not hasattr(self, 'live_adapter'):
+            from src.data.mt5_live_adapter import MT5LiveAdapter
+            mt5_cfg = load_yaml(self.root / "config" / "mt5_demo.yaml").get("mt5", {})
+            self.live_adapter = MT5LiveAdapter(
+                login=mt5_cfg.get("login"),
+                password=mt5_cfg.get("password"),
+                server=mt5_cfg.get("server")
+            )
+            self.live_adapter.initialize_mt5()
+        
+        data_source = "csv"
+        rates_sizes = {"M5":0, "M15":0, "H1":0, "H4":0}
+        tick_age_seconds = 999999999
+        mt5_connected = self.live_adapter.connected
+        symbol_visible = False
+        broker_symbol = self.symbol
+        tick_time = None
+        
+        if mt5_connected:  # Data feed always enabled in both modes
+            data_source = "mt5_live"
+            broker_symbol = self.live_adapter.resolve_broker_symbol(self.symbol, self.audit_log)
+            symbol_visible = True
+            
+            latest_tick = self.live_adapter.get_latest_tick(broker_symbol)
+            if latest_tick:
+                from datetime import datetime, timezone
+                tick_time = datetime.fromtimestamp(latest_tick.time, tz=timezone.utc)
+                tick_age_seconds = (datetime.now(timezone.utc) - tick_time).total_seconds()
+            
+            ft, rates_sizes = self.live_adapter.build_live_feature_table(broker_symbol, self.audit_log)
+        else:
+            csv = resolve_csv_source(self.root, self.symbol)
+            df = load_ohlcv_csv(csv)
+            ft = build_feature_table(df)
+            
+        if ft is None or ft.empty:
+            self.audit_log.write_blocked(
+                reason="EMPTY_OR_NONE_FEATURE_TABLE",
+                symbol=self.symbol,
+                stage="DATA",
+                details={"data_source": data_source, "mt5_connected": mt5_connected}
+            )
+            from src.core.models import DataIncompleteError
+            raise DataIncompleteError("Feature table is empty or None")
         row = ft.iloc[-1].to_dict()
+        
+        if data_source == "csv" and "timestamp" in row:
+            from datetime import datetime, timezone
+            try:
+                import pandas as pd
+                ts_pd = pd.to_datetime(row["timestamp"])
+                tick_age_seconds = (datetime.now(timezone.utc) - ts_pd).total_seconds()
+            except Exception as e:
+                self.audit_log.write_blocked(
+                    reason="TIMESTAMP_PARSE_FAILED",
+                    symbol=self.symbol,
+                    stage="DATA",
+                    details={"error": str(e)}
+                )
         
         # Reset daily/weekly metrics at boundary crossings
         ts = row.get("timestamp")
@@ -77,8 +172,13 @@ class LivePipeline:
                     self.peak_equity = self.equity
                     self.loss_streak = 0
                     self.last_date = current_date
-            except Exception:
-                pass
+            except Exception as e:
+                self.audit_log.write_blocked(
+                    reason="DAILY_METRIC_RESET_FAILED",
+                    symbol=self.symbol,
+                    stage="DATA",
+                    details={"error": str(e)}
+                )
                 
             try:
                 import pandas as pd
@@ -86,10 +186,128 @@ class LivePipeline:
                 if self.last_week is None or current_week != self.last_week:
                     self.week_peak_equity = self.equity
                     self.last_week = current_week
-            except Exception:
-                pass
+            except Exception as e:
+                self.audit_log.write_blocked(
+                    reason="WEEKLY_METRIC_RESET_FAILED",
+                    symbol=self.symbol,
+                    stage="DATA",
+                    details={"error": str(e)}
+                )
 
+        # Stale data guard
+        stale_veto = False
+        max_tick_age_seconds = 300 # 5 minutes
+        if tick_age_seconds > max_tick_age_seconds and data_source == "mt5_live":
+            stale_veto = True
+            
         plan, decision = self.strategy.generate_trade_plan(row, self.config)
+        
+        if stale_veto:
+            decision.direction = "flat"
+            decision.reason = "STALE_MT5_TICK"
+            decision.blocked_reasons.append("stale_data_veto")
+
+        # Determine ML loading status
+        ml_ok = True
+        if decision and decision.ml_decision == "BLOCK" and "ML Error" in getattr(decision, "ml_reason", ""):
+            ml_ok = False
+
+        # Stage bypass/block auditing
+        if not (plan and decision.direction in {"long", "short"}):
+            self.audit_log.write_blocked(
+                reason="STRATEGY_FLAT" if decision.direction == "flat" else "NO_STRATEGY_PLAN",
+                symbol=self.symbol,
+                stage="SIGNAL",
+                details={
+                    "regime": decision.regime,
+                    "direction": decision.direction,
+                    "blocked_reasons": decision.blocked_reasons,
+                    "indicators": {
+                        "rsi14_m15": row.get("rsi14_m15"),
+                        "adx14_h1": row.get("adx14_h1"),
+                        "atr14_m1": row.get("atr14_m1")
+                    }
+                }
+            )
+        
+        if decision and decision.ml_decision == "BLOCK":
+            self.audit_log.write_blocked(
+                reason="ML_GATEKEEPER_BLOCK",
+                symbol=self.symbol,
+                stage="SIGNAL",
+                details={
+                    "ml_score": decision.ml_score,
+                    "ml_reason": decision.ml_reason
+                }
+            )
+
+        # ------------------ DYNAMIC OBSERVE HEARTBEATS ------------------
+        # 1. Local Heartbeat
+        try:
+            import json
+            from datetime import datetime, timezone
+            (self.root / "logs").mkdir(parents=True, exist_ok=True)
+            hb_entry = {
+                "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
+                "symbol": self.symbol,
+                "ml_ok": ml_ok,
+                "mt5_ok": mt5_connected,
+                "tick_age": tick_age_seconds
+            }
+            with open(self.root / "logs" / "heartbeat.jsonl", "w") as f_hb:
+                f_hb.write(json.dumps(hb_entry) + "\n")
+        except Exception as e:
+            self.audit_log.write_blocked(
+                reason="LOCAL_HEARTBEAT_FAILED",
+                symbol=self.symbol,
+                stage="DATA",
+                details={"error": str(e)}
+            )
+
+        # 2. Global Heartbeat robustly
+        try:
+            import json, time
+            from datetime import datetime, timezone
+            global_hb = self.root.parents[2] / "logs" / "heartbeat.jsonl"
+            global_hb.parent.mkdir(parents=True, exist_ok=True)
+            hb_entry = {
+                "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
+                "symbol": self.symbol
+            }
+            for _ in range(5):
+                try:
+                    with open(global_hb, "w") as f_ghb:
+                        f_ghb.write(json.dumps(hb_entry) + "\n")
+                    break
+                except IOError as e:
+                    self.audit_log.write_blocked(
+                        reason="GLOBAL_HEARTBEAT_IO_ERROR",
+                        symbol=self.symbol,
+                        stage="DATA",
+                        details={"error": str(e)}
+                    )
+                    time.sleep(0.1)
+        except Exception as e:
+            self.audit_log.write_blocked(
+                reason="GLOBAL_HEARTBEAT_FAILED",
+                symbol=self.symbol,
+                stage="DATA",
+                details={"error": str(e)}
+            )
+
+        # ------------------ PIPELINE GATE LOGGING ------------------
+        # 1. Regime Gate
+        logger.info(f"[GATE:REGIME] {self.symbol} - Regime: {decision.regime} (ADX H1: {row.get('adx14_h1', 0.0):.1f}, ATR Ratio: {row.get('atr_ratio', 1.0):.2f})")
+        
+        # 2. Signal Gate
+        logger.info(f"[GATE:SIGNAL] {self.symbol} - Direction: {decision.direction}, Score: {decision.score}, Blocks: {decision.blocked_reasons}")
+        
+        # 3. ML Gate
+        logger.info(f"[GATE:ML] {self.symbol} - Score: {decision.ml_score:.4f}, Decision: {decision.ml_decision}, Reason: {decision.ml_reason}")
+        
+        risk_decision = None
+        res = None
+        
         if plan and decision.direction in {"long", "short"}:
             print(f"Signal: {decision.direction} Score: {decision.score} ML: {decision.ml_decision}")
             
@@ -125,6 +343,76 @@ class LivePipeline:
             }
             
             risk_decision = self.risk_gateway.full_gate(account_data, market_data)
+            if stale_veto:
+                risk_decision.action = "HARD_KILL"
+                risk_decision.reasons.append("stale_data")
+
+            # Risk Stage Veto Auditing
+            if risk_decision.action != "ALLOW":
+                self.audit_log.write_blocked(
+                    reason=risk_decision.action,
+                    symbol=self.symbol,
+                    stage="RISK",
+                    details={
+                        "reasons": risk_decision.reasons,
+                        "account_data": account_data,
+                        "market_data": market_data
+                    }
+                )
+
+            # 4. Risk Gate Logging
+            logger.info(f"[GATE:RISK] {self.symbol} - Action: {risk_decision.action}, Reasons: {risk_decision.reasons}")
+                
+            # Telegram critical alerts for HARD_KILL vetoes
+            if risk_decision.action == "HARD_KILL" and self.telegram.enabled:
+                try:
+                    self.telegram.send_message(
+                        f"🚨 <b>CRITICAL RISK HARD KILL TRIGGERED</b> [{self.symbol}]\n"
+                        f"Status: VETOED\n"
+                        f"Reasons: <code>{', '.join(risk_decision.reasons)}</code>\n"
+                        f"Daily Drawdown: {daily_dd:.2f}%\n"
+                        f"Weekly Drawdown: {weekly_dd:.2f}%\n"
+                        f"Loss Streak: {self.loss_streak}"
+                    )
+                except Exception as e:
+                    self.audit_log.write_blocked(
+                        reason="TELEGRAM_SEND_FAILED",
+                        symbol=self.symbol,
+                        stage="RISK",
+                        details={"error": str(e)}
+                    )
+
+            # Logging before NO_TRADE/VETO
+            if decision.direction == "flat" or risk_decision.action != "ALLOW":
+                try:
+                    import json
+                    from datetime import datetime, timezone
+                    log_entry = {
+                        "timestamp": str(datetime.now(timezone.utc)),
+                        "internal_symbol": self.symbol,
+                        "broker_symbol": broker_symbol,
+                        "mt5_connected": mt5_connected,
+                        "tick_time": str(tick_time) if tick_time else None,
+                        "tick_age_seconds": tick_age_seconds,
+                        "rates_rows_M5": rates_sizes.get("M5", 0),
+                        "rates_rows_M15": rates_sizes.get("M15", 0),
+                        "rates_rows_H1": rates_sizes.get("H1", 0),
+                        "rates_rows_H4": rates_sizes.get("H4", 0),
+                        "data_source": data_source,
+                        "decision": decision.direction,
+                        "reason_code": "stale_data" if stale_veto else ("strategy_flat" if decision.direction == "flat" else risk_decision.action),
+                        "reason_text": getattr(decision, "reason", "") + " | " + str(risk_decision.reasons),
+                        "indicator_values": {k: v for k, v in row.items() if isinstance(v, (int, float))}
+                    }
+                    with open(self.root / "logs" / "no_entry_audit.jsonl", "a") as flog:
+                        flog.write(json.dumps(log_entry) + "\n")
+                except Exception as e:
+                    self.audit_log.write_blocked(
+                        reason="NO_ENTRY_AUDIT_LOG_FAILED",
+                        symbol=self.symbol,
+                        stage="DATA",
+                        details={"error": str(e)}
+                    )
             
             # Log audit trail
             self.audit_log.write_tick(
@@ -137,13 +425,40 @@ class LivePipeline:
                 ml_decision=decision.ml_decision,
                 risk_action=risk_decision.action,
                 risk_reasons=risk_decision.reasons,
-                execution_status="paper_only",
+                execution_status=self.execution_mode,
                 position_size=plan.size
             )
             
             # Route order
-            res = self.router.route_order(plan, decision, risk_decision, bar_ts=str(ts))
-            print(f"Order Routing Result: {res}")
+            if risk_decision.action == "ALLOW":
+                # 5. Execution Gate Logging
+                logger.info(f"[GATE:EXECUTION] {self.symbol} - Approved. Sending order size: {plan.size}")
+                res = self.router.route_order(plan, decision, risk_decision, bar_ts=str(ts))
+                print(f"Order Routing Result: {res}")
+            else:
+                logger.info(f"[GATE:EXECUTION] {self.symbol} - Blocked by risk. No order sent.")
+        else:
+            # 5. Execution Gate Logging
+            logger.info(f"[GATE:EXECUTION] {self.symbol} - Flat or no signal. No order sent.")
+
+        # ------------------ DIAGNOSTIC MODE SUMMARY ------------------
+        import os
+        if os.getenv("DIAGNOSTIC_MODE", "false").lower() == "true":
+            risk_act = risk_decision.action if risk_decision else "N/A"
+            risk_reasons = risk_decision.reasons if risk_decision else []
+            final_act = "ORDER_SENT" if res else ("BLOCKED_BY_RISK" if (risk_act != "ALLOW" and risk_act != "N/A") else f"BLOCKED_BY_SIGNAL")
+            all_blocks = decision.blocked_reasons + risk_reasons
+            
+            ts_val = row.get("timestamp", "N/A")
+            raw_sig = getattr(decision, "raw_signal", decision.direction)
+            ml_thresh = self.config.get("ml", {}).get("block_threshold", 0.50)
+            
+            # Extract indicators safely
+            rsi_m15 = row.get("rsi14_m15", 0.0)
+            adx_val = row.get("adx14_h1", 0.0)
+            atr_val = row.get("atr14_m1", 0.001)
+            
+            print(f"[DIAGNOSTIC] symbol={self.symbol} | timestamp={ts_val} | regime={decision.regime} | rsi_m15={rsi_m15:.2f} | rsi_h1=N/A | rsi_h4=N/A | adx={adx_val:.2f} | atr={atr_val:.6f} | raw_signal={raw_sig} | signal_score={decision.score:.0f} | ml_score={decision.ml_score:.4f} | ml_threshold={ml_thresh:.2f} | ml_decision={decision.ml_decision} | risk_decision={risk_act} | final_action={final_act} | block_reason={all_blocks}")
 
     def run_loop(self):
         while True:

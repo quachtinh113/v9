@@ -5,6 +5,7 @@ import numpy as np
 from src.indicators.rsi import compute_rsi
 from src.indicators.adx import compute_adx
 from src.indicators.atr import compute_atr
+from src.utils.frequency import normalize_pandas_frequency
 
 def build_feature_table(df_m1: pd.DataFrame) -> pd.DataFrame:
     if df_m1.empty:
@@ -41,7 +42,7 @@ def build_feature_table(df_m1: pd.DataFrame) -> pd.DataFrame:
     bias_m15 = pd.Series(np.where(df_m15["close"] > ema50_m15, "long", "short"), index=df_m15.index).shift(1)
     
     # H1
-    df_h1 = df.resample("1H", closed="left", label="left").agg({
+    df_h1 = df.resample("1h", closed="left", label="left").agg({
         "open": "first", "high": "max", "low": "min", "close": "last", "volume": "sum"
     }).dropna()
     
@@ -52,7 +53,7 @@ def build_feature_table(df_m1: pd.DataFrame) -> pd.DataFrame:
     bias_h1 = pd.Series(np.where(df_h1["close"] > ema50_h1, "long", "short"), index=df_h1.index).shift(1)
     
     # H4
-    df_h4 = df.resample("4H", closed="left", label="left").agg({
+    df_h4 = df.resample(normalize_pandas_frequency("4H"), closed="left", label="left").agg({
         "open": "first", "high": "max", "low": "min", "close": "last", "volume": "sum"
     }).dropna()
     

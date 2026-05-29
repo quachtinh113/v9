@@ -1,2 +1,2 @@
 symbol,timestamp,initial_capital,ending_equity,realized_pnl,profit_factor,max_drawdown_pct,max_consecutive_losses,sharpe_ratio,sortino_ratio,monte_carlo_median_dd,monte_carlo_95_dd,ruin_probability,verdict
-GBPUSD,2026-05-22T19:47:55.198514,10000.0,9997.888122881432,-2.1118771185683727,0.8898179291379257,0.1913452314912723,2,-0.889782920379423,-45.97589741349685,0.19400568246874977,0.1973636605965315,0.0,DISABLED
+GBPUSD,2026-05-25T22:18:35.610676,10000.0,10000.0,0.0,inf,0.0,0,0.0,0.0,0.0,0.0,0.0,SANDBOX_ONLY

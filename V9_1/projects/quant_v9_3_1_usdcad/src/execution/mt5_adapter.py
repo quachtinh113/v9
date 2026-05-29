@@ -55,7 +55,40 @@ class MT5Adapter:
             self.connected = False
             return False
 
-    def send_order(self, req: Dict[str, Any]) -> Dict[str, Any]:
+    def resolve_broker_symbol(self, base_symbol: str, audit_logger=None) -> str:
+        if not self.connected: return base_symbol
+        mappings = {
+            "US100": "USTECm",
+            "US30": "US30m",
+            "US500": "US500m"
+        }
+        symbol_upper = base_symbol.upper()
+        if symbol_upper in mappings:
+            mapped_symbol = mappings[symbol_upper]
+            if mt5.symbol_select(mapped_symbol, True):
+                return mapped_symbol
+            base_symbol = mappings[symbol_upper][:-1]
+            
+        if mt5.symbol_select(base_symbol, True):
+            return base_symbol
+        for suffix in ["m", "c", "m1", "m2", "f", "i", "x"]:
+            sym = base_symbol + suffix
+            if mt5.symbol_select(sym, True):
+                return sym
+        # search all symbols
+        all_syms = mt5.symbols_get()
+        if all_syms:
+            for s in all_syms:
+                if s.name.upper() == base_symbol.upper() or s.name.upper() == (base_symbol + "M").upper():
+                    mt5.symbol_select(s.name, True)
+                    return s.name
+                    
+        if audit_logger:
+            audit_logger.write_blocked("SYMBOL_UNRESOLVED", base_symbol)
+        from src.core.models import DataIncompleteError
+        raise DataIncompleteError(f"Symbol {base_symbol} could not be resolved on MT5 broker.")
+
+    def send_order(self, req: Dict[str, Any], audit_logger=None) -> Dict[str, Any]:
         if not self.connected:
             # Safe paper trading response
             return {
@@ -70,23 +103,14 @@ class MT5Adapter:
             
         # MT5 execution logic
         symbol = req.get("symbol", "US30")
-        
-        # Try to select the symbol
-        if not mt5.symbol_select(symbol, True):
-            # Fallback mappings for Exness etc. (e.g. US30 -> US30m)
-            matched = False
-            for suffix in ["m", "", "m1", "m2"]:
-                candidate = symbol + suffix
-                if mt5.symbol_select(candidate, True):
-                    symbol = candidate
-                    matched = True
-                    break
-            if not matched:
-                return {
-                    "status": "failed",
-                    "comment": f"Failed to select symbol {symbol} or matches in MT5",
-                    "error_code": mt5.last_error()
-                }
+        try:
+            symbol = self.resolve_broker_symbol(symbol, audit_logger=audit_logger)
+        except Exception as e:
+            return {
+                "status": "failed",
+                "comment": f"Failed to select symbol {symbol} or matches in MT5: {e}",
+                "error_code": mt5.last_error()
+            }
 
         direction = req.get("direction")
         order_type = mt5.ORDER_TYPE_BUY if direction == "long" else mt5.ORDER_TYPE_SELL

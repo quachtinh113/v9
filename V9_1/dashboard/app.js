@@ -94,6 +94,9 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchData();
     loadArchitectureTab();
 
+    // Periodically poll backend API every 5 seconds for live heartbeats, status & logs
+    setInterval(fetchData, 5000);
+
     // Telemetry Slider listeners
     allocationSlider.addEventListener("input", (e) => {
         globalMultiplier = parseFloat(e.target.value);
@@ -209,8 +212,65 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // System Status UI Selection
+    const statusDot = document.querySelector(".status-dot");
+    const statusLabel = document.querySelector(".status-label");
+
+    function updateSystemHealth() {
+        if (!rawData || !rawData.system_status) return;
+        const state = rawData.system_status.state;
+        const reason = rawData.system_status.reason;
+        
+        statusLabel.textContent = `${state} - ${reason}`;
+        
+        statusDot.className = "status-dot pulsing";
+        if (state === "GREEN") {
+            statusDot.style.backgroundColor = "var(--accent-emerald)";
+            statusDot.style.boxShadow = "0 0 12px var(--accent-emerald)";
+        } else if (state === "YELLOW") {
+            statusDot.style.backgroundColor = "var(--accent-yellow)";
+            statusDot.style.boxShadow = "0 0 12px var(--accent-yellow)";
+        } else {
+            statusDot.style.backgroundColor = "var(--accent-rose)";
+            statusDot.style.boxShadow = "0 0 12px var(--accent-rose)";
+        }
+    }
+
+    function renderAssetMatrix() {
+        const fullAssetBody = document.getElementById("asset-matrix-full-body");
+        if (!fullAssetBody || !rawData) return;
+        
+        fullAssetBody.innerHTML = "";
+        rawData.assets.forEach(a => {
+            const row = document.createElement("tr");
+            
+            const isApproved = a.verdict === "APPROVED" || a.verdict === "INSTITUTIONAL_READY";
+            const verdictClass = a.verdict === "INSTITUTIONAL_READY" ? "APPROVED" : (a.verdict === "OFFLINE" ? "DISABLED" : a.verdict);
+            
+            const symbolStatusColor = a.symbol_status === "ACTIVE" ? "var(--accent-emerald)" : "var(--accent-rose)";
+            const dataStatusColor = a.data_status === "synced" ? "var(--accent-emerald)" : (a.data_status === "stale" ? "var(--accent-yellow)" : "var(--accent-rose)");
+            const modelStatusColor = a.model_status === "trained" ? "var(--accent-emerald)" : "var(--accent-rose)";
+            const riskStatusColor = a.risk_status === "nominal" ? "var(--accent-emerald)" : "var(--accent-rose)";
+            const dashboardStatusColor = a.dashboard_status === "active" ? "var(--accent-emerald)" : "var(--text-secondary)";
+
+            row.innerHTML = `
+                <td class="asset-symbol">${a.symbol}</td>
+                <td style="text-transform: capitalize;">${a.type}</td>
+                <td><span class="asset-badge ${verdictClass}">${a.verdict}</span></td>
+                <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 700; color: ${symbolStatusColor};">${a.symbol_status}</td>
+                <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 700; color: ${dataStatusColor};">${a.data_status.toUpperCase()}</td>
+                <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 700; color: ${modelStatusColor};">${a.model_status.toUpperCase()}</td>
+                <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 700; color: ${riskStatusColor};">${a.risk_status.toUpperCase()}</td>
+                <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 700; color: ${dashboardStatusColor};">${a.dashboard_status.toUpperCase()}</td>
+            `;
+            fullAssetBody.appendChild(row);
+        });
+    }
+
     function updateUI() {
         if (!rawData) return;
+        updateSystemHealth();
+        renderAssetMatrix();
 
         const approvedAssets = rawData.assets.filter(a => a.verdict === "APPROVED" || a.verdict === "INSTITUTIONAL_READY");
         
@@ -501,21 +561,18 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function streamConsoleLogs(logs) {
-        consoleOutputEl.innerHTML = "";
-        let index = 0;
-        
-        function appendNextLog() {
-            if (index >= logs.length) return;
-            const log = logs[index];
-            appendConsoleLine(log.symbol, log.message, log.timestamp);
-            index++;
-            
-            // Random delay to simulate real stream
-            setTimeout(appendNextLog, 300 + Math.random() * 600);
-        }
+    let printedLogs = new Set();
 
-        appendNextLog();
+    function streamConsoleLogs(logs) {
+        // Go through logs backwards to print oldest first
+        for (let i = logs.length - 1; i >= 0; i--) {
+            const log = logs[i];
+            const logKey = `${log.timestamp}-${log.symbol}-${log.message}`;
+            if (!printedLogs.has(logKey)) {
+                printedLogs.add(logKey);
+                appendConsoleLine(log.symbol, log.message, log.timestamp);
+            }
+        }
     }
 
     function appendConsoleLine(symbol, message, timestampStr = null) {
@@ -595,30 +652,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             }
 
-            // Load Asset Registry
-            const assetRes = await fetch("/architecture/asset_registry.json");
-            const assets = await assetRes.json();
-            
-            const fullAssetBody = document.getElementById("asset-matrix-full-body");
-            if (fullAssetBody) {
-                fullAssetBody.innerHTML = "";
-                assets.forEach(a => {
-                    const row = document.createElement("tr");
-                    
-                    const verdictClass = a.status === "APPROVED" ? "APPROVED" : "DISABLED";
-                    
-                    row.innerHTML = `
-                        <td class="asset-symbol">${a.symbol}</td>
-                        <td style="text-transform: capitalize;">${a.asset_class}</td>
-                        <td><span class="asset-badge ${verdictClass}">${a.status}</span></td>
-                        <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; color: ${a.data_status === 'synced' ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">${a.data_status}</td>
-                        <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; color: ${a.model_status === 'trained' ? 'var(--accent-emerald)' : 'var(--text-secondary)'};">${a.model_status}</td>
-                        <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; color: ${a.risk_status === 'nominal' ? 'var(--accent-emerald)' : 'var(--accent-yellow)'};">${a.risk_status}</td>
-                        <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; color: ${a.dashboard_status === 'active' ? 'var(--accent-emerald)' : 'var(--text-secondary)'};">${a.dashboard_status}</td>
-                    `;
-                    fullAssetBody.appendChild(row);
-                });
-            }
+            // Dynamic asset matrix rendering handles the fullAssetBody tab
         } catch (err) {
             console.error("Failed to load architecture registries:", err);
         }

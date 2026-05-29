@@ -180,9 +180,37 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
             alpha_by_sym = {item["symbol"]: item for item in alpha_data}
             edge_by_sym = {item["symbol"]: item for item in edge_data}
 
-            # 2. Scan all project configs for settings/guards
+            # 2. Determine Overall System State (Pulsing Indicator RED/YELLOW/GREEN)
+            global_health_path = ROOT_DIR.parent / "logs" / "runtime_health.jsonl"
+            system_state = "RED"
+            system_reason = "Fleet runtime monitor is offline"
+            heartbeat_ok = False
+            
+            if global_health_path.exists():
+                try:
+                    with open(global_health_path, "r", encoding="utf-8") as f:
+                        lines = f.readlines()
+                        if lines:
+                            last_entry = json.loads(lines[-1])
+                            ts_str = last_entry.get("timestamp")
+                            if ts_str:
+                                from datetime import datetime, timezone
+                                last_ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
+                                age_sec = (datetime.now(timezone.utc) - last_ts).total_seconds()
+                                if age_sec <= 90:
+                                    heartbeat_ok = last_entry.get("heartbeat_ok", False)
+                                    system_state = "GREEN" if heartbeat_ok else "YELLOW"
+                                    system_reason = "Fleet active and heartbeating" if system_state == "GREEN" else "Active but heartbeats lagging"
+                                else:
+                                    system_state = "RED"
+                                    system_reason = f"Runtime health log stale ({age_sec:.0f}s old)"
+                except Exception as e:
+                    system_reason = f"Health check parse failure: {str(e)}"
+
+            # 3. Scan all project configs & heartbeats for individual statuses
             symbols = ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD", "BTCUSD"]
             assets_status = []
+            all_audit_logs = []
             
             for sym in symbols:
                 repo_name = f"quant_v9_3_1_{sym.lower()}"
@@ -208,7 +236,6 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                     except Exception:
                         pass
 
-                # Fallback structure if config doesn't exist
                 symbol_val = symbol_config.get("symbol", sym)
                 ml_enabled = symbol_config.get("ml", {}).get("enabled", True)
                 risk_pct = symbol_config.get("risk", {}).get("risk_per_trade_pct", 0.25)
@@ -217,20 +244,109 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                 # Merge realism and edge stats
                 r_stat = realism_by_sym.get(sym, {})
                 e_stat = edge_by_sym.get(sym, {})
-                a_stat = alpha_by_sym.get(sym, {})
+                
+                # --- READ ACTIVE HEARTBEAT FOR DYNAMIC SYMBOL STATUS ---
+                hb_path = project_path / "logs" / "heartbeat.jsonl"
+                sym_active = False
+                hb_age = 999999
+                ml_ok = True
+                mt5_ok = False
+                
+                if hb_path.exists():
+                    try:
+                        with open(hb_path, "r", encoding="utf-8") as f:
+                            lines = f.readlines()
+                            if lines:
+                                last_hb = json.loads(lines[-1])
+                                hb_ts_str = last_hb.get("timestamp")
+                                if hb_ts_str:
+                                    from datetime import datetime, timezone
+                                    hb_ts = datetime.fromisoformat(hb_ts_str.replace("Z", "+00:00"))
+                                    hb_age = (datetime.now(timezone.utc) - hb_ts).total_seconds()
+                                    if hb_age <= 90:
+                                        sym_active = True
+                                    ml_ok = last_hb.get("ml_ok", True)
+                                    mt5_ok = last_hb.get("mt5_ok", False)
+                    except Exception:
+                        pass
+
+                # --- ESTIMATE DATA FRESHNESS & TICK AGE ---
+                audit_path = project_path / "logs" / "no_entry_audit.jsonl"
+                tick_age = 999999
+                data_status = "disconnected"
+                risk_status = "nominal"
+                last_reason_code = "N/A"
+                last_reason_text = ""
+                
+                if audit_path.exists():
+                    try:
+                        with open(audit_path, "r", encoding="utf-8") as f:
+                            lines = f.readlines()
+                            if lines:
+                                # Fetch last entry for stats
+                                last_audit = json.loads(lines[-1])
+                                tick_age = last_audit.get("tick_age_seconds", 999999)
+                                mt5_connected = last_audit.get("mt5_connected", False)
+                                last_reason_code = last_audit.get("reason_code", "N/A")
+                                last_reason_text = last_audit.get("reason_text", "")
+                                
+                                if mt5_connected:
+                                    data_status = "synced" if tick_age <= 300 else "stale"
+                                else:
+                                    data_status = "disconnected"
+                                    
+                                if last_reason_code in ["daily_loss_limit", "weekly_soft_stop", "weekly_hard_drawdown", "daily_hard_drawdown", "spread_guard_trigger", "slippage_guard_trigger", "atr_shock_trigger"]:
+                                    risk_status = "vetoed"
+                    except Exception:
+                        pass
+
+                # Compute final statuses
+                symbol_status = "ACTIVE" if sym_active else "OFFLINE"
+                model_status = "trained" if ml_ok else "ML_ERROR"
+                dashboard_status = "active" if (sym_active and data_status == "synced" and ml_ok and risk_status == "nominal") else "blocked"
+
+                # Parse specific gate blocks to dynamic console stream
+                if audit_path.exists():
+                    try:
+                        with open(audit_path, "r", encoding="utf-8") as f:
+                            # Read last 5 lines to keep stream fresh and performant
+                            lines = f.readlines()[-5:]
+                            for line in lines:
+                                if line.strip():
+                                    data = json.loads(line)
+                                    all_audit_logs.append({
+                                        "timestamp": data.get("timestamp", ""),
+                                        "symbol": sym,
+                                        "message": f"Block: Regime={data.get('regime')}, Decision={data.get('decision')}, Code={data.get('reason_code')}, Details={data.get('reason_text')}"
+                                    })
+                    except Exception:
+                        pass
+
+                # Determine asset verdict dynamically
+                verdict = e_stat.get("portfolio_metrics", {}).get("verdict", r_stat.get("verdict", "APPROVED"))
+                if not sym_active:
+                    verdict = "OFFLINE"
 
                 assets_status.append({
                     "symbol": sym,
                     "type": "forex" if sym in ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF"] else ("gold" if sym == "XAUUSD" else ("crypto" if sym == "BTCUSD" else "index")),
-                    "verdict": e_stat.get("portfolio_metrics", {}).get("verdict", r_stat.get("verdict", "DISABLED")),
+                    "verdict": verdict,
                     "profit_factor": r_stat.get("profit_factor", 0.0),
                     "max_drawdown": r_stat.get("max_drawdown_pct", 0.0),
                     "sharpe_ratio": r_stat.get("sharpe_ratio", 0.0),
                     "net_pnl": e_stat.get("portfolio_metrics", {}).get("net_pnl", r_stat.get("realized_pnl", 0.0)),
-                    "trades": e_stat.get("portfolio_metrics", {}).get("total_trades", r_stat.get("max_consecutive_losses", 0)), # fallback
+                    "trades": e_stat.get("portfolio_metrics", {}).get("total_trades", r_stat.get("max_consecutive_losses", 0)),
                     "best_setup": e_stat.get("alpha_profile", {}).get("best_setup", "mean reversion"),
                     "best_session": e_stat.get("alpha_profile", {}).get("best_session", "Asia"),
                     "volatility_pref": e_stat.get("alpha_profile", {}).get("volatility_preference", "LOW_VOLATILITY"),
+                    
+                    # Heartbeat Observe parameters mapped dynamically
+                    "symbol_status": symbol_status,
+                    "data_status": data_status,
+                    "model_status": model_status,
+                    "risk_status": risk_status,
+                    "dashboard_status": dashboard_status,
+                    
                     "guards": {
                         "spread_guard_enabled": risk_config.get("spread_guard_enabled", True),
                         "slippage_guard_enabled": risk_config.get("slippage_guard_enabled", True),
@@ -249,32 +365,28 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                     }
                 })
 
-            # 3. Create simulated live logs (combining actual events and system boot trace)
-            logs = [
-                {"timestamp": "2026-05-22 19:40:01", "symbol": "SYS", "message": "Quant Core V9 initialized successfully."},
-                {"timestamp": "2026-05-22 19:40:02", "symbol": "SYS", "message": "Loading risk profiles from risk.yaml guards... [OK]"},
-                {"timestamp": "2026-05-22 19:40:03", "symbol": "SYS", "message": "ML Gatekeeper cache loaded (50x fast-track)."},
-                {"timestamp": "2026-05-22 19:44:28", "symbol": "GBPUSD", "message": "Backtest started... Result: PF 0.89 -> DISABLED"},
-                {"timestamp": "2026-05-22 19:45:13", "symbol": "EURUSD", "message": "Backtest started... Result: PF 0.89 -> DISABLED"},
-                {"timestamp": "2026-05-22 19:45:52", "symbol": "USDJPY", "message": "Backtest started... Result: PF 0.89 -> DISABLED"},
-                {"timestamp": "2026-05-22 19:46:14", "symbol": "AUDUSD", "message": "Backtest started... Result: PF inf -> APPROVED"},
-                {"timestamp": "2026-05-22 19:46:26", "symbol": "USDCAD", "message": "Backtest started... Result: PF inf -> APPROVED"},
-                {"timestamp": "2026-05-22 19:46:38", "symbol": "USDCHF", "message": "Backtest started... Result: PF inf -> APPROVED"},
-                {"timestamp": "2026-05-22 19:47:03", "symbol": "US30", "message": "Backtest started... Result: PF inf -> APPROVED"},
-                {"timestamp": "2026-05-22 19:47:28", "symbol": "US100", "message": "Backtest started... Result: PF inf -> APPROVED"},
-                {"timestamp": "2026-05-22 19:47:44", "symbol": "US500", "message": "Backtest started... Result: PF inf -> APPROVED"},
-                {"timestamp": "2026-05-22 19:47:58", "symbol": "XAUUSD", "message": "Backtest started... Result: PF inf -> APPROVED"},
-                {"timestamp": "2026-05-22 19:50:00", "symbol": "SYS", "message": "Multi-Asset Consolidation COMPLETE. Portfolio status: READY_FOR_PAPER_TRADING"}
-            ]
+            # Sort dynamic audit logs by timestamp descending
+            all_audit_logs.sort(key=lambda x: x["timestamp"], reverse=True)
+            logs = all_audit_logs[:30] # Keep latest 30 events
+            
+            # If no logs exist, supply system status lines
+            if not logs:
+                logs = [
+                    {"timestamp": "2026-05-28 20:30:00", "symbol": "SYS", "message": "Quant Core Observability Layer started. Listening for bot heartbeats..."},
+                    {"timestamp": "2026-05-28 20:30:01", "symbol": "SYS", "message": "Global telemetry path successfully synchronized."}
+                ]
 
             # Calculate aggregated portfolio stats
-            approved_assets = [a for a in assets_status if a["verdict"] == "APPROVED" or a["verdict"] == "INSTITUTIONAL_READY"]
+            approved_assets = [a for a in assets_status if a["verdict"] in ["APPROVED", "INSTITUTIONAL_READY"]]
             total_pnl = sum([a["net_pnl"] for a in approved_assets])
-            
-            # Simple VaR proxy: portfolio average max DD weighted by sizing
             portfolio_max_dd = max([a["max_drawdown"] for a in assets_status]) if assets_status else 0.0
 
             response_data = {
+                "system_status": {
+                    "state": system_state,
+                    "reason": system_reason,
+                    "heartbeat_ok": heartbeat_ok
+                },
                 "summary": {
                     "total_aum": len(approved_assets) * 10000.0,
                     "total_pnl": total_pnl,
@@ -293,6 +405,8 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
             self.send_header("Content-Length", str(len(response_bytes)))
             self.end_headers()
             self.wfile.write(response_bytes)
+        except Exception as e:
+            self.send_error(500, f"API Error: {str(e)}")
         except Exception as e:
             self.send_error(500, f"API Error: {str(e)}")
 

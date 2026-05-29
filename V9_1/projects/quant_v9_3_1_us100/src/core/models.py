@@ -73,3 +73,8 @@ class Trade:
     bars_held: int
     exit_reason: str
     def to_dict(self) -> dict: return asdict(self)
+
+class DataIncompleteError(Exception):
+    """Raised when data feed is missing, stale, or symbol cannot be resolved."""
+    pass
+

@@ -146,6 +146,17 @@ def evaluate_signal(features: Dict[str, Any], config: Dict[str, Any] | None = No
                 blocked_reasons.append("rsi_neutral_in_sideway")
         else:
             blocked_reasons.append("missing_rsi_in_sideway")
+    elif regime == "transition":
+        # Transition: trade emerging trend when enabled (align M15 and H1 bias)
+        transition_allowed = cfg.get("risk", {}).get("transition_trade_enabled", False)
+        if transition_allowed:
+            if bias == bias_h1 and bias in ("long", "short"):
+                direction = bias
+                direction_alignment_pass = True
+            else:
+                blocked_reasons.append(f"transition_biases_mismatch_m15={bias}_h1={bias_h1}")
+        else:
+            blocked_reasons.append(f"no_trade_in_regime_{regime}")
     else:
         blocked_reasons.append(f"no_trade_in_regime_{regime}")
         
@@ -189,6 +200,9 @@ def evaluate_signal(features: Dict[str, Any], config: Dict[str, Any] | None = No
         direction_alignment_pass=direction_alignment_pass,
         position_plan_valid=False
     )
+    
+    # Store raw strategy direction before ML Gatekeeper overwrites it
+    dec.raw_signal = dec.direction
     
     # Enforce ML Gatekeeper
     ml_cfg = dict(cfg.get("ml", {}))

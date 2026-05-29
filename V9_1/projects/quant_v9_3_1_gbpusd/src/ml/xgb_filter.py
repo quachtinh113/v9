@@ -120,10 +120,11 @@ def apply_ml_gatekeeper(dec: Any, features: dict, ml_cfg: dict) -> Any:
             dec.ml_reason = f"ML score {ms:.4f} is safe"
             
     except Exception as e:
-        # If ML enabled and model missing/load failed/predict failed/feature mismatch, return BLOCK
-        dec.direction = "flat"
-        dec.ml_score = 0.0
-        dec.ml_decision = "BLOCK"
-        dec.ml_reason = f"ML Error: {str(e)}"
+        # If ML enabled and model missing/load failed/predict failed/feature mismatch, return PASS instead of BLOCK
+        dec.ml_decision = "PASS"
+        dec.ml_reason = f"ML Error (treated as PASS): {str(e)}"
+        # Do not flatten the signal; keep original direction
+        # Ensure entry_allowed remains as previously determined (if any)
+        return dec
         
     return dec

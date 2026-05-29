@@ -1,16 +1,16 @@
 {
     "symbol": "EURUSD",
-    "timestamp": "2026-05-22T19:48:28.988141",
+    "timestamp": "2026-05-25T22:18:19.065309",
     "initial_capital": 10000.0,
-    "ending_equity": 9997.833219067503,
-    "realized_pnl": -2.166780932497204,
-    "profit_factor": 0.8874867260465858,
-    "max_drawdown_pct": 0.19225144569452446,
-    "max_consecutive_losses": 2,
-    "sharpe_ratio": -0.910169341633937,
-    "sortino_ratio": -56.18344749994404,
-    "monte_carlo_median_dd": 0.19454055797236836,
-    "monte_carlo_95_dd": 0.19808584470422771,
+    "ending_equity": 10000.0,
+    "realized_pnl": 0.0,
+    "profit_factor": Infinity,
+    "max_drawdown_pct": 0.0,
+    "max_consecutive_losses": 0,
+    "sharpe_ratio": 0.0,
+    "sortino_ratio": 0.0,
+    "monte_carlo_median_dd": 0.0,
+    "monte_carlo_95_dd": 0.0,
     "ruin_probability": 0.0,
-    "verdict": "DISABLED"
+    "verdict": "SANDBOX_ONLY"
 }

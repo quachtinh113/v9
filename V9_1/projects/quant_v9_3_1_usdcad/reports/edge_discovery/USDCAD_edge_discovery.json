@@ -26,16 +26,16 @@
             "reason": "No trades"
         },
         "mean reversion": {
-            "trade_count": 3,
-            "winrate": 1.0,
-            "profit_factor": Infinity,
-            "sharpe": 1015.8690645873684,
-            "avg_holding_time": 145.0,
-            "expectancy": 1.9041479849548513,
+            "trade_count": 0,
+            "winrate": 0.0,
+            "profit_factor": 0.0,
+            "sharpe": 0.0,
+            "avg_holding_time": 0.0,
+            "expectancy": 0.0,
             "mc_worst_case_dd": 0.0,
             "mc_ruin_probability": 0.0,
-            "verdict": "APPROVED",
-            "reason": "Passed all criteria"
+            "verdict": "REJECTED",
+            "reason": "No trades"
         },
         "session breakout": {
             "trade_count": 0,
@@ -76,16 +76,16 @@
     },
     "session_statistics": {
         "Asia": {
-            "trade_count": 2,
-            "winrate": 1.0,
-            "net_pnl": 3.8291894680104264,
-            "expectancy": 1.9145947340052132
+            "trade_count": 0,
+            "winrate": 0.0,
+            "net_pnl": 0.0,
+            "expectancy": 0.0
         },
         "London": {
-            "trade_count": 1,
-            "winrate": 1.0,
-            "net_pnl": 1.8832544868541277,
-            "expectancy": 1.8832544868541277
+            "trade_count": 0,
+            "winrate": 0.0,
+            "net_pnl": 0.0,
+            "expectancy": 0.0
         },
         "New York": {
             "trade_count": 0,
@@ -107,28 +107,29 @@
         }
     },
     "alpha_profile": {
-        "best_setup": "mean reversion",
-        "worst_setup": "mean reversion",
-        "best_session": "Asia",
-        "worst_session": "London",
+        "best_setup": "N/A",
+        "worst_setup": "N/A",
+        "best_session": "N/A",
+        "worst_session": "N/A",
         "volatility_preference": "LOW_VOLATILITY"
     },
     "rejected_setups": [
         "volatility expansion",
         "breakout",
         "RSI recovery",
-        "session breakout",
-        "trend continuation"
+        "trend continuation",
+        "mean reversion",
+        "session breakout"
     ],
     "portfolio_metrics": {
-        "total_trades": 3,
-        "winrate": 1.0,
-        "net_pnl": 5.712443954866103,
-        "profit_factor": Infinity,
-        "sharpe_ratio": 1015.8690645873676,
+        "total_trades": 0,
+        "winrate": 0.0,
+        "net_pnl": 0.0,
+        "profit_factor": 0.0,
+        "sharpe_ratio": 0.0,
         "max_drawdown_pct": 0.0,
         "mc_worst_case_dd": 0.0,
         "ruin_probability": 0.0,
-        "verdict": "APPROVED"
+        "verdict": "DISABLED"
     }
 }

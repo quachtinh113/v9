@@ -5,3 +5,21 @@ class TradeJournal:
 class PipelineAuditLog:
     def __init__(self, p): self.p = p
     def write_tick(self, **kwargs): pass
+    def write_blocked(self, reason, symbol, stage="DATA", details=None):
+        import json
+        from datetime import datetime, timezone
+        if details is None:
+            details = {"message": f"Block reason: {reason}"}
+        entry = {
+            "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
+            "symbol": symbol,
+            "stage": stage,
+            "reason_code": reason,
+            "details": details
+        }
+        try:
+            with open(self.p, "a") as f:
+                f.write(json.dumps(entry) + "\n")
+        except:
+            pass
+

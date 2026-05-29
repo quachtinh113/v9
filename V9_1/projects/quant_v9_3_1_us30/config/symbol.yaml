@@ -10,7 +10,7 @@ entry:
   trend_adx_min: 25
   trend_only: true
 ml:
-  block_threshold: 0.55
+  block_threshold: 0.50
   enabled: true
   model_path: models/xgb_trade_filter.json
 position:

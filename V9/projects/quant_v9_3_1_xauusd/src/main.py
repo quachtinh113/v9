@@ -8,7 +8,7 @@ from src.utils.config import load_yaml
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=["backtest", "train", "live"], default="backtest")
+    parser.add_argument("--mode", choices=["backtest", "train", "paper", "live"], default="backtest")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     config = load_yaml(root / "config" / "symbol.yaml")
@@ -23,5 +23,15 @@ def main():
         result = run_backtest(config, strategy_module, csv_path=str(csv))
         export_summary_json(result, root / "reports" / "latest")
         print(f"Backtest Complete for {config['symbol']} | PnL: {result['net_pnl']:.2f}")
+    elif args.mode == "live":
+        from src.pipeline_live import LivePipeline
+        print(f"Starting Live Pipeline for {config['symbol']}...")
+        pipeline = LivePipeline(root, runtime_mode="live")
+        pipeline.run_loop()
+    elif args.mode == "paper":
+        from src.pipeline_live import LivePipeline
+        print(f"Starting Paper Pipeline for {config['symbol']}...")
+        pipeline = LivePipeline(root, runtime_mode="paper")
+        pipeline.run_loop()
 
 if __name__ == "__main__": main()

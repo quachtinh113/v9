@@ -1,2 +1,2 @@
 symbol,timestamp,initial_capital,ending_equity,realized_pnl,profit_factor,max_drawdown_pct,max_consecutive_losses,sharpe_ratio,sortino_ratio,monte_carlo_median_dd,monte_carlo_95_dd,ruin_probability,verdict
-AUDUSD,2026-05-22T19:49:36.802130,10000.0,10005.705448373797,5.705448373797481,inf,0.0,0,971.9303807483464,0.0,0.0,0.0,0.0,INSTITUTIONAL_READY
+AUDUSD,2026-05-25T22:17:58.085869,10000.0,10000.0,0.0,inf,0.0,0,0.0,0.0,0.0,0.0,0.0,SANDBOX_ONLY

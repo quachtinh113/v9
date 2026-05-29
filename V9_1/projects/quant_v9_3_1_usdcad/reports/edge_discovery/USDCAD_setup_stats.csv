@@ -1,7 +1,7 @@
 setup,trade_count,winrate,profit_factor,sharpe,avg_holding_time,expectancy,mc_worst_case_dd,mc_ruin_probability,verdict,reason
 trend continuation,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,REJECTED,No trades
 breakout,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,REJECTED,No trades
-mean reversion,3,1.0,inf,1015.8690645873684,145.0,1.9041479849548513,0.0,0.0,APPROVED,Passed all criteria
+mean reversion,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,REJECTED,No trades
 session breakout,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,REJECTED,No trades
 RSI recovery,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,REJECTED,No trades
 volatility expansion,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,REJECTED,No trades
