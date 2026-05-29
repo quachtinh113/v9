@@ -552,7 +552,14 @@ class LivePipeline:
             adx_val = row.get("adx14_h1", 0.0)
             atr_val = row.get("atr14_m1", 0.001)
             
-            print(f"[DIAGNOSTIC] symbol={self.symbol} | timestamp={ts_val} | regime={decision.regime} | rsi_m15={rsi_m15:.2f} | rsi_h1=N/A | rsi_h4=N/A | adx={adx_val:.2f} | atr={atr_val:.6f} | raw_signal={raw_sig} | signal_score={decision.score:.0f} | ml_score={decision.ml_score:.4f} | ml_threshold={ml_thresh:.2f} | ml_decision={decision.ml_decision} | risk_decision={risk_act} | final_action={final_act} | block_reason={all_blocks}")
+            h1_bias = row.get("bias_h1", "flat")
+            h4_bias = row.get("bias_h4", "flat")
+            m15_bias = row.get("bias", "flat")
+            pullback_detected = "true" if getattr(decision, "pullback_detected", False) else "false"
+            score_before = getattr(decision, "score_before", decision.score)
+            score_after = getattr(decision, "score_after", decision.score)
+            
+            print(f"[DIAGNOSTIC] symbol={self.symbol} | timestamp={ts_val} | regime={decision.regime} | rsi_m15={rsi_m15:.2f} | rsi_h1=N/A | rsi_h4=N/A | adx={adx_val:.2f} | atr={atr_val:.6f} | raw_signal={raw_sig} | signal_score={decision.score:.0f} | ml_score={decision.ml_score:.4f} | ml_threshold={ml_thresh:.2f} | ml_decision={decision.ml_decision} | risk_decision={risk_act} | final_action={final_act} | block_reason={all_blocks} | h1_bias={h1_bias} | h4_bias={h4_bias} | m15_bias={m15_bias} | pullback_detected={pullback_detected} | score_before={score_before:.0f} | score_after={score_after:.0f}")
 
     def run_loop(self):
         while True:

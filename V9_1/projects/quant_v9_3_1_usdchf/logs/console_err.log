@@ -1,15 +1,15 @@
-2026-05-29 17:05:42,746 [INFO] MT5 Adapter connected and logged in successfully.
-2026-05-29 17:05:49,111 [INFO] [GATE:REGIME] USDCHF - Regime: trend (ADX H1: 36.9, ATR Ratio: 0.15)
-2026-05-29 17:05:49,111 [INFO] [GATE:SIGNAL] USDCHF - Direction: short, Score: 80.0, Blocks: []
-2026-05-29 17:05:49,112 [INFO] [GATE:ML] USDCHF - Score: 0.7317, Decision: PASS, Reason: ML score 0.7317 is safe
-2026-05-29 17:05:49,119 [INFO] [GATE:RISK] USDCHF - Action: ALLOW, Reasons: []
-2026-05-29 17:05:49,120 [INFO] [GATE:EXECUTION] USDCHF - Approved. Sending order size: 158659.15
-2026-05-29 17:05:49,120 INFO {"symbol": "USDCHF", "order_type": "short", "volume": 0.01, "price": 0.7835, "sl": 0.7836575704903369, "tp": 0.7832523892294706, "comment": "QV9_USDCHF_SHORT", "comment_len": 16, "runtime_mode": "paper"}
-2026-05-29 17:05:49,120 [INFO] {"symbol": "USDCHF", "order_type": "short", "volume": 0.01, "price": 0.7835, "sl": 0.7836575704903369, "tp": 0.7832523892294706, "comment": "QV9_USDCHF_SHORT", "comment_len": 16, "runtime_mode": "paper"}
-2026-05-29 17:06:49,298 [INFO] [GATE:REGIME] USDCHF - Regime: trend (ADX H1: 36.9, ATR Ratio: 0.15)
-2026-05-29 17:06:49,298 [INFO] [GATE:SIGNAL] USDCHF - Direction: short, Score: 80.0, Blocks: []
-2026-05-29 17:06:49,298 [INFO] [GATE:ML] USDCHF - Score: 0.7317, Decision: PASS, Reason: ML score 0.7317 is safe
-2026-05-29 17:06:49,299 [INFO] [GATE:RISK] USDCHF - Action: ALLOW, Reasons: []
-2026-05-29 17:06:49,299 [INFO] [GATE:EXECUTION] USDCHF - Approved. Sending order size: 158636.36
-2026-05-29 17:06:49,299 INFO {"symbol": "USDCHF", "order_type": "short", "volume": 0.01, "price": 0.78361, "sl": 0.783767593130966, "tp": 0.7833623536513392, "comment": "QV9_USDCHF_SHORT", "comment_len": 16, "runtime_mode": "paper"}
-2026-05-29 17:06:49,299 [INFO] {"symbol": "USDCHF", "order_type": "short", "volume": 0.01, "price": 0.78361, "sl": 0.783767593130966, "tp": 0.7833623536513392, "comment": "QV9_USDCHF_SHORT", "comment_len": 16, "runtime_mode": "paper"}
+2026-05-29 17:25:10,846 [INFO] MT5 Adapter connected and logged in successfully.
+2026-05-29 17:25:16,735 [INFO] [GATE:REGIME] USDCHF - Regime: trend (ADX H1: 36.9, ATR Ratio: 0.15)
+2026-05-29 17:25:16,737 [INFO] [GATE:SIGNAL] USDCHF - Direction: short, Score: 80.0, Blocks: []
+2026-05-29 17:25:16,737 [INFO] [GATE:ML] USDCHF - Score: 0.7317, Decision: PASS, Reason: ML score 0.7317 is safe
+2026-05-29 17:25:16,741 [INFO] [GATE:RISK] USDCHF - Action: ALLOW, Reasons: []
+2026-05-29 17:25:16,741 [INFO] [GATE:EXECUTION] USDCHF - Approved. Sending order size: 158659.15
+2026-05-29 17:25:16,743 INFO {"symbol": "USDCHF", "order_type": "short", "volume": 0.01, "price": 0.7835, "sl": 0.7836575704903369, "tp": 0.7832523892294706, "comment": "QV9_USDCHF_SHORT", "comment_len": 16, "runtime_mode": "paper"}
+2026-05-29 17:25:16,743 [INFO] {"symbol": "USDCHF", "order_type": "short", "volume": 0.01, "price": 0.7835, "sl": 0.7836575704903369, "tp": 0.7832523892294706, "comment": "QV9_USDCHF_SHORT", "comment_len": 16, "runtime_mode": "paper"}
+2026-05-29 17:26:17,073 [INFO] [GATE:REGIME] USDCHF - Regime: trend (ADX H1: 36.9, ATR Ratio: 0.12)
+2026-05-29 17:26:17,073 [INFO] [GATE:SIGNAL] USDCHF - Direction: short, Score: 80.0, Blocks: []
+2026-05-29 17:26:17,073 [INFO] [GATE:ML] USDCHF - Score: 0.8150, Decision: PASS, Reason: ML score 0.8150 is safe
+2026-05-29 17:26:17,073 [INFO] [GATE:RISK] USDCHF - Action: ALLOW, Reasons: []
+2026-05-29 17:26:17,074 [INFO] [GATE:EXECUTION] USDCHF - Approved. Sending order size: 200615.25
+2026-05-29 17:26:17,074 INFO {"symbol": "USDCHF", "order_type": "short", "volume": 0.01, "price": 0.78329, "sl": 0.7834146166500341, "tp": 0.7830941738356608, "comment": "QV9_USDCHF_SHORT", "comment_len": 16, "runtime_mode": "paper"}
+2026-05-29 17:26:17,074 [INFO] {"symbol": "USDCHF", "order_type": "short", "volume": 0.01, "price": 0.78329, "sl": 0.7834146166500341, "tp": 0.7830941738356608, "comment": "QV9_USDCHF_SHORT", "comment_len": 16, "runtime_mode": "paper"}

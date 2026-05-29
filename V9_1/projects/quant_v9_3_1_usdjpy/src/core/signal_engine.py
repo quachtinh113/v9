@@ -126,9 +126,22 @@ def evaluate_signal(features: Dict[str, Any], config: Dict[str, Any] | None = No
             
     # Determine rule-based signal direction
     direction = "flat"
+    pullback_detected = False
+    
     if regime == "trend":
-        # Trend following: must align with all timeframes
-        if bias == bias_h1 == bias_h4 and bias in ("long", "short"):
+        # Check Trend Pullback Entry conditions
+        is_pullback = False
+        adx_val = features.get("adx14_h1")
+        if adx_val is not None and not pd.isna(adx_val) and float(adx_val) >= 25:
+            if bias_h1 == bias_h4 and bias_h1 in ("long", "short"):
+                if (bias_h1 == "long" and bias == "short") or (bias_h1 == "short" and bias == "long"):
+                    is_pullback = True
+                    
+        if is_pullback:
+            direction = bias_h1
+            direction_alignment_pass = True
+            pullback_detected = True
+        elif bias == bias_h1 == bias_h4 and bias in ("long", "short"):
             direction = bias
             direction_alignment_pass = True
         else:
@@ -169,6 +182,10 @@ def evaluate_signal(features: Dict[str, Any], config: Dict[str, Any] | None = No
     if atr_pass: score += 10
     if direction_alignment_pass: score += 20
     
+    if pullback_detected:
+        score += 10
+        score = min(100.0, score)
+        
     threshold = cfg.get("score_threshold", 70)
     
     # Hard entry gate: if any check fails, direction is flat
@@ -184,6 +201,12 @@ def evaluate_signal(features: Dict[str, Any], config: Dict[str, Any] | None = No
         
     entry_allowed = gate_passed
     
+    # Add audit reasons post-gate passed so they don't fail the gate
+    if pullback_detected and gate_passed:
+        blocked_reasons.append("trend_pullback_entry_enabled")
+        blocked_reasons.append("pullback_m15_against_h1_h4")
+        blocked_reasons.append("final_direction_from_h1_h4")
+        
     dec = SignalDecision(
         symbol=symbol,
         direction=direction,
@@ -200,6 +223,9 @@ def evaluate_signal(features: Dict[str, Any], config: Dict[str, Any] | None = No
         direction_alignment_pass=direction_alignment_pass,
         position_plan_valid=False
     )
+    dec.pullback_detected = pullback_detected
+    dec.score_before = score - 10 if pullback_detected else score
+    dec.score_after = score
     
     # Store raw strategy direction before ML Gatekeeper overwrites it
     dec.raw_signal = dec.direction
