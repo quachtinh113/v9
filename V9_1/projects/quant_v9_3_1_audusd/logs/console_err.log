@@ -1,9 +1,0 @@
-2026-05-29 18:03:49,749 [INFO] MT5 Adapter connected and logged in successfully.
-2026-05-29 18:03:54,727 [INFO] [GATE:REGIME] AUDUSD - Regime: transition (ADX H1: 18.1, ATR Ratio: 0.12)
-2026-05-29 18:03:54,728 [INFO] [GATE:SIGNAL] AUDUSD - Direction: flat, Score: 40.0, Blocks: ['transition_regime_disabled', 'no_trade_in_regime_transition', 'score_below_threshold_40_vs_70']
-2026-05-29 18:03:54,728 [INFO] [GATE:ML] AUDUSD - Score: 0.8577, Decision: PASS, Reason: Signal is already flat
-2026-05-29 18:03:54,729 [INFO] [GATE:EXECUTION] AUDUSD - Flat or no signal. No order sent.
-2026-05-29 18:04:54,896 [INFO] [GATE:REGIME] AUDUSD - Regime: sideway (ADX H1: 16.9, ATR Ratio: 0.10)
-2026-05-29 18:04:54,897 [INFO] [GATE:SIGNAL] AUDUSD - Direction: flat, Score: 50.0, Blocks: ['rsi_not_in_mean_reversion_bounds_50.4', 'rsi_neutral_in_sideway', 'score_below_threshold_50_vs_70']
-2026-05-29 18:04:54,898 [INFO] [GATE:ML] AUDUSD - Score: 0.8868, Decision: PASS, Reason: Signal is already flat
-2026-05-29 18:04:54,899 [INFO] [GATE:EXECUTION] AUDUSD - Flat or no signal. No order sent.
