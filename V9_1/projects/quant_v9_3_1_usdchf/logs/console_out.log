@@ -10,6 +10,6 @@ Real Order Send Enabled: False
 Signal: short Score: 80.0 ML: PASS
 Order Routing Result: {'status': 'paper_success', 'price': 0.7835, 'symbol': 'USDCHF', 'direction': 'short', 'volume': 0.01, 'order_id': 999999, 'comment': 'QV9_USDCHF_SHORT (paper)'}
 [DIAGNOSTIC] symbol=USDCHF | timestamp=2026-05-29 10:01:00+00:00 | regime=trend | rsi_m15=43.37 | rsi_h1=N/A | rsi_h4=N/A | adx=36.93 | atr=0.000113 | raw_signal=short | signal_score=80 | ml_score=0.7317 | ml_threshold=0.50 | ml_decision=PASS | risk_decision=ALLOW | final_action=ORDER_SENT | block_reason=[] | h1_bias=short | h4_bias=short | m15_bias=short | pullback_detected=false | score_before=80 | score_after=80
-Signal: short Score: 80.0 ML: PASS
-Order Routing Result: {'status': 'paper_success', 'price': 0.78329, 'symbol': 'USDCHF', 'direction': 'short', 'volume': 0.01, 'order_id': 999999, 'comment': 'QV9_USDCHF_SHORT (paper)'}
-[DIAGNOSTIC] symbol=USDCHF | timestamp=2026-05-29 10:26:00+00:00 | regime=trend | rsi_m15=40.66 | rsi_h1=N/A | rsi_h4=N/A | adx=36.93 | atr=0.000089 | raw_signal=short | signal_score=80 | ml_score=0.8150 | ml_threshold=0.50 | ml_decision=PASS | risk_decision=ALLOW | final_action=ORDER_SENT | block_reason=[] | h1_bias=short | h4_bias=short | m15_bias=short | pullback_detected=false | score_before=80 | score_after=80
+Signal: short Score: 80.0 ML: REDUCE
+Order Routing Result: {'status': 'paper_success', 'price': 0.78245, 'symbol': 'USDCHF', 'direction': 'short', 'volume': 0.01, 'order_id': 999999, 'comment': 'QV9_USDCHF_SHORT (paper)'}
+[DIAGNOSTIC] symbol=USDCHF | timestamp=2026-05-29 11:04:00+00:00 | regime=trend | rsi_m15=35.46 | rsi_h1=N/A | rsi_h4=N/A | adx=37.16 | atr=0.000089 | raw_signal=short | signal_score=80 | ml_score=0.6130 | ml_threshold=0.50 | ml_decision=REDUCE | risk_decision=ALLOW | final_action=ORDER_SENT | block_reason=[] | h1_bias=short | h4_bias=short | m15_bias=short | pullback_detected=false | score_before=80 | score_after=80

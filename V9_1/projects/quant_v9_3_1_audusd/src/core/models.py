@@ -25,6 +25,7 @@ class SignalDecision:
     entry_allowed: bool = False
     gate_status: str = "REJECTED"
     blocked_reasons: List[str] = field(default_factory=list)
+    entry_reasons: List[str] = field(default_factory=list)
     rsi_mtf_pass: bool = False
     adx_pass: bool = False
     atr_pass: bool = False

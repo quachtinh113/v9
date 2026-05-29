@@ -556,10 +556,12 @@ class LivePipeline:
             h4_bias = row.get("bias_h4", "flat")
             m15_bias = row.get("bias", "flat")
             pullback_detected = "true" if getattr(decision, "pullback_detected", False) else "false"
-            score_before = getattr(decision, "score_before", decision.score)
-            score_after = getattr(decision, "score_after", decision.score)
+            score_before_pb = getattr(decision, "score_before_pullback", decision.score)
+            score_after_pb = getattr(decision, "score_after_pullback", decision.score)
+            entry_reasons = getattr(decision, "entry_reasons", [])
+            blocked_reasons = decision.blocked_reasons
             
-            print(f"[DIAGNOSTIC] symbol={self.symbol} | timestamp={ts_val} | regime={decision.regime} | rsi_m15={rsi_m15:.2f} | rsi_h1=N/A | rsi_h4=N/A | adx={adx_val:.2f} | atr={atr_val:.6f} | raw_signal={raw_sig} | signal_score={decision.score:.0f} | ml_score={decision.ml_score:.4f} | ml_threshold={ml_thresh:.2f} | ml_decision={decision.ml_decision} | risk_decision={risk_act} | final_action={final_act} | block_reason={all_blocks} | h1_bias={h1_bias} | h4_bias={h4_bias} | m15_bias={m15_bias} | pullback_detected={pullback_detected} | score_before={score_before:.0f} | score_after={score_after:.0f}")
+            print(f"[DIAGNOSTIC] symbol={self.symbol} | timestamp={ts_val} | regime={decision.regime} | rsi_m15={rsi_m15:.2f} | rsi_h1=N/A | rsi_h4=N/A | adx={adx_val:.2f} | atr={atr_val:.6f} | raw_signal={raw_sig} | signal_score={decision.score:.0f} | ml_score={decision.ml_score:.4f} | ml_threshold={ml_thresh:.2f} | ml_decision={decision.ml_decision} | risk_decision={risk_act} | final_action={final_act} | block_reason={blocked_reasons} | entry_reasons={entry_reasons} | h1_bias={h1_bias} | h4_bias={h4_bias} | m15_bias={m15_bias} | pullback_detected={pullback_detected} | score_before_pullback={score_before_pb:.0f} | score_after_pullback={score_after_pb:.0f}")
 
     def run_loop(self):
         while True:

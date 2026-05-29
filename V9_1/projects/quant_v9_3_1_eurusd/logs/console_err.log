@@ -1,9 +1,9 @@
-2026-05-29 17:25:10,794 [INFO] MT5 Adapter connected and logged in successfully.
-2026-05-29 17:25:16,103 [INFO] [GATE:REGIME] EURUSD - Regime: transition (ADX H1: 18.7, ATR Ratio: 0.11)
-2026-05-29 17:25:16,103 [INFO] [GATE:SIGNAL] EURUSD - Direction: flat, Score: 40.0, Blocks: ['transition_regime_disabled', 'no_trade_in_regime_transition', 'score_below_threshold_40_vs_70']
-2026-05-29 17:25:16,104 [INFO] [GATE:ML] EURUSD - Score: 0.4095, Decision: PASS, Reason: Signal is already flat
-2026-05-29 17:25:16,104 [INFO] [GATE:EXECUTION] EURUSD - Flat or no signal. No order sent.
-2026-05-29 17:26:16,240 [INFO] [GATE:REGIME] EURUSD - Regime: sideway (ADX H1: 17.7, ATR Ratio: 0.12)
-2026-05-29 17:26:16,240 [INFO] [GATE:SIGNAL] EURUSD - Direction: flat, Score: 50.0, Blocks: ['rsi_not_in_mean_reversion_bounds_54.0', 'rsi_neutral_in_sideway', 'score_below_threshold_50_vs_70']
-2026-05-29 17:26:16,241 [INFO] [GATE:ML] EURUSD - Score: 0.2054, Decision: PASS, Reason: Signal is already flat
-2026-05-29 17:26:16,241 [INFO] [GATE:EXECUTION] EURUSD - Flat or no signal. No order sent.
+2026-05-29 18:03:49,770 [INFO] MT5 Adapter connected and logged in successfully.
+2026-05-29 18:03:54,883 [INFO] [GATE:REGIME] EURUSD - Regime: transition (ADX H1: 18.7, ATR Ratio: 0.11)
+2026-05-29 18:03:54,884 [INFO] [GATE:SIGNAL] EURUSD - Direction: flat, Score: 40.0, Blocks: ['transition_regime_disabled', 'no_trade_in_regime_transition', 'score_below_threshold_40_vs_70']
+2026-05-29 18:03:54,884 [INFO] [GATE:ML] EURUSD - Score: 0.4095, Decision: PASS, Reason: Signal is already flat
+2026-05-29 18:03:54,884 [INFO] [GATE:EXECUTION] EURUSD - Flat or no signal. No order sent.
+2026-05-29 18:04:55,071 [INFO] [GATE:REGIME] EURUSD - Regime: sideway (ADX H1: 16.4, ATR Ratio: 0.11)
+2026-05-29 18:04:55,072 [INFO] [GATE:SIGNAL] EURUSD - Direction: flat, Score: 50.0, Blocks: ['rsi_not_in_mean_reversion_bounds_51.8', 'rsi_neutral_in_sideway', 'score_below_threshold_50_vs_70']
+2026-05-29 18:04:55,072 [INFO] [GATE:ML] EURUSD - Score: 0.0660, Decision: PASS, Reason: Signal is already flat
+2026-05-29 18:04:55,072 [INFO] [GATE:EXECUTION] EURUSD - Flat or no signal. No order sent.

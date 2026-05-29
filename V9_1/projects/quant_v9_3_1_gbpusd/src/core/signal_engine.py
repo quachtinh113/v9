@@ -182,9 +182,13 @@ def evaluate_signal(features: Dict[str, Any], config: Dict[str, Any] | None = No
     if atr_pass: score += 10
     if direction_alignment_pass: score += 20
     
+    score_before_pullback = score
+    score_after_pullback = score
+    
     if pullback_detected:
         score += 10
         score = min(100.0, score)
+        score_after_pullback = score
         
     threshold = cfg.get("score_threshold", 70)
     
@@ -201,11 +205,12 @@ def evaluate_signal(features: Dict[str, Any], config: Dict[str, Any] | None = No
         
     entry_allowed = gate_passed
     
-    # Add audit reasons post-gate passed so they don't fail the gate
+    # Add audit reasons to entry_reasons post-gate passed so they don't block
+    entry_reasons = []
     if pullback_detected and gate_passed:
-        blocked_reasons.append("trend_pullback_entry_enabled")
-        blocked_reasons.append("pullback_m15_against_h1_h4")
-        blocked_reasons.append("final_direction_from_h1_h4")
+        entry_reasons.append("trend_pullback_entry_enabled")
+        entry_reasons.append("pullback_m15_against_h1_h4")
+        entry_reasons.append("final_direction_from_h1_h4")
         
     dec = SignalDecision(
         symbol=symbol,
@@ -216,6 +221,7 @@ def evaluate_signal(features: Dict[str, Any], config: Dict[str, Any] | None = No
         entry_allowed=entry_allowed,
         gate_status=gate_status,
         blocked_reasons=blocked_reasons,
+        entry_reasons=entry_reasons,
         rsi_mtf_pass=rsi_pass,
         adx_pass=adx_pass,
         atr_pass=atr_pass,
@@ -224,8 +230,8 @@ def evaluate_signal(features: Dict[str, Any], config: Dict[str, Any] | None = No
         position_plan_valid=False
     )
     dec.pullback_detected = pullback_detected
-    dec.score_before = score - 10 if pullback_detected else score
-    dec.score_after = score
+    dec.score_before_pullback = score_before_pullback
+    dec.score_after_pullback = score_after_pullback
     
     # Store raw strategy direction before ML Gatekeeper overwrites it
     dec.raw_signal = dec.direction
