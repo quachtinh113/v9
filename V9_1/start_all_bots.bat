@@ -10,8 +10,7 @@ echo.
 set ROOT_DIR=%~dp0projects
 set SYMBOLS=gbpusd eurusd usdjpy audusd usdcad usdchf us30 us100 us500 xauusd btcusd
 
-set MODE=%QUANT_RUNTIME_MODE%
-if "%MODE%"=="" set MODE=paper
+set MODE=paper
 
 echo Launching fleet in %MODE% mode...
 

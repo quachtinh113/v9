@@ -25,7 +25,8 @@ files_to_sync = [
     "src/execution/order_router.py",
     "src/execution/trade_journal.py",
     "src/pipeline_live.py",
-    "tests/test_execution_logic.py"
+    "tests/test_execution_logic.py",
+    "src/core/signal_engine.py"
 ]
 
 for target in target_projects:
