@@ -1,0 +1,41 @@
+backtest:
+  initial_capital: 10000
+  slippage_bps: 0.5
+  spread_bps: 1.0
+entry:
+  score_threshold: 72
+  setup_pullback_long_max: 48
+  setup_pullback_short_min: 52
+  sideway_adx_max: 18
+  trend_adx_min: 22
+  trend_only: true
+ml:
+  block_threshold: 0.55
+  enabled: true
+  model_path: models/xgb_trade_filter.json
+position:
+  dca_spacing_atr_mult: 1.6
+  stop_atr_mult: 1.4
+  timeout_minutes: 240
+  tp_atr_mult: 2.2
+profile:
+  bias_timeframes:
+  - H4
+  - H1
+  setup_timeframe: M15
+  style: structural_position
+  trigger_timeframe: M5
+risk:
+  max_daily_loss_pct: 1.8
+  max_layers: 2
+  risk_per_trade_pct: 0.25
+symbol: USDCAD
+telegram:
+  chat_id: '1958994081'
+  enabled: true
+  pass_threshold: 0.75
+  reduce_size_factor: 0.5
+  reduce_threshold: 0.65
+  send_heartbeat: true
+  token: 8711065588:AAGo-XiVpvASpB_A4ZEPmoQj15rWEBZ8U6c
+version: v9.3.1

@@ -1,0 +1,13 @@
+{
+    "timestamp": "2026-05-23T06:51:32",
+    "verdict": "RELEASE_FOR_LAPTOP_TEST",
+    "details": {
+        "live_trading_disabled": true,
+        "smoke_test_passed": true,
+        "pytest_passed": true,
+        "risk_gateway_enforced": true,
+        "execution_safety_verified": true,
+        "dashboard_loads": true,
+        "stop_script_works": true
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "timestamp": "2026-05-23T06:51:32",
+    "simulation_type": "SHORT_STABILITY_TEST_ONLY",
+    "duration_seconds": 300,
+    "metrics": {
+        "cpu_usage_pct": 3.5,
+        "ram_usage_mb": 78.4,
+        "bot_crashes": 0,
+        "dashboard_errors": 0,
+        "audit_log_growth_bytes": 1024,
+        "paper_fallback_status": "ONLINE_MOCK"
+    }
+}

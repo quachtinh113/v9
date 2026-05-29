@@ -1,0 +1,369 @@
+[
+    {
+        "symbol": "GBPUSD",
+        "timestamp": "2026-05-22T19:47:55.201513",
+        "execution_efficiency": {
+            "average_spread_bps": 1.0,
+            "average_slippage_bps": 0.5,
+            "average_latency_bps": 0.5499999999999997,
+            "total_trades": 3,
+            "total_net_pnl": -2.1118771185687137,
+            "expectancy_dollars": -0.7039590395229046,
+            "cost_adjusted_expectancy": -1.1596948968956353
+        },
+        "ranking_distribution": {
+            "A+": 3,
+            "A": 0,
+            "B": 0,
+            "C": 0,
+            "REJECT": 107
+        },
+        "session_profitability": {
+            "london": -2.1118771185687137
+        },
+        "edge_analysis": [
+            {
+                "regime": "sideway",
+                "direction": "long",
+                "total_signals": 18,
+                "executed": 2,
+                "gross_pnl": 8.614834647910673,
+                "net_pnl": 7.71476390067528,
+                "status": "SURVIVED"
+            },
+            {
+                "regime": "trend",
+                "direction": "long",
+                "total_signals": 92,
+                "executed": 1,
+                "gross_pnl": -9.359504194361193,
+                "net_pnl": -9.826641019243993,
+                "status": "UNPROFITABLE"
+            }
+        ]
+    },
+    {
+        "symbol": "EURUSD",
+        "timestamp": "2026-05-22T19:48:28.988141",
+        "execution_efficiency": {
+            "average_spread_bps": 1.0,
+            "average_slippage_bps": 0.5,
+            "average_latency_bps": 0.5499999999999997,
+            "total_trades": 3,
+            "total_net_pnl": -2.1667809324969767,
+            "expectancy_dollars": -0.7222603108323256,
+            "cost_adjusted_expectancy": -1.1779961682050564
+        },
+        "ranking_distribution": {
+            "A+": 3,
+            "A": 0,
+            "B": 0,
+            "C": 0,
+            "REJECT": 107
+        },
+        "session_profitability": {
+            "london": -2.1667809324969767
+        },
+        "edge_analysis": [
+            {
+                "regime": "sideway",
+                "direction": "long",
+                "total_signals": 18,
+                "executed": 2,
+                "gross_pnl": 8.566364200935116,
+                "net_pnl": 7.666293453699723,
+                "status": "SURVIVED"
+            },
+            {
+                "regime": "trend",
+                "direction": "long",
+                "total_signals": 92,
+                "executed": 1,
+                "gross_pnl": -9.365937561313899,
+                "net_pnl": -9.8330743861967,
+                "status": "UNPROFITABLE"
+            }
+        ]
+    },
+    {
+        "symbol": "USDJPY",
+        "timestamp": "2026-05-22T19:49:13.767499",
+        "execution_efficiency": {
+            "average_spread_bps": 1.0,
+            "average_slippage_bps": 0.5,
+            "average_latency_bps": 0.5499999999999997,
+            "total_trades": 3,
+            "total_net_pnl": -2.0425102170911487,
+            "expectancy_dollars": -0.6808367390303829,
+            "cost_adjusted_expectancy": -1.1365725964031137
+        },
+        "ranking_distribution": {
+            "A+": 3,
+            "A": 0,
+            "B": 0,
+            "C": 0,
+            "REJECT": 107
+        },
+        "session_profitability": {
+            "london": -2.0425102170911487
+        },
+        "edge_analysis": [
+            {
+                "regime": "sideway",
+                "direction": "long",
+                "total_signals": 18,
+                "executed": 2,
+                "gross_pnl": 8.64893491701682,
+                "net_pnl": 7.748864169781427,
+                "status": "SURVIVED"
+            },
+            {
+                "regime": "trend",
+                "direction": "long",
+                "total_signals": 92,
+                "executed": 1,
+                "gross_pnl": -9.324237561989776,
+                "net_pnl": -9.791374386872576,
+                "status": "UNPROFITABLE"
+            }
+        ]
+    },
+    {
+        "symbol": "AUDUSD",
+        "timestamp": "2026-05-22T19:49:36.802130",
+        "execution_efficiency": {
+            "average_spread_bps": 1.0,
+            "average_slippage_bps": 0.5,
+            "average_latency_bps": 0.55,
+            "total_trades": 3,
+            "total_net_pnl": 5.705448373798404,
+            "expectancy_dollars": 1.901816124599468,
+            "cost_adjusted_expectancy": 1.8516136208345157
+        },
+        "ranking_distribution": {
+            "A+": 3,
+            "A": 0,
+            "B": 0,
+            "C": 0,
+            "REJECT": 1
+        },
+        "session_profitability": {
+            "london": 5.705448373798404
+        },
+        "edge_analysis": [
+            {
+                "regime": "sideway",
+                "direction": "long",
+                "total_signals": 4,
+                "executed": 3,
+                "gross_pnl": 5.856055885093261,
+                "net_pnl": 5.705448373798404,
+                "status": "SURVIVED"
+            }
+        ]
+    },
+    {
+        "symbol": "USDCAD",
+        "timestamp": "2026-05-22T19:49:59.831627",
+        "execution_efficiency": {
+            "average_spread_bps": 1.0,
+            "average_slippage_bps": 0.5,
+            "average_latency_bps": 0.55,
+            "total_trades": 3,
+            "total_net_pnl": 5.712443954864554,
+            "expectancy_dollars": 1.9041479849548513,
+            "cost_adjusted_expectancy": 1.853945481189899
+        },
+        "ranking_distribution": {
+            "A+": 3,
+            "A": 0,
+            "B": 0,
+            "C": 0,
+            "REJECT": 1
+        },
+        "session_profitability": {
+            "london": 5.712443954864554
+        },
+        "edge_analysis": [
+            {
+                "regime": "sideway",
+                "direction": "long",
+                "total_signals": 4,
+                "executed": 3,
+                "gross_pnl": 5.863051466159411,
+                "net_pnl": 5.712443954864554,
+                "status": "SURVIVED"
+            }
+        ]
+    },
+    {
+        "symbol": "USDCHF",
+        "timestamp": "2026-05-22T19:50:22.439133",
+        "execution_efficiency": {
+            "average_spread_bps": 1.0,
+            "average_slippage_bps": 0.5,
+            "average_latency_bps": 0.55,
+            "total_trades": 3,
+            "total_net_pnl": 5.688771833280256,
+            "expectancy_dollars": 1.8962572777600855,
+            "cost_adjusted_expectancy": 1.8460547739951332
+        },
+        "ranking_distribution": {
+            "A+": 3,
+            "A": 0,
+            "B": 0,
+            "C": 0,
+            "REJECT": 1
+        },
+        "session_profitability": {
+            "london": 5.688771833280256
+        },
+        "edge_analysis": [
+            {
+                "regime": "sideway",
+                "direction": "long",
+                "total_signals": 4,
+                "executed": 3,
+                "gross_pnl": 5.839379344575113,
+                "net_pnl": 5.688771833280256,
+                "status": "SURVIVED"
+            }
+        ]
+    },
+    {
+        "symbol": "US30",
+        "timestamp": "2026-05-22T19:50:44.910890",
+        "execution_efficiency": {
+            "average_spread_bps": 1.0,
+            "average_slippage_bps": 0.5,
+            "average_latency_bps": 0.55,
+            "total_trades": 3,
+            "total_net_pnl": 1926.0697075722896,
+            "expectancy_dollars": 642.0232358574299,
+            "cost_adjusted_expectancy": 622.946284426748
+        },
+        "ranking_distribution": {
+            "A+": 3,
+            "A": 0,
+            "B": 0,
+            "C": 0,
+            "REJECT": 1
+        },
+        "session_profitability": {
+            "london": 1926.0697075722896
+        },
+        "edge_analysis": [
+            {
+                "regime": "sideway",
+                "direction": "long",
+                "total_signals": 4,
+                "executed": 3,
+                "gross_pnl": 1983.3005618643356,
+                "net_pnl": 1926.0697075722896,
+                "status": "SURVIVED"
+            }
+        ]
+    },
+    {
+        "symbol": "US100",
+        "timestamp": "2026-05-22T19:50:57.301878",
+        "execution_efficiency": {
+            "average_spread_bps": 1.0,
+            "average_slippage_bps": 0.5,
+            "average_latency_bps": 0.55,
+            "total_trades": 3,
+            "total_net_pnl": 5.7111370862411235,
+            "expectancy_dollars": 1.9037123620803744,
+            "cost_adjusted_expectancy": 1.8535098583154221
+        },
+        "ranking_distribution": {
+            "A+": 3,
+            "A": 0,
+            "B": 0,
+            "C": 0,
+            "REJECT": 1
+        },
+        "session_profitability": {
+            "london": 5.7111370862411235
+        },
+        "edge_analysis": [
+            {
+                "regime": "sideway",
+                "direction": "long",
+                "total_signals": 4,
+                "executed": 3,
+                "gross_pnl": 5.8617445975359805,
+                "net_pnl": 5.7111370862411235,
+                "status": "SURVIVED"
+            }
+        ]
+    },
+    {
+        "symbol": "US500",
+        "timestamp": "2026-05-22T19:51:15.051662",
+        "execution_efficiency": {
+            "average_spread_bps": 1.0,
+            "average_slippage_bps": 0.5,
+            "average_latency_bps": 0.55,
+            "total_trades": 3,
+            "total_net_pnl": 5.723106174641899,
+            "expectancy_dollars": 1.9077020582139663,
+            "cost_adjusted_expectancy": 1.8574995544490138
+        },
+        "ranking_distribution": {
+            "A+": 3,
+            "A": 0,
+            "B": 0,
+            "C": 0,
+            "REJECT": 1
+        },
+        "session_profitability": {
+            "london": 5.723106174641899
+        },
+        "edge_analysis": [
+            {
+                "regime": "sideway",
+                "direction": "long",
+                "total_signals": 4,
+                "executed": 3,
+                "gross_pnl": 5.873713685936756,
+                "net_pnl": 5.723106174641899,
+                "status": "SURVIVED"
+            }
+        ]
+    },
+    {
+        "symbol": "XAUUSD",
+        "timestamp": "2026-05-22T19:51:38.497689",
+        "execution_efficiency": {
+            "average_spread_bps": 1.0,
+            "average_slippage_bps": 0.5,
+            "average_latency_bps": 0.55,
+            "total_trades": 3,
+            "total_net_pnl": 113.88469864008721,
+            "expectancy_dollars": 37.9615662133624,
+            "cost_adjusted_expectancy": 36.957516138063355
+        },
+        "ranking_distribution": {
+            "A+": 3,
+            "A": 0,
+            "B": 0,
+            "C": 0,
+            "REJECT": 1
+        },
+        "session_profitability": {
+            "london": 113.88469864008721
+        },
+        "edge_analysis": [
+            {
+                "regime": "sideway",
+                "direction": "long",
+                "total_signals": 4,
+                "executed": 3,
+                "gross_pnl": 116.89684886598434,
+                "net_pnl": 113.88469864008721,
+                "status": "SURVIVED"
+            }
+        ]
+    }
+]

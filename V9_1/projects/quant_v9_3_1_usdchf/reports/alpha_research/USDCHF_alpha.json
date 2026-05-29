@@ -1,0 +1,22 @@
+{
+    "symbol": "USDCHF",
+    "timestamp": "2026-05-25T22:19:02.941555",
+    "execution_efficiency": {
+        "average_spread_bps": 0.0,
+        "average_slippage_bps": 0.0,
+        "average_latency_bps": 0.0,
+        "total_trades": 0,
+        "total_net_pnl": 0.0,
+        "expectancy_dollars": 0.0,
+        "cost_adjusted_expectancy": 0.0
+    },
+    "ranking_distribution": {
+        "A+": 0,
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "REJECT": 0
+    },
+    "session_profitability": {},
+    "edge_analysis": []
+}

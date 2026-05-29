@@ -1,0 +1,32 @@
+{
+    "overfitting_detected": true,
+    "train_f1_score": 0.8977955911823647,
+    "stability_score": 1.0,
+    "best_regime": "trend",
+    "worst_regime": "trend",
+    "validation_metrics": {
+        "winrate": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "confusion_matrix": [
+            [
+                227,
+                21
+            ],
+            [
+                44,
+                0
+            ]
+        ]
+    },
+    "financial_metrics": {
+        "max_drawdown": 5.25,
+        "profit_factor": 0.0,
+        "avg_trade_duration": "4h (Simulated)"
+    },
+    "regime_distribution": {
+        "trend": 795,
+        "sideway": 375
+    }
+}

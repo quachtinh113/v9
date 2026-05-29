@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Realism Engine Report - US500</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 30px; background-color: #0d1117; color: #c9d1d9; }
+        h1, h2, h3 { color: #58a6ff; }
+        .container { max-width: 900px; margin: 0 auto; background: #161b22; padding: 25px; border-radius: 8px; border: 1px solid #30363d; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 25px; }
+        th, td { padding: 12px; border: 1px solid #30363d; text-align: left; }
+        th { background-color: #21262d; color: #f0f6fc; }
+        .verdict-box { padding: 15px; border-radius: 6px; font-size: 18px; font-weight: bold; text-align: center; margin-bottom: 20px; }
+        .INSTITUTIONAL_READY { background-color: #1f6feb; color: #ffffff; border: 1px solid #58a6ff; }
+        .LIVE_PAPER_READY { background-color: #238636; color: #ffffff; border: 1px solid #2ea043; }
+        .SANDBOX_ONLY { background-color: #d29922; color: #0d1117; border: 1px solid #e3b341; }
+        .DISABLED { background-color: #da3633; color: #ffffff; border: 1px solid #f85149; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Realism Engine Audit - US500</h1>
+        <p>Generated at: 2026-05-25T22:18:50.829075</p>
+        
+        <div class="verdict-box SANDBOX_ONLY">
+            VERDICT: SANDBOX_ONLY
+        </div>
+        
+        <h3>Simulation Metrics</h3>
+        <table>
+            <tr><th>Metric</th><th>Idealized Backtest</th><th>Realistic Engine Output</th></tr>
+            <tr><td>Profit Factor</td><td>-</td><td>inf</td></tr>
+            <tr><td>Max Drawdown (%)</td><td>-</td><td>0.00%</td></tr>
+            <tr><td>Sharpe Ratio</td><td>-</td><td>0.00</td></tr>
+            <tr><td>Sortino Ratio</td><td>-</td><td>0.00</td></tr>
+            <tr><td>Max Consecutive Losses</td><td>-</td><td>0</td></tr>
+        </table>
+        
+        <h3>Monte Carlo Stress Test (1,000 Iterations)</h3>
+        <table>
+            <tr><th>Metric</th><th>Value</th></tr>
+            <tr><td>Median Drawdown</td><td>0.00%</td></tr>
+            <tr><td>95th Percentile Drawdown (Worst-Case)</td><td>0.00%</td></tr>
+            <tr><td>Probability of Ruin / 50% Drawdown</td><td>0.00%</td></tr>
+        </table>
+    </div>
+</body>
+</html>

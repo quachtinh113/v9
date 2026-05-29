@@ -1,0 +1,12 @@
+{
+    "timestamp": "2026-05-23T06:51:32",
+    "routing_chain": "Signal -> ML Gatekeeper -> RiskGateway -> OrderRouter -> MT5Adapter -> AuditLog",
+    "checks": {
+        "no_direct_execution": "WARNING",
+        "no_signal_in_execution_engine": "VERIFIED",
+        "ml_only_filters": "VERIFIED",
+        "paper_fallback_on_mt5_error": "VERIFIED",
+        "rejected_orders_logged": "VERIFIED",
+        "stop_script_kills_processes": "VERIFIED"
+    }
+}

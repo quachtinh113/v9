@@ -1,0 +1,1345 @@
+[
+    {
+        "symbol": "GBPUSD",
+        "setup_statistics": {
+            "trend continuation": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "breakout": {
+                "trade_count": 1,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 122.0,
+                "expectancy": -9.826641019243993,
+                "mc_worst_case_dd": 0.09826641019244561,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "Negative Expectancy, Insufficient Sample (<3)"
+            },
+            "mean reversion": {
+                "trade_count": 2,
+                "winrate": 0.5,
+                "profit_factor": 1.8259461691999825,
+                "sharpe": 4.6396810749900474,
+                "avg_holding_time": 46.5,
+                "expectancy": 3.85738195033764,
+                "mc_worst_case_dd": 0.09340516595830195,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "Insufficient Sample (<3)"
+            },
+            "session breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "RSI recovery": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "volatility expansion": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            }
+        },
+        "session_statistics": {
+            "Asia": {
+                "trade_count": 2,
+                "winrate": 0.5,
+                "net_pnl": 7.22863947726205,
+                "expectancy": 3.614319738631025
+            },
+            "London": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "New York": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Lunch": {
+                "trade_count": 1,
+                "winrate": 0.0,
+                "net_pnl": -9.340516595830763,
+                "expectancy": -9.340516595830763
+            },
+            "Post-news": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            }
+        },
+        "alpha_profile": {
+            "best_setup": "mean reversion",
+            "worst_setup": "breakout",
+            "best_session": "Asia",
+            "worst_session": "Lunch",
+            "volatility_preference": "LOW_VOLATILITY"
+        },
+        "rejected_setups": [
+            "RSI recovery",
+            "mean reversion",
+            "trend continuation",
+            "volatility expansion",
+            "breakout",
+            "session breakout"
+        ],
+        "portfolio_metrics": {
+            "total_trades": 0,
+            "winrate": 0.0,
+            "net_pnl": 0.0,
+            "profit_factor": 0.0,
+            "sharpe_ratio": 0.0,
+            "max_drawdown_pct": 0.0,
+            "mc_worst_case_dd": 0.0,
+            "ruin_probability": 0.0,
+            "verdict": "DISABLED"
+        }
+    },
+    {
+        "symbol": "EURUSD",
+        "setup_statistics": {
+            "trend continuation": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "breakout": {
+                "trade_count": 1,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 122.0,
+                "expectancy": -9.8330743861967,
+                "mc_worst_case_dd": 0.09833074386197041,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "Negative Expectancy, Insufficient Sample (<3)"
+            },
+            "mean reversion": {
+                "trade_count": 2,
+                "winrate": 0.5,
+                "profit_factor": 1.8134060235032934,
+                "sharpe": 4.589604277093042,
+                "avg_holding_time": 46.5,
+                "expectancy": 3.8331467268498614,
+                "mc_worst_case_dd": 0.09424928304171772,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "Insufficient Sample (<3)"
+            },
+            "session breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "RSI recovery": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "volatility expansion": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            }
+        },
+        "session_statistics": {
+            "Asia": {
+                "trade_count": 2,
+                "winrate": 0.5,
+                "net_pnl": 7.258147371674454,
+                "expectancy": 3.629073685837227
+            },
+            "London": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "New York": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Lunch": {
+                "trade_count": 1,
+                "winrate": 0.0,
+                "net_pnl": -9.42492830417143,
+                "expectancy": -9.42492830417143
+            },
+            "Post-news": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            }
+        },
+        "alpha_profile": {
+            "best_setup": "mean reversion",
+            "worst_setup": "breakout",
+            "best_session": "Asia",
+            "worst_session": "Lunch",
+            "volatility_preference": "LOW_VOLATILITY"
+        },
+        "rejected_setups": [
+            "session breakout",
+            "mean reversion",
+            "breakout",
+            "RSI recovery",
+            "volatility expansion",
+            "trend continuation"
+        ],
+        "portfolio_metrics": {
+            "total_trades": 0,
+            "winrate": 0.0,
+            "net_pnl": 0.0,
+            "profit_factor": 0.0,
+            "sharpe_ratio": 0.0,
+            "max_drawdown_pct": 0.0,
+            "mc_worst_case_dd": 0.0,
+            "ruin_probability": 0.0,
+            "verdict": "DISABLED"
+        }
+    },
+    {
+        "symbol": "USDJPY",
+        "setup_statistics": {
+            "trend continuation": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "breakout": {
+                "trade_count": 1,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 122.0,
+                "expectancy": -9.791374386872576,
+                "mc_worst_case_dd": 0.09791374386872122,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "Negative Expectancy, Insufficient Sample (<3)"
+            },
+            "mean reversion": {
+                "trade_count": 2,
+                "winrate": 0.5,
+                "profit_factor": 1.8283672262458168,
+                "sharpe": 4.6492979862276105,
+                "avg_holding_time": 46.5,
+                "expectancy": 3.8744320848907137,
+                "mc_worst_case_dd": 0.09354382844067004,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "Insufficient Sample (<3)"
+            },
+            "session breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "RSI recovery": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "volatility expansion": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            }
+        },
+        "session_statistics": {
+            "Asia": {
+                "trade_count": 2,
+                "winrate": 0.5,
+                "net_pnl": 7.311872626976083,
+                "expectancy": 3.6559363134880414
+            },
+            "London": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "New York": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Lunch": {
+                "trade_count": 1,
+                "winrate": 0.0,
+                "net_pnl": -9.354382844067231,
+                "expectancy": -9.354382844067231
+            },
+            "Post-news": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            }
+        },
+        "alpha_profile": {
+            "best_setup": "mean reversion",
+            "worst_setup": "breakout",
+            "best_session": "Asia",
+            "worst_session": "Lunch",
+            "volatility_preference": "LOW_VOLATILITY"
+        },
+        "rejected_setups": [
+            "RSI recovery",
+            "volatility expansion",
+            "session breakout",
+            "mean reversion",
+            "trend continuation",
+            "breakout"
+        ],
+        "portfolio_metrics": {
+            "total_trades": 0,
+            "winrate": 0.0,
+            "net_pnl": 0.0,
+            "profit_factor": 0.0,
+            "sharpe_ratio": 0.0,
+            "max_drawdown_pct": 0.0,
+            "mc_worst_case_dd": 0.0,
+            "ruin_probability": 0.0,
+            "verdict": "DISABLED"
+        }
+    },
+    {
+        "symbol": "AUDUSD",
+        "setup_statistics": {
+            "trend continuation": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "mean reversion": {
+                "trade_count": 3,
+                "winrate": 1.0,
+                "profit_factor": Infinity,
+                "sharpe": 971.9303807483475,
+                "avg_holding_time": 145.0,
+                "expectancy": 1.901816124599468,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "APPROVED",
+                "reason": "Passed all criteria"
+            },
+            "session breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "RSI recovery": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "volatility expansion": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            }
+        },
+        "session_statistics": {
+            "Asia": {
+                "trade_count": 2,
+                "winrate": 1.0,
+                "net_pnl": 3.8341809623871654,
+                "expectancy": 1.9170904811935827
+            },
+            "London": {
+                "trade_count": 1,
+                "winrate": 1.0,
+                "net_pnl": 1.8712674114112389,
+                "expectancy": 1.8712674114112389
+            },
+            "New York": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Lunch": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Post-news": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            }
+        },
+        "alpha_profile": {
+            "best_setup": "mean reversion",
+            "worst_setup": "mean reversion",
+            "best_session": "Asia",
+            "worst_session": "London",
+            "volatility_preference": "LOW_VOLATILITY"
+        },
+        "rejected_setups": [
+            "volatility expansion",
+            "breakout",
+            "session breakout",
+            "trend continuation",
+            "RSI recovery"
+        ],
+        "portfolio_metrics": {
+            "total_trades": 3,
+            "winrate": 1.0,
+            "net_pnl": 5.705448373797481,
+            "profit_factor": Infinity,
+            "sharpe_ratio": 971.9303807483464,
+            "max_drawdown_pct": 0.0,
+            "mc_worst_case_dd": 0.0,
+            "ruin_probability": 0.0,
+            "verdict": "APPROVED"
+        }
+    },
+    {
+        "symbol": "USDCAD",
+        "setup_statistics": {
+            "trend continuation": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "mean reversion": {
+                "trade_count": 3,
+                "winrate": 1.0,
+                "profit_factor": Infinity,
+                "sharpe": 1015.8690645873684,
+                "avg_holding_time": 145.0,
+                "expectancy": 1.9041479849548513,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "APPROVED",
+                "reason": "Passed all criteria"
+            },
+            "session breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "RSI recovery": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "volatility expansion": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            }
+        },
+        "session_statistics": {
+            "Asia": {
+                "trade_count": 2,
+                "winrate": 1.0,
+                "net_pnl": 3.8291894680104264,
+                "expectancy": 1.9145947340052132
+            },
+            "London": {
+                "trade_count": 1,
+                "winrate": 1.0,
+                "net_pnl": 1.8832544868541277,
+                "expectancy": 1.8832544868541277
+            },
+            "New York": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Lunch": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Post-news": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            }
+        },
+        "alpha_profile": {
+            "best_setup": "mean reversion",
+            "worst_setup": "mean reversion",
+            "best_session": "Asia",
+            "worst_session": "London",
+            "volatility_preference": "LOW_VOLATILITY"
+        },
+        "rejected_setups": [
+            "volatility expansion",
+            "breakout",
+            "RSI recovery",
+            "session breakout",
+            "trend continuation"
+        ],
+        "portfolio_metrics": {
+            "total_trades": 3,
+            "winrate": 1.0,
+            "net_pnl": 5.712443954866103,
+            "profit_factor": Infinity,
+            "sharpe_ratio": 1015.8690645873676,
+            "max_drawdown_pct": 0.0,
+            "mc_worst_case_dd": 0.0,
+            "ruin_probability": 0.0,
+            "verdict": "APPROVED"
+        }
+    },
+    {
+        "symbol": "USDCHF",
+        "setup_statistics": {
+            "trend continuation": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "mean reversion": {
+                "trade_count": 3,
+                "winrate": 1.0,
+                "profit_factor": Infinity,
+                "sharpe": 1074.745050861011,
+                "avg_holding_time": 145.0,
+                "expectancy": 1.8962572777600855,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "APPROVED",
+                "reason": "Passed all criteria"
+            },
+            "session breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "RSI recovery": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "volatility expansion": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            }
+        },
+        "session_statistics": {
+            "Asia": {
+                "trade_count": 2,
+                "winrate": 1.0,
+                "net_pnl": 3.813235913237733,
+                "expectancy": 1.9066179566188666
+            },
+            "London": {
+                "trade_count": 1,
+                "winrate": 1.0,
+                "net_pnl": 1.8755359200425232,
+                "expectancy": 1.8755359200425232
+            },
+            "New York": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Lunch": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Post-news": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            }
+        },
+        "alpha_profile": {
+            "best_setup": "mean reversion",
+            "worst_setup": "mean reversion",
+            "best_session": "Asia",
+            "worst_session": "London",
+            "volatility_preference": "LOW_VOLATILITY"
+        },
+        "rejected_setups": [
+            "volatility expansion",
+            "breakout",
+            "RSI recovery",
+            "session breakout",
+            "trend continuation"
+        ],
+        "portfolio_metrics": {
+            "total_trades": 3,
+            "winrate": 1.0,
+            "net_pnl": 5.688771833280043,
+            "profit_factor": Infinity,
+            "sharpe_ratio": 1074.7450508610088,
+            "max_drawdown_pct": 0.0,
+            "mc_worst_case_dd": 0.0,
+            "ruin_probability": 0.0,
+            "verdict": "APPROVED"
+        }
+    },
+    {
+        "symbol": "US30",
+        "setup_statistics": {
+            "trend continuation": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "mean reversion": {
+                "trade_count": 3,
+                "winrate": 1.0,
+                "profit_factor": Infinity,
+                "sharpe": 83.16278848115674,
+                "avg_holding_time": 145.0,
+                "expectancy": 642.0232358574299,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "APPROVED",
+                "reason": "Passed all criteria"
+            },
+            "session breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "RSI recovery": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "volatility expansion": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            }
+        },
+        "session_statistics": {
+            "Asia": {
+                "trade_count": 2,
+                "winrate": 1.0,
+                "net_pnl": 1211.7287991415837,
+                "expectancy": 605.8643995707919
+            },
+            "London": {
+                "trade_count": 1,
+                "winrate": 1.0,
+                "net_pnl": 714.3409084307059,
+                "expectancy": 714.3409084307059
+            },
+            "New York": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Lunch": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Post-news": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            }
+        },
+        "alpha_profile": {
+            "best_setup": "mean reversion",
+            "worst_setup": "mean reversion",
+            "best_session": "Asia",
+            "worst_session": "London",
+            "volatility_preference": "LOW_VOLATILITY"
+        },
+        "rejected_setups": [
+            "volatility expansion",
+            "trend continuation",
+            "RSI recovery",
+            "breakout",
+            "session breakout"
+        ],
+        "portfolio_metrics": {
+            "total_trades": 3,
+            "winrate": 1.0,
+            "net_pnl": 1926.0697075722892,
+            "profit_factor": Infinity,
+            "sharpe_ratio": 83.16278848115672,
+            "max_drawdown_pct": 0.0,
+            "mc_worst_case_dd": 0.0,
+            "ruin_probability": 0.0,
+            "verdict": "APPROVED"
+        }
+    },
+    {
+        "symbol": "US100",
+        "setup_statistics": {
+            "trend continuation": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "mean reversion": {
+                "trade_count": 3,
+                "winrate": 1.0,
+                "profit_factor": Infinity,
+                "sharpe": 995.4178526791674,
+                "avg_holding_time": 145.0,
+                "expectancy": 1.9037123620803744,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "APPROVED",
+                "reason": "Passed all criteria"
+            },
+            "session breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "RSI recovery": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "volatility expansion": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            }
+        },
+        "session_statistics": {
+            "Asia": {
+                "trade_count": 2,
+                "winrate": 1.0,
+                "net_pnl": 3.834145783647287,
+                "expectancy": 1.9170728918236435
+            },
+            "London": {
+                "trade_count": 1,
+                "winrate": 1.0,
+                "net_pnl": 1.8769913025938365,
+                "expectancy": 1.8769913025938365
+            },
+            "New York": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Lunch": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Post-news": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            }
+        },
+        "alpha_profile": {
+            "best_setup": "mean reversion",
+            "worst_setup": "mean reversion",
+            "best_session": "Asia",
+            "worst_session": "London",
+            "volatility_preference": "LOW_VOLATILITY"
+        },
+        "rejected_setups": [
+            "RSI recovery",
+            "breakout",
+            "session breakout",
+            "trend continuation",
+            "volatility expansion"
+        ],
+        "portfolio_metrics": {
+            "total_trades": 3,
+            "winrate": 1.0,
+            "net_pnl": 5.711137086240342,
+            "profit_factor": Infinity,
+            "sharpe_ratio": 995.4178526791684,
+            "max_drawdown_pct": 0.0,
+            "mc_worst_case_dd": 0.0,
+            "ruin_probability": 0.0,
+            "verdict": "APPROVED"
+        }
+    },
+    {
+        "symbol": "US500",
+        "setup_statistics": {
+            "trend continuation": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "mean reversion": {
+                "trade_count": 3,
+                "winrate": 1.0,
+                "profit_factor": Infinity,
+                "sharpe": 752.6001543876362,
+                "avg_holding_time": 145.0,
+                "expectancy": 1.9077020582139663,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "APPROVED",
+                "reason": "Passed all criteria"
+            },
+            "session breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "RSI recovery": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "volatility expansion": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            }
+        },
+        "session_statistics": {
+            "Asia": {
+                "trade_count": 2,
+                "winrate": 1.0,
+                "net_pnl": 3.851562233843026,
+                "expectancy": 1.925781116921513
+            },
+            "London": {
+                "trade_count": 1,
+                "winrate": 1.0,
+                "net_pnl": 1.8715439407988725,
+                "expectancy": 1.8715439407988725
+            },
+            "New York": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Lunch": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Post-news": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            }
+        },
+        "alpha_profile": {
+            "best_setup": "mean reversion",
+            "worst_setup": "mean reversion",
+            "best_session": "Asia",
+            "worst_session": "London",
+            "volatility_preference": "LOW_VOLATILITY"
+        },
+        "rejected_setups": [
+            "trend continuation",
+            "RSI recovery",
+            "session breakout",
+            "volatility expansion",
+            "breakout"
+        ],
+        "portfolio_metrics": {
+            "total_trades": 3,
+            "winrate": 1.0,
+            "net_pnl": 5.723106174642453,
+            "profit_factor": Infinity,
+            "sharpe_ratio": 752.6001543876348,
+            "max_drawdown_pct": 0.0,
+            "mc_worst_case_dd": 0.0,
+            "ruin_probability": 0.0,
+            "verdict": "APPROVED"
+        }
+    },
+    {
+        "symbol": "XAUUSD",
+        "setup_statistics": {
+            "trend continuation": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "mean reversion": {
+                "trade_count": 3,
+                "winrate": 1.0,
+                "profit_factor": Infinity,
+                "sharpe": 909.1210329390227,
+                "avg_holding_time": 145.0,
+                "expectancy": 37.9615662133624,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "APPROVED",
+                "reason": "Passed all criteria"
+            },
+            "session breakout": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "RSI recovery": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            },
+            "volatility expansion": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "avg_holding_time": 0.0,
+                "expectancy": 0.0,
+                "mc_worst_case_dd": 0.0,
+                "mc_ruin_probability": 0.0,
+                "verdict": "REJECTED",
+                "reason": "No trades"
+            }
+        },
+        "session_statistics": {
+            "Asia": {
+                "trade_count": 2,
+                "winrate": 1.0,
+                "net_pnl": 76.38512100872504,
+                "expectancy": 38.19256050436252
+            },
+            "London": {
+                "trade_count": 1,
+                "winrate": 1.0,
+                "net_pnl": 37.49957763136217,
+                "expectancy": 37.49957763136217
+            },
+            "New York": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Lunch": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            },
+            "Post-news": {
+                "trade_count": 0,
+                "winrate": 0.0,
+                "net_pnl": 0.0,
+                "expectancy": 0.0
+            }
+        },
+        "alpha_profile": {
+            "best_setup": "mean reversion",
+            "worst_setup": "mean reversion",
+            "best_session": "Asia",
+            "worst_session": "London",
+            "volatility_preference": "LOW_VOLATILITY"
+        },
+        "rejected_setups": [
+            "session breakout",
+            "breakout",
+            "trend continuation",
+            "volatility expansion",
+            "RSI recovery"
+        ],
+        "portfolio_metrics": {
+            "total_trades": 3,
+            "winrate": 1.0,
+            "net_pnl": 113.88469864008766,
+            "profit_factor": Infinity,
+            "sharpe_ratio": 909.1210329390225,
+            "max_drawdown_pct": 0.0,
+            "mc_worst_case_dd": 0.0,
+            "ruin_probability": 0.0,
+            "verdict": "APPROVED"
+        }
+    }
+]
