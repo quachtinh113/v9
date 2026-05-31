@@ -196,7 +196,10 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                             if ts_str:
                                 from datetime import datetime, timezone
                                 last_ts = datetime.fromisoformat(ts_str.replace("Z", ""))
-                                age_sec = (datetime.now(timezone.utc) - last_ts).total_seconds()
+                                if last_ts.tzinfo is None:
+                                    age_sec = (datetime.utcnow() - last_ts).total_seconds()
+                                else:
+                                    age_sec = (datetime.now(timezone.utc) - last_ts).total_seconds()
                                 if age_sec <= 90:
                                     heartbeat_ok = last_entry.get("heartbeat_ok", False)
                                     system_state = "GREEN" if heartbeat_ok else "YELLOW"
@@ -265,7 +268,10 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                                     hb_timestamp_str = hb_ts_str
                                     from datetime import datetime, timezone
                                     hb_ts = datetime.fromisoformat(hb_ts_str.replace("Z", ""))
-                                    hb_age = (datetime.now(timezone.utc) - hb_ts).total_seconds()
+                                    if hb_ts.tzinfo is None:
+                                        hb_age = (datetime.utcnow() - hb_ts).total_seconds()
+                                    else:
+                                        hb_age = (datetime.now(timezone.utc) - hb_ts).total_seconds()
                                     if hb_age <= 90:
                                         sym_active = True
                                     ml_ok = last_hb.get("ml_ok", True)
@@ -372,6 +378,8 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                 audit_ndjson_path = project_path / "logs" / "live_pipeline_audit.ndjson"
                 latest_loop_audit = None
                 latest_signal_block = None
+                latest_strategy_flat = None
+                latest_risk_block = None
                 
                 if audit_ndjson_path.exists():
                     try:
@@ -385,7 +393,11 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                                     latest_loop_audit = data
                                 if data.get("stage") == "SIGNAL" and data.get("reason_code") == "ML_GATEKEEPER_BLOCK" and latest_signal_block is None:
                                     latest_signal_block = data
-                                if latest_loop_audit and latest_signal_block:
+                                if data.get("stage") == "SIGNAL" and data.get("reason_code") == "STRATEGY_FLAT" and latest_strategy_flat is None:
+                                    latest_strategy_flat = data
+                                if data.get("stage") == "RISK" and latest_risk_block is None:
+                                    latest_risk_block = data
+                                if latest_loop_audit and latest_signal_block and latest_strategy_flat and latest_risk_block:
                                     break
                     except Exception:
                         pass
@@ -474,6 +486,69 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                     bottleneck_resolved = "No valid setup"
                     color_resolved = "blue"
 
+                # Resolve Block Reason
+                block_reason_resolved = "No valid setup"
+                
+                if stage_resolved == "DATA_OFFLINE":
+                    block_reason_resolved = "Data feed not running"
+                elif stage_resolved == "DATA_STALE":
+                    hb_tick_age = 99999
+                    if hb_path.exists():
+                        try:
+                            with open(hb_path, "r", encoding="utf-8") as f:
+                                lines_h = f.readlines()
+                                if lines_h:
+                                    last_h = json.loads(lines_h[-1])
+                                    hb_tick_age = int(last_h.get("tick_age", 99999))
+                        except Exception:
+                            pass
+                    if hb_tick_age > 100000:
+                        block_reason_resolved = f"tick_age={hb_tick_age % 1000}"
+                    else:
+                        block_reason_resolved = f"tick_age={hb_tick_age}"
+                elif stage_resolved == "SIGNAL_ENGINE":
+                    if latest_strategy_flat:
+                        reasons = latest_strategy_flat.get("details", {}).get("blocked_reasons", [])
+                        if reasons:
+                            block_reason_resolved = reasons[0]
+                        else:
+                            block_reason_resolved = "No valid setup"
+                    else:
+                        block_reason_resolved = "No valid setup"
+                elif stage_resolved == "ML_GATEKEEPER":
+                    block_reason_resolved = f"ml_score={round(ml_score_val, 2)}"
+                elif stage_resolved == "RISK_GATEWAY":
+                    risk_reasons = []
+                    if latest_risk_block:
+                        risk_reasons = latest_risk_block.get("details", {}).get("reasons", [])
+                    if not risk_reasons and last_reason_code and last_reason_code != "N/A":
+                        risk_reasons = [last_reason_code]
+                    
+                    if risk_reasons:
+                        first_reason = risk_reasons[0]
+                        if "spread_guard" in first_reason:
+                            block_reason_resolved = "spread_guard"
+                        elif "slippage_guard" in first_reason:
+                            block_reason_resolved = "slippage_guard"
+                        elif "atr_shock" in first_reason:
+                            block_reason_resolved = "atr_shock"
+                        elif "daily_loss" in first_reason:
+                            block_reason_resolved = "daily_loss_limit"
+                        elif "weekly_soft" in first_reason:
+                            block_reason_resolved = "weekly_soft_stop"
+                        elif "hard_drawdown" in first_reason:
+                            block_reason_resolved = "hard_drawdown"
+                        else:
+                            block_reason_resolved = first_reason
+                    else:
+                        block_reason_resolved = "Risk veto"
+                elif stage_resolved == "ORDER_ROUTER_WAITING":
+                    block_reason_resolved = "Signal passed but no order call"
+                elif stage_resolved == "ORDER_ROUTER":
+                    block_reason_resolved = "Order routing in progress"
+                elif stage_resolved == "ORDER_SENT":
+                    block_reason_resolved = "Order sent to broker"
+
                 # Order Name formatting
                 from datetime import datetime, timezone
                 ts_to_use = tick_timestamp if tick_timestamp else hb_timestamp_str
@@ -515,16 +590,31 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                 pipeline_status.append({
                     "symbol": sym,
                     "order_name": order_name,
-                    "direction": direction_mapped,
                     "stage": stage_resolved,
-                    "bottleneck": bottleneck_resolved,
+                    "block_reason": block_reason_resolved,
                     "ml_score": round(ml_score_val, 4),
-                    "ml_decision": ml_decision_val,
-                    "risk_decision": risk_action_val,
-                    "execution_status": exec_mode_val,
+                    "risk_action": risk_action_val,
                     "last_update": last_update_display,
                     "color": color_resolved
                 })
+
+            # Sort blocked symbols first:
+            # Blocked stages are: RISK_GATEWAY, DATA_OFFLINE, DATA_STALE, ML_GATEKEEPER, ORDER_ROUTER_WAITING, SIGNAL_ENGINE
+            # Non-blocked stages are: ORDER_ROUTER, ORDER_SENT
+            def get_stage_priority(stage):
+                priority = {
+                    "RISK_GATEWAY": 0,
+                    "DATA_OFFLINE": 1,
+                    "DATA_STALE": 2,
+                    "ML_GATEKEEPER": 3,
+                    "ORDER_ROUTER_WAITING": 4,
+                    "SIGNAL_ENGINE": 5,
+                    "ORDER_ROUTER": 6,
+                    "ORDER_SENT": 7
+                }
+                return priority.get(stage, 99)
+
+            pipeline_status.sort(key=lambda x: get_stage_priority(x["stage"]))
 
             # Sort dynamic audit logs by timestamp descending
             all_audit_logs.sort(key=lambda x: x["timestamp"], reverse=True)

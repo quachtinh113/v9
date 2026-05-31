@@ -688,30 +688,15 @@ document.addEventListener("DOMContentLoaded", () => {
             row.innerHTML = `
                 <td class="asset-symbol" style="font-weight: 700;">${p.symbol}</td>
                 <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; color: #fff;">${p.order_name}</td>
-                <td style="font-family: 'Space Grotesk', monospace; font-weight: 700; font-size: 11px;">
-                    <span class="badge" style="background-color: ${p.direction === "LONG" ? "rgba(16, 185, 129, 0.15)" : (p.direction === "SHORT" ? "rgba(244, 63, 94, 0.15)" : "rgba(255, 255, 255, 0.05)")}; color: ${p.direction === "LONG" ? "var(--accent-emerald)" : (p.direction === "SHORT" ? "var(--accent-rose)" : "var(--text-secondary)")}; border: 1px solid ${p.direction === "LONG" ? "rgba(16, 185, 129, 0.3)" : (p.direction === "SHORT" ? "rgba(244, 63, 94, 0.3)" : "rgba(255, 255, 255, 0.1)")}; padding: 3px 8px; border-radius: 4px;">
-                        ${p.direction}
-                    </span>
-                </td>
                 <td style="font-family: 'Space Grotesk', monospace; font-weight: 700; font-size: 12px; color: ${statusColor};">
                     <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: ${statusColor}; margin-right: 6px; box-shadow: 0 0 8px ${statusColor};"></span>
                     ${p.stage}
                 </td>
-                <td style="color: var(--text-secondary); font-size: 13px;">${p.bottleneck}</td>
+                <td style="color: var(--text-secondary); font-size: 13px; font-family: 'Space Grotesk', monospace; font-weight: 500;">${p.block_reason}</td>
                 <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 600;">${scoreStr}</td>
                 <td style="font-family: 'Space Grotesk', monospace; font-weight: 700; font-size: 11px;">
-                    <span class="badge" style="background-color: ${p.ml_decision === "ALLOW" ? "rgba(16, 185, 129, 0.1)" : "rgba(168, 85, 247, 0.1)"}; color: ${p.ml_decision === "ALLOW" ? "var(--accent-emerald)" : "#a855f7"}; border: 1px solid ${p.ml_decision === "ALLOW" ? "rgba(16, 185, 129, 0.2)" : "rgba(168, 85, 247, 0.2)"}; padding: 2px 6px;">
-                        ${p.ml_decision}
-                    </span>
-                </td>
-                <td style="font-family: 'Space Grotesk', monospace; font-weight: 700; font-size: 11px;">
-                    <span class="badge" style="background-color: ${p.risk_decision === "ALLOW" ? "rgba(16, 185, 129, 0.1)" : (p.risk_decision === "N/A" ? "rgba(255, 255, 255, 0.05)" : "rgba(244, 63, 94, 0.1)")}; color: ${p.risk_decision === "ALLOW" ? "var(--accent-emerald)" : (p.risk_decision === "N/A" ? "var(--text-secondary)" : "var(--accent-rose)")}; border: 1px solid ${p.risk_decision === "ALLOW" ? "rgba(16, 185, 129, 0.2)" : (p.risk_decision === "N/A" ? "rgba(255, 255, 255, 0.1)" : "rgba(244, 63, 94, 0.2)")}; padding: 2px 6px;">
-                        ${p.risk_decision}
-                    </span>
-                </td>
-                <td style="font-family: 'Space Grotesk', monospace; font-weight: 700; font-size: 11px;">
-                    <span class="badge" style="background-color: ${p.execution_status === "LIVE" ? "rgba(6, 182, 212, 0.1)" : "rgba(255, 255, 255, 0.05)"}; color: ${p.execution_status === "LIVE" ? "var(--accent-cyan)" : "var(--text-secondary)"}; border: 1px solid ${p.execution_status === "LIVE" ? "rgba(6, 182, 212, 0.2)" : "rgba(255, 255, 255, 0.1)"}; padding: 2px 6px;">
-                        ${p.execution_status}
+                    <span class="badge" style="background-color: ${p.risk_action === "ALLOW" ? "rgba(16, 185, 129, 0.1)" : (p.risk_action === "N/A" ? "rgba(255, 255, 255, 0.05)" : "rgba(244, 63, 94, 0.1)")}; color: ${p.risk_action === "ALLOW" ? "var(--accent-emerald)" : (p.risk_action === "N/A" ? "var(--text-secondary)" : "var(--accent-rose)")}; border: 1px solid ${p.risk_action === "ALLOW" ? "rgba(16, 185, 129, 0.2)" : (p.risk_action === "N/A" ? "rgba(255, 255, 255, 0.1)" : "rgba(244, 63, 94, 0.2)")}; padding: 2px 6px;">
+                        ${p.risk_action}
                     </span>
                 </td>
                 <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; color: var(--text-secondary);">${p.last_update}</td>
