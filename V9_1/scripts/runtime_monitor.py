@@ -1,23 +1,34 @@
 import time, json, datetime, os, psutil, pathlib
 
+HEARTBEAT_TIMEOUT_SECONDS = 45  # seconds
+
 LOG_PATH = pathlib.Path(__file__).parents[2] / "logs" / "runtime_health.jsonl"
 LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 HEARTBEAT_PATH = pathlib.Path(__file__).parents[2] / "logs" / "heartbeat.jsonl"
 
 def heartbeat_ok():
-    """Return True if a heartbeat entry was written within the last 20 seconds."""
+    """Return True if a heartbeat entry was written within the timeout."""
     try:
         if not HEARTBEAT_PATH.exists():
             return False
-        with open(HEARTBEAT_PATH, "r", encoding="utf-8") as f:
-            lines = f.readlines()
-            if not lines:
-                return False
-            last = json.loads(lines[-1])
-            ts = datetime.datetime.fromisoformat(last["timestamp"].replace("Z", "+00:00"))
-            return (datetime.datetime.utcnow() - ts).total_seconds() <= 20
-    except Exception:
+        # Read the last line efficiently
+        with open(HEARTBEAT_PATH, "rb") as f:
+            f.seek(-2, os.SEEK_END)
+            while f.read(1) != b'\n':
+                f.seek(-2, os.SEEK_CUR)
+            last_line = f.readline().decode("utf-8")
+        
+        last = json.loads(last_line)
+        ts = datetime.datetime.fromisoformat(last["timestamp"].replace("Z", "+00:00"))
+        
+        # Ensure UTC comparison
+        if ts.tzinfo is None:
+            ts = ts.replace(tzinfo=datetime.timezone.utc)
+        
+        age = (datetime.datetime.now(datetime.timezone.utc) - ts).total_seconds()
+        return age <= HEARTBEAT_TIMEOUT_SECONDS
+    except (OSError, (IndexError, json.JSONDecodeError, KeyError, ValueError)):
         return False
 
 def log_health():

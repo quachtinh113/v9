@@ -267,10 +267,81 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    function updateFleetStatus() {
+        if (!rawData || !rawData.fleet_status) return;
+        const fs = rawData.fleet_status;
+        
+        // 1. Fleet state
+        const fleetStateEl = document.getElementById("fleet-state");
+        if (fleetStateEl) {
+            if (fs.running) {
+                fleetStateEl.textContent = "🟢 Fleet Running";
+                fleetStateEl.style.color = "var(--accent-emerald)";
+            } else {
+                fleetStateEl.textContent = "🔴 Fleet Stopped";
+                fleetStateEl.style.color = "var(--accent-rose)";
+            }
+        }
+        
+        // 2. Agents alive
+        const fleetAgentsAliveEl = document.getElementById("fleet-agents-alive");
+        if (fleetAgentsAliveEl) {
+            fleetAgentsAliveEl.textContent = `Agents Alive: ${fs.agents_alive}`;
+        }
+        
+        // 3. Last telemetry
+        const fleetLastTelemetryEl = document.getElementById("fleet-last-telemetry");
+        if (fleetLastTelemetryEl) {
+            fleetLastTelemetryEl.textContent = fs.last_telemetry;
+        }
+        
+        // 4. Heartbeat status
+        const fleetHeartbeatStatusEl = document.getElementById("fleet-heartbeat-status");
+        if (fleetHeartbeatStatusEl) {
+            if (fs.heartbeat_ok) {
+                fleetHeartbeatStatusEl.textContent = "Heartbeat: Healthy";
+                fleetHeartbeatStatusEl.className = "badge badge-success";
+            } else {
+                fleetHeartbeatStatusEl.textContent = "Heartbeat: Lagging";
+                fleetHeartbeatStatusEl.className = "badge badge-warning";
+            }
+        }
+        
+        // 5. Key ticks
+        const keyTicksDisplayEl = document.getElementById("key-ticks-display");
+        if (keyTicksDisplayEl) {
+            keyTicksDisplayEl.innerHTML = "";
+            Object.keys(fs.key_ticks).forEach(symbol => {
+                const val = fs.key_ticks[symbol];
+                let valColor = "#fff";
+                
+                if (val === "Market Closed") valColor = "var(--text-secondary)";
+                else if (val === "Offline") valColor = "var(--accent-rose)";
+                else if (val.includes("s ago")) {
+                    const secs = parseFloat(val);
+                    if (secs > 10) valColor = "var(--accent-yellow)";
+                    else valColor = "var(--accent-emerald)";
+                }
+                
+                const div = document.createElement("div");
+                div.style.display = "flex";
+                div.style.justify = "space-between";
+                div.style.borderBottom = "1px solid rgba(255,255,255,0.05)";
+                div.style.paddingBottom = "4px";
+                div.innerHTML = `
+                    <span style="color: var(--accent-cyan);">${symbol}:</span>
+                    <span style="color: ${valColor};">${val}</span>
+                `;
+                keyTicksDisplayEl.appendChild(div);
+            });
+        }
+    }
+
     function updateUI() {
         if (!rawData) return;
         updateSystemHealth();
         renderAssetMatrix();
+        updateFleetStatus();
 
         const approvedAssets = rawData.assets.filter(a => a.verdict === "APPROVED" || a.verdict === "INSTITUTIONAL_READY");
         

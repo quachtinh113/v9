@@ -7,8 +7,21 @@ from pathlib import Path
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import yaml
 
+HEARTBEAT_TIMEOUT_SECONDS = 45  # seconds
+import logging
+import datetime
+
+
+
+
+
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import yaml
+
 # Root directory
 ROOT_DIR = Path(__file__).resolve().parent
+logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(levelname)s:%(name)s: %(message)s')
+logger = logging.getLogger('run_dashboard')
 PROJECTS_DIR = ROOT_DIR / "projects"
 
 class PortfolioDashboardHandler(BaseHTTPRequestHandler):
@@ -185,29 +198,38 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
             system_state = "RED"
             system_reason = "Fleet runtime monitor is offline"
             heartbeat_ok = False
-            
+            age_sec = None
+            latest_heartbeat_entry = None
+
             if global_health_path.exists():
                 try:
                     with open(global_health_path, "r", encoding="utf-8") as f:
                         lines = f.readlines()
-                        if lines:
-                            last_entry = json.loads(lines[-1])
-                            ts_str = last_entry.get("timestamp")
-                            if ts_str:
-                                from datetime import datetime, timezone
-                                last_ts = datetime.fromisoformat(ts_str.replace("Z", ""))
-                                if last_ts.tzinfo is None:
-                                    age_sec = (datetime.utcnow() - last_ts).total_seconds()
-                                else:
-                                    age_sec = (datetime.now(timezone.utc) - last_ts).total_seconds()
-                                if age_sec <= 90:
-                                    heartbeat_ok = last_entry.get("heartbeat_ok", False)
-                                    system_state = "GREEN" if heartbeat_ok else "YELLOW"
-                                    system_reason = "Fleet active and heartbeating" if system_state == "GREEN" else "Active but heartbeats lagging"
-                                else:
-                                    system_state = "RED"
-                                    system_reason = f"Runtime health log stale ({age_sec:.0f}s old)"
+                    if lines:
+                        last_entry = json.loads(lines[-1])
+                        latest_heartbeat_entry = last_entry
+                        ts_str = last_entry.get("timestamp")
+                        if ts_str:
+                            # Parse ISO timestamp, handling possible 'Z' suffix
+                            ts = datetime.datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
+                            # Convert to naive UTC for comparison
+                            if ts.tzinfo is not None:
+                                ts = ts.astimezone(datetime.timezone.utc).replace(tzinfo=None)
+                            else:
+                                ts = ts.replace(tzinfo=datetime.timezone.utc)
+                            age_sec = (datetime.datetime.utcnow() - ts).total_seconds()
+                            heartbeat_ok = age_sec <= HEARTBEAT_TIMEOUT_SECONDS
+                            if heartbeat_ok:
+                                system_state = "GREEN"
+                                system_reason = "Heartbeat healthy"
+                            else:
+                                system_state = "RED"
+                                system_reason = f"Heartbeat stale ({age_sec:.0f}s old)"
+                        else:
+                            system_state = "RED"
+                            system_reason = "No heartbeat timestamp"
                 except Exception as e:
+                    logger.error(f"Error reading runtime health: {e}")
                     system_reason = f"Health check parse failure: {str(e)}"
 
             # 3. Scan all project configs & heartbeats for individual statuses
@@ -449,9 +471,27 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                         break
 
                 # Resolve Stage, Bottleneck and Color
+                is_market_closed = False
+                if data_stale and sym.upper() != "BTCUSD":
+                    from datetime import datetime, timezone
+                    now_utc = datetime.now(timezone.utc)
+                    weekday = now_utc.weekday()  # 0 = Monday, 6 = Sunday
+                    hour = now_utc.hour
+                    
+                    if weekday == 5:  # Saturday
+                        is_market_closed = True
+                    elif weekday == 4 and hour >= 21:  # Friday evening after 21:00 UTC
+                        is_market_closed = True
+                    elif weekday == 6 and hour < 21:  # Sunday before 21:00 UTC
+                        is_market_closed = True
+
                 if not sym_active:
                     stage_resolved = "DATA_OFFLINE"
                     bottleneck_resolved = "Data feed not running"
+                    color_resolved = "gray"
+                elif is_market_closed:
+                    stage_resolved = "MARKET_CLOSED"
+                    bottleneck_resolved = "Weekend market halt"
                     color_resolved = "gray"
                 elif data_stale:
                     stage_resolved = "DATA_STALE"
@@ -491,6 +531,8 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                 
                 if stage_resolved == "DATA_OFFLINE":
                     block_reason_resolved = "Data feed not running"
+                elif stage_resolved == "MARKET_CLOSED":
+                    block_reason_resolved = "Weekend market halt"
                 elif stage_resolved == "DATA_STALE":
                     hb_tick_age = 99999
                     if hb_path.exists():
@@ -606,6 +648,7 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                     "RISK_GATEWAY": 0,
                     "DATA_OFFLINE": 1,
                     "DATA_STALE": 2,
+                    "MARKET_CLOSED": 2.5,
                     "ML_GATEKEEPER": 3,
                     "ORDER_ROUTER_WAITING": 4,
                     "SIGNAL_ENGINE": 5,
@@ -649,6 +692,40 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                 "orders_sent": orders_sent
             }
 
+            # Calculate dynamic fleet status
+            active_agents = sum(1 for a in assets_status if a["symbol_status"] == "ACTIVE")
+            
+            key_ticks = {}
+            for p in pipeline_status:
+                if p["symbol"] in ["BTCUSD", "XAUUSD", "US30", "EURUSD"]:
+                    if p["stage"] == "MARKET_CLOSED":
+                        key_ticks[p["symbol"]] = "Market Closed"
+                    elif p["stage"] == "DATA_OFFLINE":
+                        key_ticks[p["symbol"]] = "Offline"
+                    else:
+                        if "tick_age=" in p["block_reason"]:
+                            key_ticks[p["symbol"]] = f"{p['block_reason'].split('=')[1]}s ago"
+                        else:
+                            key_ticks[p["symbol"]] = "< 1s ago" if p["symbol"] == "BTCUSD" else "Active"
+            
+            fleet_status = {
+    "running": active_agents > 0,
+    "agents_alive": f"{active_agents} / {len(symbols)}",
+    "last_telemetry": datetime.now(timezone.utc).strftime("%H:%M:%S"),
+    "heartbeat_ok": heartbeat_ok,
+    "heartbeat_age_seconds": age_sec,
+    "heartbeat_timeout_seconds": HEARTBEAT_TIMEOUT_SECONDS,
+    "key_ticks": key_ticks
+}
+
+
+
+
+
+
+
+
+
             response_data = {
                 "system_status": {
                     "state": system_state,
@@ -666,7 +743,9 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                 "assets": assets_status,
                 "audit_logs": logs,
                 "pipeline_status": pipeline_status,
-                "pipeline_summary": pipeline_summary
+                "pipeline_summary": pipeline_summary,
+                "fleet_status": fleet_status,
+                "latest_heartbeat": latest_heartbeat_entry
             }
 
             response_bytes = json.dumps(response_data, indent=4).encode("utf-8")
