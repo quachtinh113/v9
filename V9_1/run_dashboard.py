@@ -195,7 +195,7 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                             ts_str = last_entry.get("timestamp")
                             if ts_str:
                                 from datetime import datetime, timezone
-                                last_ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
+                                last_ts = datetime.fromisoformat(ts_str.replace("Z", ""))
                                 age_sec = (datetime.now(timezone.utc) - last_ts).total_seconds()
                                 if age_sec <= 90:
                                     heartbeat_ok = last_entry.get("heartbeat_ok", False)
@@ -211,6 +211,7 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
             symbols = ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD", "BTCUSD"]
             assets_status = []
             all_audit_logs = []
+            pipeline_status = []
             
             for sym in symbols:
                 repo_name = f"quant_v9_3_1_{sym.lower()}"
@@ -251,6 +252,7 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                 hb_age = 999999
                 ml_ok = True
                 mt5_ok = False
+                hb_timestamp_str = ""
                 
                 if hb_path.exists():
                     try:
@@ -260,8 +262,9 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                                 last_hb = json.loads(lines[-1])
                                 hb_ts_str = last_hb.get("timestamp")
                                 if hb_ts_str:
+                                    hb_timestamp_str = hb_ts_str
                                     from datetime import datetime, timezone
-                                    hb_ts = datetime.fromisoformat(hb_ts_str.replace("Z", "+00:00"))
+                                    hb_ts = datetime.fromisoformat(hb_ts_str.replace("Z", ""))
                                     hb_age = (datetime.now(timezone.utc) - hb_ts).total_seconds()
                                     if hb_age <= 90:
                                         sym_active = True
@@ -365,6 +368,164 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                     }
                 })
 
+                # --- TELEMETRY PARSING FOR LIVE ORDER PIPELINE STATUS ---
+                audit_ndjson_path = project_path / "logs" / "live_pipeline_audit.ndjson"
+                latest_loop_audit = None
+                latest_signal_block = None
+                
+                if audit_ndjson_path.exists():
+                    try:
+                        with open(audit_ndjson_path, "r", encoding="utf-8") as f:
+                            lines_audit = f.readlines()[-100:]
+                            for line in reversed(lines_audit):
+                                if not line.strip():
+                                    continue
+                                data = json.loads(line)
+                                if data.get("stage") == "LOOP_AUDIT" and latest_loop_audit is None:
+                                    latest_loop_audit = data
+                                if data.get("stage") == "SIGNAL" and data.get("reason_code") == "ML_GATEKEEPER_BLOCK" and latest_signal_block is None:
+                                    latest_signal_block = data
+                                if latest_loop_audit and latest_signal_block:
+                                    break
+                    except Exception:
+                        pass
+
+                tick_timestamp = ""
+                data_stale = False
+                signal_direction = "flat"
+                ml_score_val = 0.0
+                ml_decision_val = "ALLOW"
+                risk_action_val = "N/A"
+                order_send_called_val = False
+                exec_mode_val = "PAPER"
+
+                if latest_loop_audit:
+                    tick_timestamp = latest_loop_audit.get("timestamp", "")
+                    data_stale = latest_loop_audit.get("data_stale", False)
+                    signal_direction = latest_loop_audit.get("signal_result", "flat")
+                    ml_score_val = latest_loop_audit.get("ml_score", 0.0)
+                    risk_action_val = latest_loop_audit.get("risk_decision", "N/A")
+                    order_send_called_val = latest_loop_audit.get("order_send_called", False)
+                    exec_mode_val = latest_loop_audit.get("execution_mode", "PAPER").upper()
+
+                if latest_signal_block:
+                    ml_decision_val = "BLOCK"
+                elif latest_loop_audit and latest_loop_audit.get("ml_score", 0.0) < 0.50 and latest_loop_audit.get("signal_result") in ["long", "short"]:
+                    ml_decision_val = "BLOCK"
+
+                has_journal_order = False
+                for journal_name in ["live_journal.jsonl", "demo_journal.jsonl"]:
+                    journal_path = project_path / "logs" / journal_name
+                    if journal_path.exists():
+                        try:
+                            with open(journal_path, "r", encoding="utf-8") as f:
+                                lines_j = f.readlines()[-50:]
+                                for line in lines_j:
+                                    if not line.strip():
+                                        continue
+                                    data = json.loads(line)
+                                    response = data.get("response", {})
+                                    if response:
+                                        status = str(response.get("status", "")).lower()
+                                        retcode = response.get("retcode")
+                                        if "success" in status or retcode == 10009 or "TRADE_RETCODE_DONE" in str(response):
+                                            has_journal_order = True
+                                            break
+                        except Exception:
+                            pass
+                    if has_journal_order:
+                        break
+
+                # Resolve Stage, Bottleneck and Color
+                if not sym_active:
+                    stage_resolved = "DATA_OFFLINE"
+                    bottleneck_resolved = "Data feed not running"
+                    color_resolved = "gray"
+                elif data_stale:
+                    stage_resolved = "DATA_STALE"
+                    bottleneck_resolved = "MT5 tick stale"
+                    color_resolved = "orange"
+                elif signal_direction == "flat" or signal_direction == "N/A":
+                    stage_resolved = "SIGNAL_ENGINE"
+                    bottleneck_resolved = "No valid setup"
+                    color_resolved = "blue"
+                elif ml_decision_val == "BLOCK":
+                    stage_resolved = "ML_GATEKEEPER"
+                    bottleneck_resolved = "ML blocked signal"
+                    color_resolved = "purple"
+                elif risk_action_val in ["SOFT_BLOCK", "HARD_KILL"]:
+                    stage_resolved = "RISK_GATEWAY"
+                    bottleneck_resolved = "Risk veto"
+                    color_resolved = "red"
+                elif risk_action_val == "ALLOW" and not order_send_called_val:
+                    stage_resolved = "ORDER_ROUTER_WAITING"
+                    bottleneck_resolved = "Signal passed but no order call"
+                    color_resolved = "yellow"
+                elif order_send_called_val and not has_journal_order:
+                    stage_resolved = "ORDER_ROUTER"
+                    bottleneck_resolved = "Order routing in progress"
+                    color_resolved = "cyan"
+                elif has_journal_order:
+                    stage_resolved = "ORDER_SENT"
+                    bottleneck_resolved = "Order sent to broker"
+                    color_resolved = "green"
+                else:
+                    stage_resolved = "SIGNAL_ENGINE"
+                    bottleneck_resolved = "No valid setup"
+                    color_resolved = "blue"
+
+                # Order Name formatting
+                from datetime import datetime, timezone
+                ts_to_use = tick_timestamp if tick_timestamp else hb_timestamp_str
+                formatted_ts = ""
+                if ts_to_use:
+                    try:
+                        ts_clean = ts_to_use.replace("Z", "").replace("+00:00", "").replace("T", " ").strip()
+                        dt = datetime.fromisoformat(ts_clean)
+                        formatted_ts = dt.strftime("%Y%m%d-%H%M")
+                    except Exception:
+                        try:
+                            dt = datetime.strptime(ts_to_use[:16], "%Y-%m-%d %H:%M")
+                            formatted_ts = dt.strftime("%Y%m%d-%H%M")
+                        except Exception:
+                            formatted_ts = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
+                else:
+                    formatted_ts = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
+
+                direction_mapped = "FLAT"
+                if signal_direction == "long":
+                    direction_mapped = "LONG"
+                elif signal_direction == "short":
+                    direction_mapped = "SHORT"
+
+                order_name = f"{sym.upper()}-{direction_mapped}-{formatted_ts}"
+
+                # Last update display
+                last_update_display = ""
+                if ts_to_use:
+                    try:
+                        ts_clean = ts_to_use.replace("Z", "").replace("+00:00", "").replace("T", " ").strip()
+                        dt = datetime.fromisoformat(ts_clean)
+                        last_update_display = dt.strftime("%Y-%m-%d %H:%M:%S")
+                    except Exception:
+                        last_update_display = ts_to_use[:19]
+                else:
+                    last_update_display = "N/A"
+
+                pipeline_status.append({
+                    "symbol": sym,
+                    "order_name": order_name,
+                    "direction": direction_mapped,
+                    "stage": stage_resolved,
+                    "bottleneck": bottleneck_resolved,
+                    "ml_score": round(ml_score_val, 4),
+                    "ml_decision": ml_decision_val,
+                    "risk_decision": risk_action_val,
+                    "execution_status": exec_mode_val,
+                    "last_update": last_update_display,
+                    "color": color_resolved
+                })
+
             # Sort dynamic audit logs by timestamp descending
             all_audit_logs.sort(key=lambda x: x["timestamp"], reverse=True)
             logs = all_audit_logs[:30] # Keep latest 30 events
@@ -381,6 +542,23 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
             total_pnl = sum([a["net_pnl"] for a in approved_assets])
             portfolio_max_dd = max([a["max_drawdown"] for a in assets_status]) if assets_status else 0.0
 
+            # Calculate summary counters
+            total_symbols = len(symbols)
+            signal_blocked = sum(1 for p in pipeline_status if p["stage"] == "SIGNAL_ENGINE")
+            ml_blocked = sum(1 for p in pipeline_status if p["stage"] == "ML_GATEKEEPER")
+            risk_blocked = sum(1 for p in pipeline_status if p["stage"] == "RISK_GATEWAY")
+            execution_waiting = sum(1 for p in pipeline_status if p["stage"] == "ORDER_ROUTER_WAITING")
+            orders_sent = sum(1 for p in pipeline_status if p["stage"] in ["ORDER_SENT", "ORDER_ROUTER"])
+
+            pipeline_summary = {
+                "total_symbols": total_symbols,
+                "signal_blocked": signal_blocked,
+                "ml_blocked": ml_blocked,
+                "risk_blocked": risk_blocked,
+                "execution_waiting": execution_waiting,
+                "orders_sent": orders_sent
+            }
+
             response_data = {
                 "system_status": {
                     "state": system_state,
@@ -396,7 +574,9 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                     "risk_level": "LOW_VOLATILITY" if len(approved_assets) > 5 else "MODERATE"
                 },
                 "assets": assets_status,
-                "audit_logs": logs
+                "audit_logs": logs,
+                "pipeline_status": pipeline_status,
+                "pipeline_summary": pipeline_summary
             }
 
             response_bytes = json.dumps(response_data, indent=4).encode("utf-8")
@@ -405,8 +585,6 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
             self.send_header("Content-Length", str(len(response_bytes)))
             self.end_headers()
             self.wfile.write(response_bytes)
-        except Exception as e:
-            self.send_error(500, f"API Error: {str(e)}")
         except Exception as e:
             self.send_error(500, f"API Error: {str(e)}")
 

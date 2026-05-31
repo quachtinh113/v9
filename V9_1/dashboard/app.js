@@ -94,8 +94,8 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchData();
     loadArchitectureTab();
 
-    // Periodically poll backend API every 5 seconds for live heartbeats, status & logs
-    setInterval(fetchData, 5000);
+    // Periodically poll backend API every 10 seconds for live heartbeats, status & logs
+    setInterval(fetchData, 10000);
 
     // Telemetry Slider listeners
     allocationSlider.addEventListener("input", (e) => {
@@ -326,6 +326,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 2. Render Table
         renderTable();
+
+        // Render Pipeline Status Table and Counters
+        renderPipelineStatus();
 
         // 3. Render Guards
         updateGuardsDisplay();
@@ -655,6 +658,76 @@ document.addEventListener("DOMContentLoaded", () => {
             // Dynamic asset matrix rendering handles the fullAssetBody tab
         } catch (err) {
             console.error("Failed to load architecture registries:", err);
+        }
+    }
+
+    function renderPipelineStatus() {
+        const pipelineBodyEl = document.getElementById("pipeline-body");
+        if (!pipelineBodyEl || !rawData || !rawData.pipeline_status) return;
+
+        pipelineBodyEl.innerHTML = "";
+        rawData.pipeline_status.forEach(p => {
+            const row = document.createElement("tr");
+
+            let colorClass = "gray";
+            if (p.color) {
+                colorClass = p.color;
+            }
+
+            const scoreStr = p.ml_score !== null && p.ml_score !== undefined ? p.ml_score.toFixed(4) : "0.0000";
+
+            let statusColor = "var(--text-secondary)";
+            if (p.color === "green") statusColor = "var(--accent-emerald)";
+            else if (p.color === "cyan") statusColor = "var(--accent-cyan)";
+            else if (p.color === "yellow") statusColor = "var(--accent-yellow)";
+            else if (p.color === "red") statusColor = "var(--accent-rose)";
+            else if (p.color === "purple") statusColor = "#a855f7";
+            else if (p.color === "blue") statusColor = "#3b82f6";
+            else if (p.color === "orange") statusColor = "#f97316";
+
+            row.innerHTML = `
+                <td class="asset-symbol" style="font-weight: 700;">${p.symbol}</td>
+                <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; color: #fff;">${p.order_name}</td>
+                <td style="font-family: 'Space Grotesk', monospace; font-weight: 700; font-size: 11px;">
+                    <span class="badge" style="background-color: ${p.direction === "LONG" ? "rgba(16, 185, 129, 0.15)" : (p.direction === "SHORT" ? "rgba(244, 63, 94, 0.15)" : "rgba(255, 255, 255, 0.05)")}; color: ${p.direction === "LONG" ? "var(--accent-emerald)" : (p.direction === "SHORT" ? "var(--accent-rose)" : "var(--text-secondary)")}; border: 1px solid ${p.direction === "LONG" ? "rgba(16, 185, 129, 0.3)" : (p.direction === "SHORT" ? "rgba(244, 63, 94, 0.3)" : "rgba(255, 255, 255, 0.1)")}; padding: 3px 8px; border-radius: 4px;">
+                        ${p.direction}
+                    </span>
+                </td>
+                <td style="font-family: 'Space Grotesk', monospace; font-weight: 700; font-size: 12px; color: ${statusColor};">
+                    <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: ${statusColor}; margin-right: 6px; box-shadow: 0 0 8px ${statusColor};"></span>
+                    ${p.stage}
+                </td>
+                <td style="color: var(--text-secondary); font-size: 13px;">${p.bottleneck}</td>
+                <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 600;">${scoreStr}</td>
+                <td style="font-family: 'Space Grotesk', monospace; font-weight: 700; font-size: 11px;">
+                    <span class="badge" style="background-color: ${p.ml_decision === "ALLOW" ? "rgba(16, 185, 129, 0.1)" : "rgba(168, 85, 247, 0.1)"}; color: ${p.ml_decision === "ALLOW" ? "var(--accent-emerald)" : "#a855f7"}; border: 1px solid ${p.ml_decision === "ALLOW" ? "rgba(16, 185, 129, 0.2)" : "rgba(168, 85, 247, 0.2)"}; padding: 2px 6px;">
+                        ${p.ml_decision}
+                    </span>
+                </td>
+                <td style="font-family: 'Space Grotesk', monospace; font-weight: 700; font-size: 11px;">
+                    <span class="badge" style="background-color: ${p.risk_decision === "ALLOW" ? "rgba(16, 185, 129, 0.1)" : (p.risk_decision === "N/A" ? "rgba(255, 255, 255, 0.05)" : "rgba(244, 63, 94, 0.1)")}; color: ${p.risk_decision === "ALLOW" ? "var(--accent-emerald)" : (p.risk_decision === "N/A" ? "var(--text-secondary)" : "var(--accent-rose)")}; border: 1px solid ${p.risk_decision === "ALLOW" ? "rgba(16, 185, 129, 0.2)" : (p.risk_decision === "N/A" ? "rgba(255, 255, 255, 0.1)" : "rgba(244, 63, 94, 0.2)")}; padding: 2px 6px;">
+                        ${p.risk_decision}
+                    </span>
+                </td>
+                <td style="font-family: 'Space Grotesk', monospace; font-weight: 700; font-size: 11px;">
+                    <span class="badge" style="background-color: ${p.execution_status === "LIVE" ? "rgba(6, 182, 212, 0.1)" : "rgba(255, 255, 255, 0.05)"}; color: ${p.execution_status === "LIVE" ? "var(--accent-cyan)" : "var(--text-secondary)"}; border: 1px solid ${p.execution_status === "LIVE" ? "rgba(6, 182, 212, 0.2)" : "rgba(255, 255, 255, 0.1)"}; padding: 2px 6px;">
+                        ${p.execution_status}
+                    </span>
+                </td>
+                <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; color: var(--text-secondary);">${p.last_update}</td>
+            `;
+            pipelineBodyEl.appendChild(row);
+        });
+
+        // Render summary counters
+        if (rawData.pipeline_summary) {
+            const s = rawData.pipeline_summary;
+            document.getElementById("pipeline-total-symbols").textContent = s.total_symbols;
+            document.getElementById("pipeline-signal-blocked").textContent = s.signal_blocked;
+            document.getElementById("pipeline-ml-blocked").textContent = s.ml_blocked;
+            document.getElementById("pipeline-risk-blocked").textContent = s.risk_blocked;
+            document.getElementById("pipeline-execution-waiting").textContent = s.execution_waiting;
+            document.getElementById("pipeline-orders-sent").textContent = s.orders_sent;
         }
     }
 });

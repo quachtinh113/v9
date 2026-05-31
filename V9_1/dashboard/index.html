@@ -95,13 +95,80 @@
                         </div>
                     </section>
 
+                    <!-- LIVE ORDER PIPELINE STATUS -->
+                    <section class="pipeline-status-section" style="grid-column: span 2; margin-bottom: 24px;">
+                        <div class="card" style="width: 100%;">
+                            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                <h3 style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #fff;">LIVE ORDER PIPELINE STATUS</h3>
+                                <span class="badge badge-info" id="pipeline-refresh-badge">Auto-refreshing in 10s</span>
+                            </div>
+                            
+                            <!-- Summary Counters Cards -->
+                            <div class="pipeline-summary-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 15px 0 20px 0;">
+                                <div class="kpi-card" style="padding: 12px 16px; min-height: auto; position: relative;">
+                                    <div class="card-bg-glow" style="opacity: 0.15;"></div>
+                                    <span class="kpi-label" style="font-size: 11px;">Total Symbols</span>
+                                    <h3 class="kpi-value" id="pipeline-total-symbols" style="font-size: 20px; font-weight: 700; margin-top: 4px; font-family: 'Space Grotesk', monospace;">11</h3>
+                                </div>
+                                <div class="kpi-card" style="padding: 12px 16px; min-height: auto; position: relative;">
+                                    <div class="card-bg-glow" style="opacity: 0.15; background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.4), transparent 70%);"></div>
+                                    <span class="kpi-label" style="font-size: 11px; color: var(--accent-cyan);">Signal Blocked</span>
+                                    <h3 class="kpi-value" id="pipeline-signal-blocked" style="font-size: 20px; font-weight: 700; margin-top: 4px; font-family: 'Space Grotesk', monospace; color: #3b82f6;">0</h3>
+                                </div>
+                                <div class="kpi-card" style="padding: 12px 16px; min-height: auto; position: relative;">
+                                    <div class="card-bg-glow" style="opacity: 0.15; background: radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.4), transparent 70%);"></div>
+                                    <span class="kpi-label" style="font-size: 11px; color: #a855f7;">ML Blocked</span>
+                                    <h3 class="kpi-value" id="pipeline-ml-blocked" style="font-size: 20px; font-weight: 700; margin-top: 4px; font-family: 'Space Grotesk', monospace; color: #a855f7;">0</h3>
+                                </div>
+                                <div class="kpi-card" style="padding: 12px 16px; min-height: auto; position: relative;">
+                                    <div class="card-bg-glow" style="opacity: 0.15; background: radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.4), transparent 70%);"></div>
+                                    <span class="kpi-label" style="font-size: 11px; color: var(--accent-rose);">Risk Blocked</span>
+                                    <h3 class="kpi-value" id="pipeline-risk-blocked" style="font-size: 20px; font-weight: 700; margin-top: 4px; font-family: 'Space Grotesk', monospace; color: var(--accent-rose);">0</h3>
+                                </div>
+                                <div class="kpi-card" style="padding: 12px 16px; min-height: auto; position: relative;">
+                                    <div class="card-bg-glow" style="opacity: 0.15; background: radial-gradient(circle at 50% 50%, rgba(234, 179, 8, 0.4), transparent 70%);"></div>
+                                    <span class="kpi-label" style="font-size: 11px; color: var(--accent-yellow);">Execution Waiting</span>
+                                    <h3 class="kpi-value" id="pipeline-execution-waiting" style="font-size: 20px; font-weight: 700; margin-top: 4px; font-family: 'Space Grotesk', monospace; color: var(--accent-yellow);">0</h3>
+                                </div>
+                                <div class="kpi-card" style="padding: 12px 16px; min-height: auto; position: relative;">
+                                    <div class="card-bg-glow" style="opacity: 0.15; background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.4), transparent 70%);"></div>
+                                    <span class="kpi-label" style="font-size: 11px; color: var(--accent-emerald);">Orders Sent</span>
+                                    <h3 class="kpi-value" id="pipeline-orders-sent" style="font-size: 20px; font-weight: 700; margin-top: 4px; font-family: 'Space Grotesk', monospace; color: var(--accent-emerald);">0</h3>
+                                </div>
+                            </div>
+                            
+                            <!-- Pipeline Table -->
+                            <div class="table-container" style="max-height: 400px; overflow-y: auto;">
+                                <table class="data-table" id="pipeline-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Symbol</th>
+                                            <th>Order Name</th>
+                                            <th>Direction</th>
+                                            <th>Current Stage</th>
+                                            <th>Bottleneck</th>
+                                            <th>ML Score</th>
+                                            <th>ML Decision</th>
+                                            <th>Risk Decision</th>
+                                            <th>Execution Status</th>
+                                            <th>Last Update</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="pipeline-body">
+                                        <!-- Dynamic rows loaded by app.js -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
                     <!-- Analytics Row -->
                     <div class="analytics-row">
                         <!-- Left: Asset Table -->
                         <div class="card asset-card">
                             <div class="card-header">
                                 <h3>Asset Allocations & Verdicts</h3>
-                                <span class="badge badge-info">10 Targets Loaded</span>
+                                <span class="badge badge-info">11 Targets Loaded</span>
                             </div>
                             <div class="table-container">
                                 <table class="data-table" id="assets-table">
@@ -281,9 +348,9 @@
                 <div class="card">
                     <div class="card-header">
                         <h3>Institutional Asset Matrix</h3>
-                        <span class="badge badge-info">10 Asset Channels</span>
+                        <span class="badge badge-info">11 Asset Channels</span>
                     </div>
-                    <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14.5px;">Detailed configuration and validation pipeline status of the 10 loaded asset channels.</p>
+                    <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14.5px;">Detailed configuration and validation pipeline status of the 11 loaded asset channels.</p>
                     <div class="table-container">
                         <table class="data-table" id="asset-matrix-full-table">
                             <thead>
