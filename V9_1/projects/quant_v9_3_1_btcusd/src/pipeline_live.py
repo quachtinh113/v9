@@ -18,6 +18,36 @@ class LivePipeline:
         self.runtime_mode = runtime_mode
         self.execution_mode = "paper" if runtime_mode == "paper" else "live"
         self.config = load_yaml(root / "config" / "symbol.yaml")
+        # Load model registry for provenance validation
+        self.model_registry = load_yaml(root / "models" / "registry.yaml")
+        # Determine active model entry based on model_path
+        self.model_path = root / "models" / "active" / "xgb_trade_filter.json"
+        # Find matching entry in registry
+        entry = next((m for m in self.model_registry.get('models', []) if m.get('model_path') == str(self.model_path)), None)
+        if entry is None:
+            # Fallback to legacy path handling (same as before)
+            old_path = root / "models" / "xgb_trade_filter.json"
+            if old_path.exists():
+                self.model_path.parent.mkdir(parents=True, exist_ok=True)
+                import shutil
+                shutil.copy(old_path, self.model_path)
+            entry = next((m for m in self.model_registry.get('models', []) if m.get('model_path') == str(self.model_path)), None)
+        # Extract provenance fields
+        if entry:
+            self.model_id = entry.get('model_id')
+            self.model_status = entry.get('status')
+            self.allowed_to_block = entry.get('allowed_to_block', False)
+        else:
+            self.model_id = None
+            self.model_status = None
+            self.allowed_to_block = False
+        # Determine ML gate mode based on registry fields
+        if not self.allowed_to_block:
+            self.ml_gate_mode = "observe_only"
+            self.model_provenance_valid = False
+        else:
+            self.ml_gate_mode = "block"
+            self.model_provenance_valid = True
         # Telegram & Model Path Setup
         tg_cfg = self.config.get("telegram", {})
         self.telegram = TelegramBot(tg_cfg.get("token"), tg_cfg.get("chat_id"), tg_cfg.get("enabled", False))
@@ -218,7 +248,11 @@ class LivePipeline:
                     ml_score=ml_score,
                     risk_decision=risk_decision,
                     execution_mode=execution_mode,
-                    order_send_called=order_send_called
+                    order_send_called=order_send_called,
+                    ml_gate_mode=getattr(self, "ml_gate_mode", "observe_only"),
+                    ml_block_applied=decision.ml_decision == "BLOCK" and getattr(self, "ml_gate_mode", "observe_only") != "observe_only",
+                    ml_reason=decision.ml_reason,
+                    model_provenance_valid=getattr(self, "model_provenance_valid", False)
                 )
 
     def _tick_internal(self):
@@ -371,15 +405,21 @@ class LivePipeline:
             )
         
         if decision and decision.ml_decision == "BLOCK":
-            self.audit_log.write_blocked(
-                reason="ML_GATEKEEPER_BLOCK",
-                symbol=self.symbol,
-                stage="SIGNAL",
-                details={
-                    "ml_score": decision.ml_score,
-                    "ml_reason": decision.ml_reason
-                }
-            )
+            if getattr(self, "ml_gate_mode", "observe_only") != "observe_only":
+                # Apply ML block as configured
+                self.audit_log.write_blocked(
+                    reason="ML_GATEKEEPER_BLOCK",
+                    symbol=self.symbol,
+                    stage="SIGNAL",
+                    details={
+                        "ml_score": decision.ml_score,
+                        "ml_reason": decision.ml_reason
+                    }
+                )
+            else:
+                # In observe_only mode, record that block was not applied
+                decision.ml_reason = "model_provenance_missing"
+                # No audit_block written; will be captured in loop audit
 
         # Heartbeat variables are stored in self.last_tick_metrics and written in the finally block of tick()
         self.last_tick_metrics["ml_ok"] = ml_ok

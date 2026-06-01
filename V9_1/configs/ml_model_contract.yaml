@@ -1,0 +1,13 @@
+model_id: null
+train_date: null
+model_path: null
+feature_schema_path: null
+label_dataset_path: null
+feature_count: null
+feature_order_hash: null
+training_sample_count: null
+positive_label_ratio: null
+validation_auc: null
+promoted_by: null
+promoted_at: null
+allowed_to_block: false
