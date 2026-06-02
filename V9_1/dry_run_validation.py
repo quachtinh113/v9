@@ -3,6 +3,9 @@ import sys
 import copy
 from pathlib import Path
 
+import os
+os.environ["RISK_STATE_DB_PATH"] = str(Path("c:/Quant Trade/v9/V9_1/logs/test_risk_state.db").resolve())
+
 def clear_src_modules():
     to_delete = [m for m in sys.modules if m.startswith('src.') or m == 'src']
     for m in to_delete:

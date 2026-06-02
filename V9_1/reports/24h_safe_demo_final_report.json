@@ -1,0 +1,17 @@
+{
+    "total_trades": 0,
+    "trades_per_symbol": {},
+    "net_pnl_per_symbol": {},
+    "max_trades_per_symbol_per_hour": 7,
+    "max_consecutive_losses_fleet": 0,
+    "max_consecutive_losses_per_symbol": {},
+    "number_of_risk_vetoes": 6,
+    "veto_reasons_distribution": {
+        "max_trades_per_hour_exceeded": 3,
+        "too_soon_since_last_trade": 6,
+        "duplicate_direction_open": 6
+    },
+    "database_error_count": 0,
+    "duplicate_entry_count": 6,
+    "conclusion": "BLOCKED_DEMO (Symbol trades > 3/hour, Duplicate same-direction entries detected)"
+}

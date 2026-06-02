@@ -39,6 +39,14 @@ class RiskGateway:
         self.news_blackout_enabled = bool(self.config.get("news_blackout_enabled", True))
         self.transition_trade_enabled = bool(self.config.get("transition_trade_enabled", False))
 
+        # Execution Frequency & Loss Brake configurations
+        self.max_trades_per_symbol_per_hour = int(self.config.get("max_trades_per_symbol_per_hour", 3))
+        self.min_seconds_between_same_symbol_trades = float(self.config.get("min_seconds_between_same_symbol_trades", 300))
+        self.stop_symbol_after_n_consecutive_losses = int(self.config.get("stop_symbol_after_n_consecutive_losses", 3))
+        self.fleet_loss_streak_brake = int(self.config.get("fleet_loss_streak_brake", 8))
+        self.cooldown_after_loss_minutes = float(self.config.get("cooldown_after_loss_minutes", 30))
+        self.max_open_trades_per_symbol = int(self.config.get("max_open_trades_per_symbol", 1))
+
     def full_gate(self, account: Dict[str, Any], market: Dict[str, Any]) -> RiskDecision:
         reasons = []
         action = "ALLOW"
@@ -67,6 +75,44 @@ class RiskGateway:
         loss_streak = int(account.get("loss_streak", 0))
         open_positions = int(account.get("open_positions", 0))
         daily_trades_count = int(account.get("daily_trades_count", 0))
+
+        # Execution frequency guards
+        trades_last_hour = int(account.get("trades_last_hour", 0))
+        if trades_last_hour >= self.max_trades_per_symbol_per_hour:
+            reasons.append("max_trades_per_hour_exceeded")
+            action = "HARD_KILL"
+            
+        seconds_since_last_trade = float(account.get("seconds_since_last_trade", 999999))
+        if seconds_since_last_trade < self.min_seconds_between_same_symbol_trades:
+            reasons.append("too_soon_since_last_trade")
+            action = "HARD_KILL"
+            
+        if open_positions >= self.max_open_trades_per_symbol:
+            reasons.append("max_open_trades_per_symbol_exceeded")
+            action = "HARD_KILL"
+            
+        open_directions = account.get("open_directions", [])
+        pending_direction = market.get("pending_direction", None)
+        if pending_direction and pending_direction in open_directions:
+            reasons.append("duplicate_direction_open")
+            action = "HARD_KILL"
+            
+        # Loss brakes
+        consecutive_losses_symbol = int(account.get("consecutive_losses_symbol", 0))
+        if consecutive_losses_symbol >= self.stop_symbol_after_n_consecutive_losses:
+            reasons.append("symbol_consecutive_loss_limit")
+            action = "HARD_KILL"
+            
+        fleet_loss_streak = int(account.get("fleet_loss_streak", 0))
+        if fleet_loss_streak >= self.fleet_loss_streak_brake:
+            reasons.append("fleet_loss_streak_limit")
+            action = "HARD_KILL"
+            
+        seconds_since_last_loss = float(account.get("seconds_since_last_loss", 999999))
+        cooldown_seconds = self.cooldown_after_loss_minutes * 60
+        if seconds_since_last_loss < cooldown_seconds:
+            reasons.append("loss_cooldown_active")
+            action = "HARD_KILL"
         
         # Hard kill checks
         if daily_dd_pct >= self.hard_drawdown_pct:

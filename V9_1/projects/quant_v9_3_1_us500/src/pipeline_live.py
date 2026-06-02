@@ -1,5 +1,6 @@
 from __future__ import annotations
 import logging, time, argparse, os
+from src.core.fleet_state import FleetStateManager
 from pathlib import Path
 from src.utils.config import load_yaml
 from src.utils.telegram_bot import TelegramBot
@@ -49,6 +50,14 @@ class LivePipeline:
         exec_cfg["mode"] = self.execution_mode
         self.journal = TradeJournal(root / "logs" / "live_journal.jsonl")
         self.audit_log = PipelineAuditLog(root / "logs" / "live_pipeline_audit.ndjson")
+        db_env = os.environ.get("RISK_STATE_DB_PATH")
+        if db_env:
+            db_path_resolved = Path(db_env)
+        else:
+            db_path_resolved = self.root.parents[1] / "logs" / "risk_state.db"
+        self.fleet_state = FleetStateManager(db_path_resolved)
+        from datetime import datetime, timezone
+        self.last_deal_check_time = datetime.now(timezone.utc)
         if self.execution_mode == "live":
             try:
                 assert self.runtime_mode == "live", f"BLOCKED: self.runtime_mode must be 'live' (current: {self.runtime_mode})"
@@ -327,6 +336,38 @@ class LivePipeline:
                 )
 
         # Stale data guard
+        
+        if getattr(self, "live_adapter", None) and self.live_adapter.connected:
+            import MetaTrader5 as mt5
+            from datetime import datetime, timezone
+            broker_symbol_inner = self.live_adapter.resolve_broker_symbol(self.symbol, self.audit_log)
+            # Positions
+            positions = mt5.positions_get(symbol=broker_symbol_inner)
+            if positions:
+                for pos in positions:
+                    entry_time_str = datetime.fromtimestamp(pos.time, tz=timezone.utc).isoformat()
+                    direction = "long" if pos.type == mt5.ORDER_TYPE_BUY else "short"
+                    self.fleet_state.record_trade(pos.ticket, self.symbol, direction, entry_time_str, None, pos.profit, "OPEN")
+            # History
+            now = datetime.now(timezone.utc)
+            deals = mt5.history_deals_get(self.last_deal_check_time, now)
+            if deals:
+                for deal in deals:
+                    if deal.symbol == broker_symbol_inner and deal.entry == mt5.DEAL_ENTRY_OUT:
+                        exit_time_str = datetime.fromtimestamp(deal.time, tz=timezone.utc).isoformat()
+                        direction = "long" if deal.type == mt5.DEAL_TYPE_SELL else "short"
+                        self.fleet_state.record_trade(deal.position_id, self.symbol, direction, None, exit_time_str, deal.profit, "CLOSED")
+            self.last_deal_check_time = now
+            
+        metrics = self.fleet_state.get_fleet_metrics(self.symbol)
+        self.trades_last_hour = metrics["trades_last_hour"]
+        self.seconds_since_last_trade = metrics["seconds_since_last_trade"]
+        self.open_directions = metrics["open_directions"]
+        self.consecutive_losses_symbol = metrics["consecutive_losses_symbol"]
+        self.fleet_loss_streak = metrics["fleet_loss_streak"]
+        self.seconds_since_last_loss = metrics["seconds_since_last_loss"]
+        self.open_positions = metrics["open_positions"]
+
         stale_veto = False
         max_tick_age_seconds = 300 # 5 minutes
         if tick_age_seconds > max_tick_age_seconds and data_source == "mt5_live":
@@ -363,9 +404,9 @@ class LivePipeline:
                     "direction": decision.direction,
                     "blocked_reasons": decision.blocked_reasons,
                     "indicators": {
-                        "rsi14_m15": row.get("rsi14_m15"),
-                        "adx14_h1": row.get("adx14_h1"),
-                        "atr14_m1": row.get("atr14_m1")
+                        "rsi14_m15": getattr(self, 'last_row', {}).get("rsi14_m15"),
+                        "adx14_h1": getattr(self, 'last_row', {}).get("adx14_h1"),
+                        "atr14_m1": getattr(self, 'last_row', {}).get("atr14_m1")
                     }
                 }
             )
@@ -425,9 +466,18 @@ class LivePipeline:
                 "daily_dd_pct": daily_dd,
                 "weekly_dd_pct": weekly_dd,
                 "loss_streak": self.loss_streak,
+
+                "trades_last_hour": getattr(self, "trades_last_hour", 0),
+                "seconds_since_last_trade": getattr(self, "seconds_since_last_trade", 999999),
+                "open_directions": getattr(self, "open_directions", []),
+                "consecutive_losses_symbol": getattr(self, "consecutive_losses_symbol", 0),
+                "fleet_loss_streak": getattr(self, "fleet_loss_streak", 0),
+                "seconds_since_last_loss": getattr(self, "seconds_since_last_loss", 999999),
             }
             market_data = {
                 "session_flag": row.get("session_flag", "london"),
+
+                "pending_direction": decision.direction,
                 "spread_bps": effective_spread,
                 "slippage_bps": effective_slippage,
                 "atr_ratio": atr_ratio

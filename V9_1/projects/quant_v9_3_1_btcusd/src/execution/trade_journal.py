@@ -23,7 +23,7 @@ class PipelineAuditLog:
         except:
             pass
 
-    def write_loop_audit(self, symbol, tick_ok, broker_symbol, data_stale, regime_result, signal_result, ml_mode, ml_score, risk_decision, execution_mode, order_send_called, ml_gate_mode=None, ml_block_applied=None, ml_reason=None, model_provenance_valid=None, model_id=None, model_status=None, allowed_to_block=None, details=None, rsi14_m15=None, adx14_h1=None, atr14_m1=None, spread_bps=None, effective_spread=None, regime=None, session_state=None, signal_score=None):
+    def write_loop_audit(self, symbol, tick_ok, broker_symbol, data_stale, regime_result, signal_result, ml_mode, ml_score, risk_decision, execution_mode, order_send_called, ml_gate_mode=None, ml_block_applied=None, ml_reason=None, model_provenance_valid=None, model_id=None, model_status=None, allowed_to_block=None, details=None, rsi14_m15=None, adx14_h1=None, atr14_m1=None, spread_bps=None, effective_spread=None, regime=None, session_state=None, signal_score=None, trades_last_hour=None, consecutive_losses_symbol=None, consecutive_losses_fleet=None, cooldown_status=None, veto_reason=None):
         import json
         from datetime import datetime, timezone
         entry = {
@@ -55,7 +55,16 @@ class PipelineAuditLog:
             "regime": regime,
             "session_state": session_state,
             "signal_score": signal_score,
-            "details": details or {}
+            
+            "trades_last_hour": trades_last_hour,
+            "consecutive_losses_symbol": consecutive_losses_symbol,
+            "consecutive_losses_fleet": consecutive_losses_fleet,
+            "cooldown_status": cooldown_status,
+            "veto_reason": veto_reason,
+            "adx": adx14_h1,
+            "rsi": rsi14_m15,
+            "direction": signal_result,
+"details": details or {}
         }
         import json
         from datetime import datetime, timezone

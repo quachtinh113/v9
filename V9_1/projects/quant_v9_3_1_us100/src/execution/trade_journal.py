@@ -40,7 +40,16 @@ class PipelineAuditLog:
             "risk_decision": risk_decision,
             "execution_mode": execution_mode,
             "order_send_called": order_send_called,
-            "details": details or {}
+            
+            "trades_last_hour": trades_last_hour,
+            "consecutive_losses_symbol": consecutive_losses_symbol,
+            "consecutive_losses_fleet": consecutive_losses_fleet,
+            "cooldown_status": cooldown_status,
+            "veto_reason": veto_reason,
+            "adx": adx14_h1,
+            "rsi": rsi14_m15,
+            "direction": signal_result,
+"details": details or {}
         }
         try:
             with open(self.p, "a") as f:
