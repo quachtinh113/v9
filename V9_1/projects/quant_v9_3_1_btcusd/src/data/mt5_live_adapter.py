@@ -65,7 +65,7 @@ class MT5LiveAdapter:
         df.rename(columns={'time': 'timestamp', 'tick_volume': 'volume'}, inplace=True)
         return df
 
-    def build_live_feature_table(self, symbol, audit_logger=None):
+    def build_live_feature_table(self, symbol, session_policy="fx", audit_logger=None):
         if not self.connected:
             return None, {"M5":0, "M15":0, "H1":0, "H4":0}
             
@@ -90,5 +90,5 @@ class MT5LiveAdapter:
             raise DataIncompleteError(f"M1 rates data for {symbol} is None or empty.")
             
         from src.data.mtf_builder import build_feature_table
-        ft = build_feature_table(df_m1)
+        ft = build_feature_table(df_m1, session_policy=session_policy)
         return ft, rates_sizes

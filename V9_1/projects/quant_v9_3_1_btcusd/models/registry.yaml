@@ -1,0 +1,7 @@
+models:
+  - model_id: XGB_LEGACY_ACTIVE
+    model_path: "models/active/xgb_trade_filter.json"
+    dataset_id: UNKNOWN_LEGACY_DATASET
+    status: observe_only
+    allowed_to_block: false
+    metrics: {}

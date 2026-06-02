@@ -41,8 +41,8 @@ class LivePipeline:
             self.model_id = None
             self.model_status = None
             self.allowed_to_block = False
-        # Determine ML gate mode based on registry fields
-        if not self.allowed_to_block:
+        # Determine ML gate mode based on registry fields and status
+        if self.model_status != "blocking_allowed" or not self.allowed_to_block:
             self.ml_gate_mode = "observe_only"
             self.model_provenance_valid = False
         else:
@@ -126,6 +126,7 @@ class LivePipeline:
 
     def tick(self):
         tick_ok = False
+        decision = None
         data_stale = False
         regime_result = "N/A"
         signal_result = "N/A"
@@ -250,9 +251,23 @@ class LivePipeline:
                     execution_mode=execution_mode,
                     order_send_called=order_send_called,
                     ml_gate_mode=getattr(self, "ml_gate_mode", "observe_only"),
-                    ml_block_applied=decision.ml_decision == "BLOCK" and getattr(self, "ml_gate_mode", "observe_only") != "observe_only",
-                    ml_reason=decision.ml_reason,
-                    model_provenance_valid=getattr(self, "model_provenance_valid", False)
+
+                    ml_block_applied=(decision is not None and decision.ml_decision == "BLOCK") and getattr(self, "ml_gate_mode", "observe_only") != "observe_only",
+                    ml_reason=decision.ml_reason if decision is not None else None,
+                    model_provenance_valid=getattr(self, "model_provenance_valid", False),
+                    model_id=getattr(self, "model_id", None),
+                    model_status=getattr(self, "model_status", None),
+                    allowed_to_block=getattr(self, "allowed_to_block", False),
+                    # New feature fields
+                    rsi14_m15=row.get("rsi14_m15"),
+                    adx14_h1=row.get("adx14_h1"),
+                    atr14_m1=row.get("atr14_m1"),
+                    spread_bps=base_spread_bps,
+                    effective_spread=effective_spread,
+                    regime=decision.regime if decision is not None else None,
+                    session_state=row.get("session_flag"),
+                    signal_score=decision.score if decision is not None else None,
+                    details=None
                 )
 
     def _tick_internal(self):
@@ -296,11 +311,11 @@ class LivePipeline:
                 tick_time = datetime.fromtimestamp(latest_tick.time, tz=timezone.utc)
                 tick_age_seconds = (datetime.now(timezone.utc) - tick_time).total_seconds()
             
-            ft, rates_sizes = self.live_adapter.build_live_feature_table(broker_symbol, self.audit_log)
+            ft, rates_sizes = self.live_adapter.build_live_feature_table(broker_symbol, session_policy=self.config.get("session_policy", "fx"), audit_logger=self.audit_log)
         else:
             csv = resolve_csv_source(self.root, self.symbol)
             df = load_ohlcv_csv(csv)
-            ft = build_feature_table(df)
+            ft = build_feature_table(df, session_policy=self.config.get("session_policy", "fx"))
             
         if ft is None or ft.empty:
             self.audit_log.write_blocked(
@@ -367,6 +382,10 @@ class LivePipeline:
             stale_veto = True
             
         plan, decision = self.strategy.generate_trade_plan(row, self.config)
+        
+        # Store for audit logging in finally block
+        self.last_decision = decision
+        self.last_row = row
         
         if stale_veto:
             decision.direction = "flat"

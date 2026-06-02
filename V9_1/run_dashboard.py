@@ -288,12 +288,11 @@ class PortfolioDashboardHandler(BaseHTTPRequestHandler):
                                 hb_ts_str = last_hb.get("timestamp")
                                 if hb_ts_str:
                                     hb_timestamp_str = hb_ts_str
-                                    from datetime import datetime, timezone
-                                    hb_ts = datetime.fromisoformat(hb_ts_str.replace("Z", ""))
+                                    hb_ts = datetime.datetime.fromisoformat(hb_ts_str.replace("Z", ""))
                                     if hb_ts.tzinfo is None:
-                                        hb_age = (datetime.utcnow() - hb_ts).total_seconds()
+                                        hb_age = (datetime.datetime.utcnow() - hb_ts).total_seconds()
                                     else:
-                                        hb_age = (datetime.now(timezone.utc) - hb_ts).total_seconds()
+                                        hb_age = (datetime.datetime.now(datetime.timezone.utc) - hb_ts).total_seconds()
                                     if hb_age <= 90:
                                         sym_active = True
                                     ml_ok = last_hb.get("ml_ok", True)

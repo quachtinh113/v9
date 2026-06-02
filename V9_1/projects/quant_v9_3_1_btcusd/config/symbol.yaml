@@ -38,6 +38,10 @@ risk:
   spread_limit_bps: 5.0
   transition_trade_enabled: false
 symbol: BTCUSD
+asset_class: crypto
+session_policy: always_on
+active_sessions:
+  - crypto_24_7
 telegram:
   chat_id: '1958994081'
   enabled: true

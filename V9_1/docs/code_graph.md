@@ -3,8 +3,8 @@
 ## Quick Reference
 | Problem | Inspect these files | Do not touch |
 |---|---|---|
-| Bot not starting | `fix_main.py`, `run_and_monitor_fleet.py` | `configs/mt5_demo.yaml` |
-| ML gatekeeper blocking | `src/ml/xgb_filter.py`, `src/pipeline_live.py` | `src/core/models.py` |
+| Bot not starting | `run_btcusd_pipeline.py` (BTC official launcher), `fix_main.py` | `configs/mt5_demo.yaml` |
+| ML gatekeeper blocking | `src/ml/xgb_filter.py`, `mcp/tools/ml_gate_audit_tool.py` | `src/core/models.py` |
 | Risk engine veto | `src/core/risk_engine.py`, `src/execution/risk_gateway.py` | `src/utils/*` |
 | Audit logging failures | `src/execution/trade_journal.py` | `src/pipeline_live.py` |
 
@@ -23,6 +23,10 @@
 ```
 Market Data → Feature Builder → Regime Engine → Signal Engine → ML Gatekeeper → Risk Engine → Execution Router → Audit Logs
 ```
+*(Note: For BTCUSD, `session_policy: always_on` passes `crypto_24_7` through Feature Builder → Regime Engine → Signal Engine to prevent off-session blocks)*
+
+> [!IMPORTANT]
+> `docs/audit_memory.md` MUST be read before commencing future audits!
 
 ## Hotspot Map
 | File | Blast Radius | Reason |

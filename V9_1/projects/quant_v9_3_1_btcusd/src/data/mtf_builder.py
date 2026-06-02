@@ -7,7 +7,7 @@ from src.indicators.adx import compute_adx
 from src.indicators.atr import compute_atr
 from src.utils.frequency import normalize_pandas_frequency
 
-def build_feature_table(df_m1: pd.DataFrame) -> pd.DataFrame:
+def build_feature_table(df_m1: pd.DataFrame, session_policy: str = "fx") -> pd.DataFrame:
     if df_m1.empty:
         return pd.DataFrame()
         
@@ -86,6 +86,8 @@ def build_feature_table(df_m1: pd.DataFrame) -> pd.DataFrame:
     df["minute"] = df.index.minute
     
     def calc_session(hour):
+        if session_policy == "always_on":
+            return "crypto_24_7"
         if 8 <= hour < 13:
             return "london"
         elif 13 <= hour < 21:

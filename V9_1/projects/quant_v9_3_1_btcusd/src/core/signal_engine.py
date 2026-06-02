@@ -41,7 +41,7 @@ def evaluate_signal(features: Dict[str, Any], config: Dict[str, Any] | None = No
         
     # --- 2. Session PASS check ---
     session = str(features.get("session_flag", "off"))
-    allowed_sessions = ("london", "new_york")
+    allowed_sessions = ("london", "new_york", "crypto_24_7")
     if session in allowed_sessions:
         session_pass = True
     else:
