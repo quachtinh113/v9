@@ -1,2 +1,0 @@
-symbol,timestamp,initial_capital,ending_equity,realized_pnl,profit_factor,max_drawdown_pct,max_consecutive_losses,sharpe_ratio,sortino_ratio,monte_carlo_median_dd,monte_carlo_95_dd,ruin_probability,verdict
-USDJPY,2026-05-22T19:49:13.767499,10000.0,9997.95748978291,-2.042510217090239,0.8933178671152048,0.19113067679168202,2,-0.8593756758962973,-49.46525097524728,0.19294933354121302,0.1970392413398724,0.0,DISABLED

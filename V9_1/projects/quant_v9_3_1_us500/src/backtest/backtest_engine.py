@@ -263,7 +263,7 @@ class SingleAssetBacktester:
         total = len(trades)
         net_pnl = float(pnl_series.sum())
         pf = (pnl_series[pnl_series > 0].sum() / abs(pnl_series[pnl_series < 0].sum())) if (pnl_series < 0).any() else float('inf')
-        return {"status": "ok", "symbol": self.config["symbol"], "trades": total, "win_rate": wins / total if total else 0, "net_pnl": net_pnl, "profit_factor": pf, "ending_equity": float(equity_curve[-1])}
+        return {"status": "ok", "symbol": self.config["symbol"], "trades": total, "win_rate": wins / total if total else 0, "net_pnl": net_pnl, "profit_factor": pf, "ending_equity": float(equity_curve[-1]), "bars": len(equity_curve) - 1}
 
 def run_backtest(config, strategy_module, csv_path=None):
     df = load_ohlcv_csv(csv_path)

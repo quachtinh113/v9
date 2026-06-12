@@ -10,7 +10,7 @@ entry:
   trend_adx_min: 22
   trend_only: true
 ml:
-  block_threshold: 0.55
+  block_threshold: 0.50
   enabled: true
   model_path: models/xgb_trade_filter.json
 position:
@@ -26,9 +26,17 @@ profile:
   style: structural_position
   trigger_timeframe: M5
 risk:
+  atr_ratio_limit: 2.0
   max_daily_loss_pct: 1.8
+  max_daily_trades: 5
   max_layers: 2
+  max_open_positions: 2
+  max_symbol_exposure: 0.05
+  news_blackout_enabled: true
   risk_per_trade_pct: 0.25
+  slippage_limit_bps: 3.0
+  spread_limit_bps: 5.0
+  transition_trade_enabled: false
 symbol: USDJPY
 telegram:
   chat_id: '1958994081'

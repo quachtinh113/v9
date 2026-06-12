@@ -16,7 +16,7 @@ sys.path.insert(0, str(PROJECTS_DIR / "quant_v9_3_1_us30"))
 from src.core.microstructure import MicrostructureDetector
 from src.core.regime_engine import detect_regime
 
-SYMBOLS = ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD"]
+SYMBOLS = ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD", "BTCUSD"]
 
 # Base Transaction Costs by symbol (in basis points)
 BASE_COSTS = {
@@ -30,6 +30,7 @@ BASE_COSTS = {
     "US100":  {"spread": 1.5, "slippage": 1.0},
     "US500":  {"spread": 1.5, "slippage": 1.0},
     "XAUUSD": {"spread": 2.0, "slippage": 1.0},
+    "BTCUSD": {"spread": 2.5, "slippage": 1.5},
 }
 
 def load_symbol_data(symbol: str) -> pd.DataFrame:

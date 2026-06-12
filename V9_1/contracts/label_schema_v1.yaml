@@ -1,0 +1,10 @@
+# Label schema version 1
+labels:
+  - name: WIN
+    description: Positive trade outcome
+  - name: LOSS
+    description: Negative trade outcome
+  - name: NO_TRADE
+    description: No trade executed
+  - name: UNKNOWN
+    description: Uncertain outcome

@@ -1,17 +1,23 @@
-// Portfolio Command Center - Logic Engine
+// Portfolio Command Center - Logic Engine (Antigravity 2.0)
 document.addEventListener("DOMContentLoaded", () => {
     let rawData = null;
     let pnlChart = null;
     let equityChart = null;
     let selectedSymbol = "US30";
     let globalMultiplier = 1.0;
+    
+    // Stress Test States
+    let stressVol = 1.0;
+    let stressSlip = 1.0;
+    let stressBlackSwan = false;
 
     // Tab switching setup
     const navItems = {
         "nav-dashboard": "tab-content-dashboard",
         "nav-assets": "tab-content-assets",
         "nav-risk": "tab-content-risk",
-        "nav-architecture": "tab-content-architecture"
+        "nav-architecture": "tab-content-architecture",
+        "nav-gcp": "tab-content-gcp"
     };
 
     Object.keys(navItems).forEach(navId => {
@@ -50,18 +56,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const assetsBodyEl = document.getElementById("assets-body");
     const consoleOutputEl = document.getElementById("console-output");
     
-    // Slider & Guard Elements
+    // Sliders
     const allocationSlider = document.getElementById("allocation-slider");
     const globalMultiplierVal = document.getElementById("global-multiplier-val");
+    const stressVolSlider = document.getElementById("stress-vol-slider");
+    const stressVolVal = document.getElementById("stress-vol-val");
+    const stressSlipSlider = document.getElementById("stress-slip-slider");
+    const stressSlipVal = document.getElementById("stress-slip-val");
+    const stressBlackswanCheck = document.getElementById("stress-blackswan");
+
+    // Guard Display Elements
     const guardSymbolTitle = document.getElementById("selected-symbol-guard");
-    
-    // Guard statuses
     const guardSpreadEl = document.getElementById("guard-spread");
     const guardSlippageEl = document.getElementById("guard-slippage");
     const guardAtrEl = document.getElementById("guard-atr");
     const guardDailyLimitEl = document.getElementById("guard-daily-limit");
     const guardWeeklyLimitEl = document.getElementById("guard-weekly-limit");
     const guardHardLimitEl = document.getElementById("guard-hard-limit");
+
+    // Config Tuning Form Elements
+    const configSymbolTitle = document.getElementById("selected-symbol-config");
+    const cfgRiskPctInput = document.getElementById("cfg-risk-pct");
+    const cfgDailyLimitInput = document.getElementById("cfg-daily-limit");
+    const cfgStopAtrInput = document.getElementById("cfg-stop-atr");
+    const cfgTpAtrInput = document.getElementById("cfg-tp-atr");
+    const cfgMlEnabledCheck = document.getElementById("cfg-ml-enabled");
+    const btnSaveConfig = document.getElementById("btn-save-config");
+    const btnGcpDeploySimulate = document.getElementById("btn-gcp-deploy-simulate");
 
     // Clock
     setInterval(() => {
@@ -73,11 +94,110 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchData();
     loadArchitectureTab();
 
-    // Slider listener
+    // Periodically poll backend API every 10 seconds for live heartbeats, status & logs
+    setInterval(fetchData, 10000);
+
+    // Telemetry Slider listeners
     allocationSlider.addEventListener("input", (e) => {
         globalMultiplier = parseFloat(e.target.value);
         globalMultiplierVal.textContent = `${globalMultiplier.toFixed(1)}x`;
         updateUI();
+    });
+
+    // Stress testing listeners
+    stressVolSlider.addEventListener("input", (e) => {
+        stressVol = parseFloat(e.target.value);
+        stressVolVal.textContent = `${stressVol.toFixed(1)}x`;
+        updateUI();
+    });
+
+    stressSlipSlider.addEventListener("input", (e) => {
+        stressSlip = parseFloat(e.target.value);
+        stressSlipVal.textContent = `${stressSlip.toFixed(1)}x`;
+        updateUI();
+    });
+
+    stressBlackswanCheck.addEventListener("change", (e) => {
+        stressBlackSwan = e.target.checked;
+        if (stressBlackSwan) {
+            showToast("Black Swan Event Enabled! Extreme portfolio safety guards triggered.", "error");
+        } else {
+            showToast("Black Swan Veto released. Resuming nominal bounds.", "success");
+        }
+        updateUI();
+    });
+
+    // Save configurations back to backend API
+    btnSaveConfig.addEventListener("click", async () => {
+        if (!rawData) return;
+        
+        const payload = {
+            symbol: selectedSymbol,
+            risk_per_trade_pct: parseFloat(cfgRiskPctInput.value),
+            daily_loss_limit_pct: parseFloat(cfgDailyLimitInput.value),
+            stop_atr_mult: parseFloat(cfgStopAtrInput.value),
+            tp_atr_mult: parseFloat(cfgTpAtrInput.value),
+            ml_enabled: cfgMlEnabledCheck.checked
+        };
+
+        try {
+            btnSaveConfig.disabled = true;
+            btnSaveConfig.textContent = "Saving...";
+            
+            const res = await fetch("/api/update_config", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+            
+            if (res.ok && data.status === "success") {
+                showToast(`Settings applied to ${selectedSymbol} config successfully!`, "success");
+                
+                // Write a log in the console
+                appendConsoleLine("SYS", `Configuration for ${selectedSymbol} updated: Risk=${payload.risk_per_trade_pct}%, DailyLimit=${payload.daily_loss_limit_pct}%`);
+                
+                // Fetch fresh values
+                await fetchData();
+            } else {
+                showToast(`Error: ${data.message || "Failed to update configuration"}`, "error");
+            }
+        } catch (err) {
+            console.error(err);
+            showToast(`Connection error: ${err.message}`, "error");
+        } finally {
+            btnSaveConfig.disabled = false;
+            btnSaveConfig.innerHTML = "<span>💾</span> Apply Config";
+        }
+    });
+
+    // GCP simulation trigger
+    btnGcpDeploySimulate.addEventListener("click", () => {
+        btnGcpDeploySimulate.disabled = true;
+        btnGcpDeploySimulate.textContent = "Deploying...";
+        
+        appendConsoleLine("GCP", "Deploying release package V9_3_1_LAPTOP_TEST to Compute Engine VM...");
+        showToast("Step 1/3: Compiling NowTrading release package...", "info");
+        
+        setTimeout(() => {
+            appendConsoleLine("GCP", "Uploading compressed tarball (87.5 MB) via gcloud compute scp...");
+            showToast("Step 2/3: Pushing package to GCP Remote VM...", "info");
+            
+            setTimeout(() => {
+                appendConsoleLine("GCP", "Connection established. SSH systemd service restart initiated...");
+                showToast("Step 3/3: Activating remote bot workers...", "info");
+                
+                setTimeout(() => {
+                    appendConsoleLine("GCP", "GCP VM Server status: READY. 10 channels listening on Paper Fallback adapter.");
+                    showToast("Deployment Complete! NowTrading Quant VPS online.", "success");
+                    btnGcpDeploySimulate.disabled = false;
+                    btnGcpDeploySimulate.innerHTML = "<span>🚀</span> Run Deployment Pipeline";
+                }, 1500);
+            }, 1500);
+        }, 1500);
     });
 
     async function fetchData() {
@@ -92,24 +212,184 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // System Status UI Selection
+    const statusDot = document.querySelector(".status-dot");
+    const statusLabel = document.querySelector(".status-label");
+
+    function updateSystemHealth() {
+        if (!rawData || !rawData.system_status) return;
+        const state = rawData.system_status.state;
+        const reason = rawData.system_status.reason;
+        
+        statusLabel.textContent = `${state} - ${reason}`;
+        
+        statusDot.className = "status-dot pulsing";
+        if (state === "GREEN") {
+            statusDot.style.backgroundColor = "var(--accent-emerald)";
+            statusDot.style.boxShadow = "0 0 12px var(--accent-emerald)";
+        } else if (state === "YELLOW") {
+            statusDot.style.backgroundColor = "var(--accent-yellow)";
+            statusDot.style.boxShadow = "0 0 12px var(--accent-yellow)";
+        } else {
+            statusDot.style.backgroundColor = "var(--accent-rose)";
+            statusDot.style.boxShadow = "0 0 12px var(--accent-rose)";
+        }
+    }
+
+    function renderAssetMatrix() {
+        const fullAssetBody = document.getElementById("asset-matrix-full-body");
+        if (!fullAssetBody || !rawData) return;
+        
+        fullAssetBody.innerHTML = "";
+        rawData.assets.forEach(a => {
+            const row = document.createElement("tr");
+            
+            const isApproved = a.verdict === "APPROVED" || a.verdict === "INSTITUTIONAL_READY";
+            const verdictClass = a.verdict === "INSTITUTIONAL_READY" ? "APPROVED" : (a.verdict === "OFFLINE" ? "DISABLED" : a.verdict);
+            
+            const symbolStatusColor = a.symbol_status === "ACTIVE" ? "var(--accent-emerald)" : "var(--accent-rose)";
+            const dataStatusColor = a.data_status === "synced" ? "var(--accent-emerald)" : (a.data_status === "stale" ? "var(--accent-yellow)" : "var(--accent-rose)");
+            const modelStatusColor = a.model_status === "trained" ? "var(--accent-emerald)" : "var(--accent-rose)";
+            const riskStatusColor = a.risk_status === "nominal" ? "var(--accent-emerald)" : "var(--accent-rose)";
+            const dashboardStatusColor = a.dashboard_status === "active" ? "var(--accent-emerald)" : "var(--text-secondary)";
+
+            row.innerHTML = `
+                <td class="asset-symbol">${a.symbol}</td>
+                <td style="text-transform: capitalize;">${a.type}</td>
+                <td><span class="asset-badge ${verdictClass}">${a.verdict}</span></td>
+                <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 700; color: ${symbolStatusColor};">${a.symbol_status}</td>
+                <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 700; color: ${dataStatusColor};">${a.data_status.toUpperCase()}</td>
+                <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 700; color: ${modelStatusColor};">${a.model_status.toUpperCase()}</td>
+                <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 700; color: ${riskStatusColor};">${a.risk_status.toUpperCase()}</td>
+                <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 700; color: ${dashboardStatusColor};">${a.dashboard_status.toUpperCase()}</td>
+            `;
+            fullAssetBody.appendChild(row);
+        });
+    }
+
+    function updateFleetStatus() {
+        if (!rawData || !rawData.fleet_status) return;
+        const fs = rawData.fleet_status;
+        
+        // 1. Fleet state
+        const fleetStateEl = document.getElementById("fleet-state");
+        if (fleetStateEl) {
+            if (fs.running) {
+                fleetStateEl.textContent = "🟢 Fleet Running";
+                fleetStateEl.style.color = "var(--accent-emerald)";
+            } else {
+                fleetStateEl.textContent = "🔴 Fleet Stopped";
+                fleetStateEl.style.color = "var(--accent-rose)";
+            }
+        }
+        
+        // 2. Agents alive
+        const fleetAgentsAliveEl = document.getElementById("fleet-agents-alive");
+        if (fleetAgentsAliveEl) {
+            fleetAgentsAliveEl.textContent = `Agents Alive: ${fs.agents_alive}`;
+        }
+        
+        // 3. Last telemetry
+        const fleetLastTelemetryEl = document.getElementById("fleet-last-telemetry");
+        if (fleetLastTelemetryEl) {
+            fleetLastTelemetryEl.textContent = fs.last_telemetry;
+        }
+        
+        // 4. Heartbeat status
+        const fleetHeartbeatStatusEl = document.getElementById("fleet-heartbeat-status");
+        if (fleetHeartbeatStatusEl) {
+            if (fs.heartbeat_ok) {
+                fleetHeartbeatStatusEl.textContent = "Heartbeat: Healthy";
+                fleetHeartbeatStatusEl.className = "badge badge-success";
+            } else {
+                fleetHeartbeatStatusEl.textContent = "Heartbeat: Lagging";
+                fleetHeartbeatStatusEl.className = "badge badge-warning";
+            }
+        }
+        
+        // 5. Key ticks
+        const keyTicksDisplayEl = document.getElementById("key-ticks-display");
+        if (keyTicksDisplayEl) {
+            keyTicksDisplayEl.innerHTML = "";
+            Object.keys(fs.key_ticks).forEach(symbol => {
+                const val = fs.key_ticks[symbol];
+                let valColor = "#fff";
+                
+                if (val === "Market Closed") valColor = "var(--text-secondary)";
+                else if (val === "Offline") valColor = "var(--accent-rose)";
+                else if (val.includes("s ago")) {
+                    const secs = parseFloat(val);
+                    if (secs > 10) valColor = "var(--accent-yellow)";
+                    else valColor = "var(--accent-emerald)";
+                }
+                
+                const div = document.createElement("div");
+                div.style.display = "flex";
+                div.style.justify = "space-between";
+                div.style.borderBottom = "1px solid rgba(255,255,255,0.05)";
+                div.style.paddingBottom = "4px";
+                div.innerHTML = `
+                    <span style="color: var(--accent-cyan);">${symbol}:</span>
+                    <span style="color: ${valColor};">${val}</span>
+                `;
+                keyTicksDisplayEl.appendChild(div);
+            });
+        }
+    }
+
     function updateUI() {
         if (!rawData) return;
+        updateSystemHealth();
+        renderAssetMatrix();
+        updateFleetStatus();
 
         const approvedAssets = rawData.assets.filter(a => a.verdict === "APPROVED" || a.verdict === "INSTITUTIONAL_READY");
         
-        // 1. Calculate weighted AUM & PnL based on global multiplier
+        // 1. Calculate AUM based on global multiplier
         const baseAum = approvedAssets.length * 10000;
         const adjustedAum = baseAum * globalMultiplier;
-        const adjustedPnl = rawData.summary.total_pnl * globalMultiplier;
 
-        // Calculate VaR (weighted portfolio DD * global multiplier)
+        // Apply stress multipliers to metrics
+        let totalPnlMultiplier = globalMultiplier;
+        
+        // Volatility stress reduces overall net expectancy (transaction costs increase)
+        totalPnlMultiplier *= Math.max(0.1, 1 - (stressVol - 1) * 0.15);
+        // Slippage stress eats directly into the profit factor and Net returns
+        totalPnlMultiplier *= Math.max(0.05, 1 - (stressSlip - 1) * 0.2);
+
+        if (stressBlackSwan) {
+            // Black Swan wipes out the gains
+            totalPnlMultiplier *= -0.4; // heavy drawdown PnL
+        }
+
+        const adjustedPnl = rawData.summary.total_pnl * totalPnlMultiplier;
+
+        // Calculate VaR (weighted portfolio DD * global multiplier * stress factors)
         const avgDrawdown = rawData.summary.portfolio_max_dd;
-        const portfolioVaR = avgDrawdown * globalMultiplier;
+        let portfolioVaR = avgDrawdown * globalMultiplier * (1 + (stressVol - 1) * 0.5 + (stressSlip - 1) * 0.3);
+        
+        if (stressBlackSwan) {
+            portfolioVaR = Math.max(portfolioVaR, 8.0); // Hard Drawdown hit
+        }
 
         // Render KPIs
         valAumEl.textContent = `$${adjustedAum.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
         valPnlEl.textContent = `$${adjustedPnl.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        
+        // Visual indicator class for PnL
+        if (adjustedPnl < 0) {
+            valPnlEl.className = "kpi-value kpi-trend trend-down";
+        } else {
+            valPnlEl.className = "kpi-value pnl-positive";
+        }
+
         valVarEl.textContent = `${portfolioVaR.toFixed(2)}%`;
+        if (portfolioVaR >= 8.0 || stressBlackSwan) {
+            valVarEl.style.color = "var(--accent-rose)";
+        } else {
+            valVarEl.style.color = "var(--text-primary)";
+        }
+
         valChannelsEl.textContent = `${approvedAssets.length} / ${rawData.assets.length}`;
         
         const activePct = (approvedAssets.length / rawData.assets.length) * 100;
@@ -118,12 +398,18 @@ document.addEventListener("DOMContentLoaded", () => {
         // 2. Render Table
         renderTable();
 
+        // Render Pipeline Status Table and Counters
+        renderPipelineStatus();
+
         // 3. Render Guards
         updateGuardsDisplay();
 
-        // 4. Render Charts
+        // 4. Update configuration values for selected symbol
+        populateConfigPanel();
+
+        // 5. Render Charts
         renderPnlPieChart(approvedAssets);
-        renderEquityChart(approvedAssets);
+        renderEquityChart(approvedAssets, totalPnlMultiplier, portfolioVaR);
     }
 
     function renderTable() {
@@ -144,12 +430,19 @@ document.addEventListener("DOMContentLoaded", () => {
             // Custom verdict badge classes
             const verdictClass = asset.verdict === "INSTITUTIONAL_READY" ? "APPROVED" : asset.verdict;
 
+            // Apply stress to profit factor displayed
+            let displayPF = asset.profit_factor;
+            if (displayPF && displayPF < 999) {
+                displayPF = displayPF * Math.max(0.2, 1 - (stressVol - 1) * 0.1 - (stressSlip - 1) * 0.15);
+                if (stressBlackSwan) displayPF = displayPF * 0.3;
+            }
+
             row.innerHTML = `
                 <td class="asset-symbol">${asset.symbol}</td>
                 <td><span style="text-transform: capitalize;">${asset.type}</span></td>
                 <td><span class="asset-badge ${verdictClass}">${asset.verdict}</span></td>
                 <td>${asset.sharpe_ratio.toFixed(2)}</td>
-                <td>${asset.profit_factor === null || asset.profit_factor > 1000 ? "inf" : asset.profit_factor.toFixed(2)}</td>
+                <td>${displayPF === null || displayPF > 50 ? "inf" : displayPF.toFixed(2)}</td>
                 <td>${allocationText}</td>
                 <td><span class="badge badge-info">${weightText}</span></td>
             `;
@@ -159,6 +452,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.querySelectorAll("#assets-body tr").forEach(r => r.classList.remove("selected"));
                 row.classList.add("selected");
                 updateGuardsDisplay();
+                populateConfigPanel();
             });
 
             assetsBodyEl.appendChild(row);
@@ -171,14 +465,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
         guardSymbolTitle.textContent = asset.symbol;
 
-        // Update indicators
-        setGuardStatus(guardSpreadEl, asset.guards.spread_guard_enabled);
-        setGuardStatus(guardSlippageEl, asset.guards.slippage_guard_enabled);
-        setGuardStatus(guardAtrEl, asset.guards.atr_shock_block_enabled);
+        // If Black Swan or high stress is enabled, we simulate spread and atr shock triggers
+        const spreadGuardTriggered = stressSlip >= 4.0 || stressBlackSwan;
+        const slippageGuardTriggered = stressSlip >= 3.5 || stressBlackSwan;
+        const atrShockTriggered = stressVol >= 3.0 || stressBlackSwan;
+
+        // Show active or warning states in guards
+        if (spreadGuardTriggered) {
+            guardSpreadEl.textContent = "BLOCKED / VETOED";
+            guardSpreadEl.className = "guard-status status-disabled";
+        } else {
+            setGuardStatus(guardSpreadEl, asset.guards.spread_guard_enabled);
+        }
+
+        if (slippageGuardTriggered) {
+            guardSlippageEl.textContent = "BLOCKED / VETOED";
+            guardSlippageEl.className = "guard-status status-disabled";
+        } else {
+            setGuardStatus(guardSlippageEl, asset.guards.slippage_guard_enabled);
+        }
+
+        if (atrShockTriggered) {
+            guardAtrEl.textContent = "BLOCKED / VETOED";
+            guardAtrEl.className = "guard-status status-disabled";
+        } else {
+            setGuardStatus(guardAtrEl, asset.guards.atr_shock_block_enabled);
+        }
 
         guardDailyLimitEl.textContent = `${asset.guards.daily_loss_limit_pct.toFixed(1)}%`;
         guardWeeklyLimitEl.textContent = `${asset.guards.weekly_soft_stop_pct.toFixed(1)}%`;
         guardHardLimitEl.textContent = `${asset.guards.hard_drawdown_pct.toFixed(1)}%`;
+    }
+
+    function populateConfigPanel() {
+        const asset = rawData.assets.find(a => a.symbol === selectedSymbol);
+        if (!asset) return;
+
+        configSymbolTitle.textContent = asset.symbol;
+        cfgRiskPctInput.value = asset.config.risk_per_trade_pct;
+        cfgDailyLimitInput.value = asset.guards.daily_loss_limit_pct;
+        cfgStopAtrInput.value = asset.config.stop_atr_mult;
+        cfgTpAtrInput.value = asset.config.tp_atr_mult;
+        cfgMlEnabledCheck.checked = asset.config.ml_enabled;
     }
 
     function setGuardStatus(element, isEnabled) {
@@ -208,8 +536,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 datasets: [{
                     data: data,
                     backgroundColor: [
-                        "#06b6d4", "#6366f1", "#10b981", "#eab308", 
-                        "#ec4899", "#8b5cf6", "#f97316", "#a855f7"
+                        "#06b6d4", "#6366f1", "#10b981", "#f59e0b", 
+                        "#f43f5e", "#a855f7", "#3b82f6", "#ec4899"
                     ],
                     borderColor: "rgba(10, 15, 30, 0.8)",
                     borderWidth: 2
@@ -222,8 +550,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     legend: {
                         position: "right",
                         labels: {
-                            color: "#94a3b8",
-                            font: { family: "Outfit", size: 11 }
+                            color: "#8e9bb3",
+                            font: { family: "Plus Jakarta Sans", size: 11, weight: 600 }
                         }
                     }
                 }
@@ -231,37 +559,40 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function renderEquityChart(approvedAssets) {
+    function renderEquityChart(approvedAssets, totalPnlMultiplier, portfolioVaR) {
         const ctx = document.getElementById("equityChart").getContext("2d");
         
         if (equityChart) {
             equityChart.destroy();
         }
 
-        // Generate synthetic daily points (20 steps) to simulate historical equity curve
-        // compound interest curve with slight fluctuations
         const points = 20;
         const labels = Array.from({length: points}, (_, i) => `Day ${i + 1}`);
         
-        // Sum total portfolio returns
         let currentEquity = approvedAssets.length * 10000 * globalMultiplier;
-        const totalNetPnl = rawData.summary.total_pnl * globalMultiplier;
+        const totalNetPnl = rawData.summary.total_pnl * totalPnlMultiplier;
         const incrementalProfit = totalNetPnl / points;
 
         const dataPoints = [currentEquity - totalNetPnl];
         
-        // Generate values with small fluctuations
         for (let i = 1; i < points; i++) {
-            const randomVolatility = (Math.random() - 0.2) * (incrementalProfit * 0.4); // slightly upward trend
+            // Apply higher randomness and downward fluctuations if volatility/slippage is high
+            const shockFactor = (stressVol + stressSlip) * 0.15;
+            const randomVal = (Math.random() - 0.25 - (stressBlackSwan ? 0.6 : 0)) * (incrementalProfit * shockFactor);
             const prev = dataPoints[i - 1];
-            dataPoints.push(prev + incrementalProfit + randomVolatility);
+            dataPoints.push(prev + incrementalProfit + randomVal);
         }
-        dataPoints.push(currentEquity); // end at adjusted value
+        dataPoints.push(currentEquity); 
 
-        // Setup smooth gradient background
+        // Dynamic chart gradient colors (Red if losing, Blue if winning)
         const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-        gradient.addColorStop(0, "rgba(6, 182, 212, 0.35)");
-        gradient.addColorStop(1, "rgba(6, 182, 212, 0)");
+        if (totalNetPnl < 0) {
+            gradient.addColorStop(0, "rgba(244, 63, 94, 0.35)");
+            gradient.addColorStop(1, "rgba(244, 63, 94, 0)");
+        } else {
+            gradient.addColorStop(0, "rgba(6, 182, 212, 0.35)");
+            gradient.addColorStop(1, "rgba(6, 182, 212, 0)");
+        }
 
         equityChart = new Chart(ctx, {
             type: "line",
@@ -272,32 +603,30 @@ document.addEventListener("DOMContentLoaded", () => {
                     data: dataPoints,
                     fill: true,
                     backgroundColor: gradient,
-                    borderColor: "#06b6d4",
+                    borderColor: totalNetPnl < 0 ? "#f43f5e" : "#06b6d4",
                     borderWidth: 3,
                     pointRadius: 4,
                     pointHoverRadius: 6,
                     pointBackgroundColor: "#fff",
-                    tension: 0.3
+                    tension: 0.35
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        display: false
-                    }
+                    legend: { display: false }
                 },
                 scales: {
                     x: {
-                        grid: { color: "rgba(255, 255, 255, 0.05)" },
-                        ticks: { color: "#94a3b8", font: { family: "Outfit" } }
+                        grid: { color: "rgba(255, 255, 255, 0.03)" },
+                        ticks: { color: "#8e9bb3", font: { family: "Plus Jakarta Sans", size: 10 } }
                     },
                     y: {
-                        grid: { color: "rgba(255, 255, 255, 0.05)" },
+                        grid: { color: "rgba(255, 255, 255, 0.03)" },
                         ticks: { 
-                            color: "#94a3b8", 
-                            font: { family: "Outfit" },
+                            color: "#8e9bb3", 
+                            font: { family: "Plus Jakarta Sans", size: 10 },
                             callback: (val) => `$${val.toLocaleString()}`
                         }
                     }
@@ -306,29 +635,61 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function streamConsoleLogs(logs) {
-        consoleOutputEl.innerHTML = "";
-        let index = 0;
-        
-        function appendNextLog() {
-            if (index >= logs.length) return;
-            const log = logs[index];
-            const line = document.createElement("div");
-            line.className = "console-line";
-            line.innerHTML = `
-                <span class="console-timestamp">[${log.timestamp.split(" ")[1]}]</span>
-                <span class="console-sym">${log.symbol}:</span>
-                <span>${log.message}</span>
-            `;
-            consoleOutputEl.appendChild(line);
-            consoleOutputEl.scrollTop = consoleOutputEl.scrollHeight;
-            index++;
-            
-            // Random delay to simulate real stream
-            setTimeout(appendNextLog, 400 + Math.random() * 800);
-        }
+    let printedLogs = new Set();
 
-        appendNextLog();
+    function streamConsoleLogs(logs) {
+        // Go through logs backwards to print oldest first
+        for (let i = logs.length - 1; i >= 0; i--) {
+            const log = logs[i];
+            const logKey = `${log.timestamp}-${log.symbol}-${log.message}`;
+            if (!printedLogs.has(logKey)) {
+                printedLogs.add(logKey);
+                appendConsoleLine(log.symbol, log.message, log.timestamp);
+            }
+        }
+    }
+
+    function appendConsoleLine(symbol, message, timestampStr = null) {
+        if (!timestampStr) {
+            const now = new Date();
+            timestampStr = now.toTimeString().split(" ")[0];
+        } else if (timestampStr.includes(" ")) {
+            timestampStr = timestampStr.split(" ")[1];
+        }
+        
+        const line = document.createElement("div");
+        line.className = "console-line";
+        line.innerHTML = `
+            <span class="console-timestamp">[${timestampStr}]</span>
+            <span class="console-sym">${symbol}:</span>
+            <span>${message}</span>
+        `;
+        consoleOutputEl.appendChild(line);
+        consoleOutputEl.scrollTop = consoleOutputEl.scrollHeight;
+    }
+
+    // Custom Toast alert visual system
+    function showToast(message, type = "success") {
+        const container = document.getElementById("toast-container");
+        if (!container) return;
+
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+        
+        let icon = "✓";
+        if (type === "error") icon = "⚠️";
+        if (type === "info") icon = "ℹ️";
+
+        toast.innerHTML = `<span>${icon}</span> ${message}`;
+        container.appendChild(toast);
+
+        // Slide out and remove toast
+        setTimeout(() => {
+            toast.style.animation = "slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) reverse forwards";
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 3500);
     }
 
     async function loadArchitectureTab() {
@@ -344,7 +705,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const card = document.createElement("div");
                     card.className = "module-card";
                     
-                    const statusDotColor = m.status === "active" ? "#10b981" : "#eab308";
+                    const statusDotColor = m.status === "active" ? "var(--accent-emerald)" : "var(--accent-yellow)";
                     
                     card.innerHTML = `
                         <div class="module-header">
@@ -365,33 +726,64 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             }
 
-            // Load Asset Registry
-            const assetRes = await fetch("/architecture/asset_registry.json");
-            const assets = await assetRes.json();
-            
-            const fullAssetBody = document.getElementById("asset-matrix-full-body");
-            if (fullAssetBody) {
-                fullAssetBody.innerHTML = "";
-                assets.forEach(a => {
-                    const row = document.createElement("tr");
-                    
-                    const verdictClass = a.status === "APPROVED" ? "APPROVED" : "DISABLED";
-                    const statusDotColor = a.status === "APPROVED" ? "#10b981" : "#f43f5e";
-                    
-                    row.innerHTML = `
-                        <td class="asset-symbol">${a.symbol}</td>
-                        <td style="text-transform: capitalize;">${a.asset_class}</td>
-                        <td><span class="asset-badge ${verdictClass}">${a.status}</span></td>
-                        <td style="font-family: monospace; font-size: 12px; color: ${a.data_status === 'synced' ? '#10b981' : '#f43f5e'};">${a.data_status}</td>
-                        <td style="font-family: monospace; font-size: 12px; color: ${a.model_status === 'trained' ? '#10b981' : '#94a3b8'};">${a.model_status}</td>
-                        <td style="font-family: monospace; font-size: 12px; color: ${a.risk_status === 'nominal' ? '#10b981' : '#eab308'};">${a.risk_status}</td>
-                        <td style="font-family: monospace; font-size: 12px; color: ${a.dashboard_status === 'active' ? '#10b981' : '#94a3b8'};">${a.dashboard_status}</td>
-                    `;
-                    fullAssetBody.appendChild(row);
-                });
-            }
+            // Dynamic asset matrix rendering handles the fullAssetBody tab
         } catch (err) {
             console.error("Failed to load architecture registries:", err);
+        }
+    }
+
+    function renderPipelineStatus() {
+        const pipelineBodyEl = document.getElementById("pipeline-body");
+        if (!pipelineBodyEl || !rawData || !rawData.pipeline_status) return;
+
+        pipelineBodyEl.innerHTML = "";
+        rawData.pipeline_status.forEach(p => {
+            const row = document.createElement("tr");
+
+            let colorClass = "gray";
+            if (p.color) {
+                colorClass = p.color;
+            }
+
+            const scoreStr = p.ml_score !== null && p.ml_score !== undefined ? p.ml_score.toFixed(4) : "0.0000";
+
+            let statusColor = "var(--text-secondary)";
+            if (p.color === "green") statusColor = "var(--accent-emerald)";
+            else if (p.color === "cyan") statusColor = "var(--accent-cyan)";
+            else if (p.color === "yellow") statusColor = "var(--accent-yellow)";
+            else if (p.color === "red") statusColor = "var(--accent-rose)";
+            else if (p.color === "purple") statusColor = "#a855f7";
+            else if (p.color === "blue") statusColor = "#3b82f6";
+            else if (p.color === "orange") statusColor = "#f97316";
+
+            row.innerHTML = `
+                <td class="asset-symbol" style="font-weight: 700;">${p.symbol}</td>
+                <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; color: #fff;">${p.order_name}</td>
+                <td style="font-family: 'Space Grotesk', monospace; font-weight: 700; font-size: 12px; color: ${statusColor};">
+                    <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: ${statusColor}; margin-right: 6px; box-shadow: 0 0 8px ${statusColor};"></span>
+                    ${p.stage}
+                </td>
+                <td style="color: var(--text-secondary); font-size: 13px; font-family: 'Space Grotesk', monospace; font-weight: 500;">${p.block_reason}</td>
+                <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 600;">${scoreStr}</td>
+                <td style="font-family: 'Space Grotesk', monospace; font-weight: 700; font-size: 11px;">
+                    <span class="badge" style="background-color: ${p.risk_action === "ALLOW" ? "rgba(16, 185, 129, 0.1)" : (p.risk_action === "N/A" ? "rgba(255, 255, 255, 0.05)" : "rgba(244, 63, 94, 0.1)")}; color: ${p.risk_action === "ALLOW" ? "var(--accent-emerald)" : (p.risk_action === "N/A" ? "var(--text-secondary)" : "var(--accent-rose)")}; border: 1px solid ${p.risk_action === "ALLOW" ? "rgba(16, 185, 129, 0.2)" : (p.risk_action === "N/A" ? "rgba(255, 255, 255, 0.1)" : "rgba(244, 63, 94, 0.2)")}; padding: 2px 6px;">
+                        ${p.risk_action}
+                    </span>
+                </td>
+                <td style="font-family: 'Space Grotesk', monospace; font-size: 12px; color: var(--text-secondary);">${p.last_update}</td>
+            `;
+            pipelineBodyEl.appendChild(row);
+        });
+
+        // Render summary counters
+        if (rawData.pipeline_summary) {
+            const s = rawData.pipeline_summary;
+            document.getElementById("pipeline-total-symbols").textContent = s.total_symbols;
+            document.getElementById("pipeline-signal-blocked").textContent = s.signal_blocked;
+            document.getElementById("pipeline-ml-blocked").textContent = s.ml_blocked;
+            document.getElementById("pipeline-risk-blocked").textContent = s.risk_blocked;
+            document.getElementById("pipeline-execution-waiting").textContent = s.execution_waiting;
+            document.getElementById("pipeline-orders-sent").textContent = s.orders_sent;
         }
     }
 });

@@ -1,0 +1,21 @@
+# System & Python exclusions
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.pytest/
+
+# Quant V9 Fleet runtime logs and database exclusions
+logs/
+diagnostics/
+*.log
+*.jsonl
+*.ndjson
+*.csv
+*.txt
+
+# IDE Configurations
+.gemini/
+.idea/
+.vscode/

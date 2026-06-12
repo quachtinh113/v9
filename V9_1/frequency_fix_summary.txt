@@ -1,0 +1,14 @@
+c:\Quant Trade\v9\V9_1\apply_frequency_fixes.py
+c:\Quant Trade\v9\V9_1\fix_frequencies.py
+c:\Quant Trade\v9\V9_1\generate_m1.py
+c:\Quant Trade\v9\V9_1\projects\quant_v9_3_1_audusd\src\data\mtf_builder.py
+c:\Quant Trade\v9\V9_1\projects\quant_v9_3_1_btcusd\src\data\mtf_builder.py
+c:\Quant Trade\v9\V9_1\projects\quant_v9_3_1_eurusd\src\data\mtf_builder.py
+c:\Quant Trade\v9\V9_1\projects\quant_v9_3_1_gbpusd\src\data\mtf_builder.py
+c:\Quant Trade\v9\V9_1\projects\quant_v9_3_1_us100\src\data\mtf_builder.py
+c:\Quant Trade\v9\V9_1\projects\quant_v9_3_1_us30\src\data\mtf_builder.py
+c:\Quant Trade\v9\V9_1\projects\quant_v9_3_1_us500\src\data\mtf_builder.py
+c:\Quant Trade\v9\V9_1\projects\quant_v9_3_1_usdcad\src\data\mtf_builder.py
+c:\Quant Trade\v9\V9_1\projects\quant_v9_3_1_usdchf\src\data\mtf_builder.py
+c:\Quant Trade\v9\V9_1\projects\quant_v9_3_1_usdjpy\src\data\mtf_builder.py
+c:\Quant Trade\v9\V9_1\projects\quant_v9_3_1_xauusd\src\data\mtf_builder.py

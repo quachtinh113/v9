@@ -8,7 +8,7 @@ from datetime import datetime
 import pandas as pd
 
 PROJECTS_DIR = Path(__file__).resolve().parent / "projects"
-SYMBOLS = ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD"]
+SYMBOLS = ["GBPUSD", "EURUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "US30", "US100", "US500", "XAUUSD", "BTCUSD"]
 
 def run_backtest(symbol):
     repo_name = f"quant_v9_3_1_{symbol.lower()}"

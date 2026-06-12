@@ -1,0 +1,17 @@
+# Feature schema version 1
+# List of feature names and their data types used by ML Gatekeeper
+features:
+  - name: price_change_5m
+    type: float
+  - name: price_change_15m
+    type: float
+  - name: volume
+    type: float
+  - name: spread
+    type: float
+  - name: momentum
+    type: float
+  - name: volatility_1h
+    type: float
+  - name: market_state
+    type: string

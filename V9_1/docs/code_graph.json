@@ -1,0 +1,30 @@
+{
+  "quick_reference": [
+    {"problem": "Bot not starting", "inspect_files": ["fix_main.py", "run_and_monitor_fleet.py"], "do_not_touch": ["configs/mt5_demo.yaml"]},
+    {"problem": "ML gatekeeper blocking", "inspect_files": ["src/ml/xgb_filter.py", "src/pipeline_live.py"], "do_not_touch": ["src/core/models.py"]},
+    {"problem": "Risk engine veto", "inspect_files": ["src/core/risk_engine.py", "src/execution/risk_gateway.py"], "do_not_touch": ["src/utils/*"]},
+    {"problem": "Audit logging failures", "inspect_files": ["src/execution/trade_journal.py"], "do_not_touch": []}
+  ],
+  "dependency_graph": [
+    {"file": "src/pipeline_live.py", "imports": ["src.utils.config", "src.data.*", "src.execution.*", "src.core.risk_engine"], "imported_by": ["run_and_monitor_fleet.py", "run_dashboard.py"], "risk_level": "High"},
+    {"file": "src/ml/xgb_filter.py", "imports": ["json", "xgboost", "sklearn"], "imported_by": ["src/core/signal_engine.py"], "risk_level": "Medium"},
+    {"file": "src/core/risk_engine.py", "imports": ["src.core.models", "src.utils.config"], "imported_by": ["src/pipeline_live.py"], "risk_level": "High"},
+    {"file": "src/execution/order_router.py", "imports": ["src.execution.mt5_adapter"], "imported_by": ["src/pipeline_live.py"], "risk_level": "Medium"},
+    {"file": "src/utils/config.py", "imports": ["yaml"], "imported_by": "many", "risk_level": "Low"},
+    {"file": "src/execution/trade_journal.py", "imports": ["json", "datetime"], "imported_by": ["src/pipeline_live.py"], "risk_level": "Medium"},
+    {"file": "src/core/models.py", "imports": [], "imported_by": ["src/core/*", "src/pipeline_live.py"], "risk_level": "Low"}
+  ],
+  "runtime_flow": ["Market Data", "Feature Builder", "Regime Engine", "Signal Engine", "ML Gatekeeper", "Risk Engine", "Execution Router", "Audit Logs"],
+  "hotspot_map": [
+    {"file": "src/pipeline_live.py", "blast_radius": "Whole bot execution", "reason": "Central orchestration"},
+    {"file": "src/ml/xgb_filter.py", "blast_radius": "Trade decisions", "reason": "ML gating logic"},
+    {"file": "src/core/risk_engine.py", "blast_radius": "Capital protection", "reason": "Final veto"},
+    {"file": "src/execution/order_router.py", "blast_radius": "Order placement", "reason": "Execution gateway"},
+    {"file": "src/utils/config.py", "blast_radius": "Config loading", "reason": "Affects all components"},
+    {"file": "src/execution/trade_journal.py", "blast_radius": "Audit persistence", "reason": "Logging of every tick"},
+    {"file": "src/core/signal_engine.py", "blast_radius": "Signal generation", "reason": "Determines direction"},
+    {"file": "src/data/mt5_live_adapter.py", "blast_radius": "Live market feed", "reason": "Data source"},
+    {"file": "src/data/mt5_adapter.py", "blast_radius": "MT5 connection", "reason": "Connectivity"},
+    {"file": "src/execution/risk_gateway.py", "blast_radius": "Risk decisions", "reason": "Veto logic"}
+  ]
+}

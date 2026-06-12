@@ -19,6 +19,7 @@ SYMBOLS = {
     "US100":  {"type": "index", "mt5_symbol": "USTEC"},
     "US500":  {"type": "index", "mt5_symbol": "US500m"},
     "XAUUSD": {"type": "gold",  "mt5_symbol": "XAUUSDm"},
+    "BTCUSD": {"type": "crypto", "mt5_symbol": "BTCUSDm"},
 }
 
 def setup_repo(symbol, data):
@@ -59,6 +60,10 @@ def setup_repo(symbol, data):
             config['entry']['trend_adx_min'] = 28
             config['position']['stop_atr_mult'] = 2.0
             config['position']['tp_atr_mult'] = 3.0
+        elif data['type'] == 'crypto':
+            config['entry']['trend_adx_min'] = 25
+            config['position']['stop_atr_mult'] = 1.8
+            config['position']['tp_atr_mult'] = 2.5
         else: # forex
             config['entry']['trend_adx_min'] = 22
             config['position']['stop_atr_mult'] = 1.4

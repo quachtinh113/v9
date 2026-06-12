@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture Management - NowTrading Quant V2.0</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon"></div>
+                <div class="logo-text">
+                    <span class="brand">NOWTRADING</span>
+                    <span class="version">ARCHITECT V2.0</span>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="#" class="nav-item active">
+                    <span class="icon">🌐</span> Architecture
+                </a>
+            </nav>
+            <div class="system-status">
+                <div class="status-indicator">
+                    <span class="status-dot pulsing"></span>
+                    <span class="status-label">SYS_READY_MOCK</span>
+                </div>
+                <div class="server-time" id="server-time">--:--:--</div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-title">
+                    <h1>ARCHITECTURE MANAGEMENT PANEL</h1>
+                    <p class="subtitle">System Topology, Module Registries, and Security Gateways</p>
+                </div>
+                <div class="header-controls">
+                    <button class="btn btn-primary" onclick="window.location.reload();">
+                        <span>🔄</span> Sync Topologies
+                    </button>
+                </div>
+            </header>
+
+            <!-- 1. System Pipeline Flow diagram -->
+            <div class="card" style="margin-bottom: 25px;">
+                <div class="card-header">
+                    <h3>System Pipeline Execution Flow</h3>
+                    <span class="badge badge-info">100% Enforced</span>
+                </div>
+                <div class="flow-container">
+                    <div class="flow-node">
+                        <div class="node-title">Regime Engine</div>
+                        <div class="node-subtitle">Market Classification</div>
+                    </div>
+                    <div class="flow-arrow">➔</div>
+                    <div class="flow-node">
+                        <div class="node-title">Signal Engine</div>
+                        <div class="node-subtitle">Setup Triggers</div>
+                    </div>
+                    <div class="flow-arrow">➔</div>
+                    <div class="flow-node node-ml">
+                        <div class="node-title">ML Gatekeeper</div>
+                        <div class="node-subtitle">XGBoost Filter</div>
+                    </div>
+                    <div class="flow-arrow">➔</div>
+                    <div class="flow-node node-risk">
+                        <div class="node-title">RiskGateway</div>
+                        <div class="node-subtitle">7 Guards Check</div>
+                    </div>
+                    <div class="flow-arrow">➔</div>
+                    <div class="flow-node">
+                        <div class="node-title">OrderRouter</div>
+                        <div class="node-subtitle">Payload Packing</div>
+                    </div>
+                    <div class="flow-arrow">➔</div>
+                    <div class="flow-node">
+                        <div class="node-title">MT5Adapter</div>
+                        <div class="node-subtitle">Broker Terminal</div>
+                    </div>
+                    <div class="flow-arrow">➔</div>
+                    <div class="flow-node">
+                        <div class="node-title">Audit Logger</div>
+                        <div class="node-subtitle">NDJSON Stream</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Grid containing Module health & release details -->
+            <div class="analytics-row" style="margin-bottom: 25px;">
+                <!-- Left: Module Registry -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Module Registry & Health</h3>
+                        <span class="badge badge-info">9 Cores Online</span>
+                    </div>
+                    <div class="module-health-grid" id="module-health-grid">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Right: Timeline & Warnings -->
+                <div class="card-column">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Active Release Stage</h3>
+                        </div>
+                        <div class="release-progress">
+                            <div class="release-step completed">
+                                <div class="step-dot">✓</div>
+                                <span>DEV</span>
+                            </div>
+                            <div class="release-step completed">
+                                <div class="step-dot">✓</div>
+                                <span>RC1</span>
+                            </div>
+                            <div class="release-step active">
+                                <div class="step-dot">●</div>
+                                <span>LAPTOP</span>
+                            </div>
+                            <div class="release-step">
+                                <div class="step-dot">○</div>
+                                <span>PAPER</span>
+                            </div>
+                            <div class="release-step">
+                                <div class="step-dot">○</div>
+                                <span>DEMO</span>
+                            </div>
+                            <div class="release-step">
+                                <div class="step-dot">○</div>
+                                <span>LIVE</span>
+                            </div>
+                        </div>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 15px; text-align: center;">
+                            Mode: <strong style="color: var(--accent-cyan);">PAPER TESTING LOCAL RELEASE</strong>
+                        </div>
+                    </div>
+
+                    <!-- Forbidden Bypass Warnings -->
+                    <div class="card warning-card">
+                        <div class="card-header">
+                            <h3 style="color: #f43f5e; display: flex; align-items: center; gap: 8px;">
+                                ⚠️ FORBIDDEN BYPASS WARNINGS
+                            </h3>
+                        </div>
+                        <div class="warning-content">
+                            <div class="warning-item">
+                                <strong>RULE BYPASS_RISK_GATEWAY:</strong>
+                                <span>SignalEngine ➔ OrderRouter direct route is hard-blocked. All setups must pass through RiskGateway.</span>
+                            </div>
+                            <div class="warning-item">
+                                <strong>RULE DIRECT_ADAPTER_ACCESS:</strong>
+                                <span>SignalEngine ➔ MT5Adapter execution is locked. Directly invoking terminal adapter without routing or auditing will trigger security blockout.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Asset Matrix Registry -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Asset Registry & Verification</h3>
+                    <span class="badge badge-info">10 Asset Channels</span>
+                </div>
+                <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14.5px;">Detailed validation pipeline status of the 10 loaded asset channels.</p>
+                <div class="table-container">
+                    <table class="data-table" id="asset-matrix-full-table">
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Asset Class</th>
+                                <th>Status</th>
+                                <th>Data Status</th>
+                                <th>Model Status</th>
+                                <th>Risk Status</th>
+                                <th>Dashboard Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="asset-matrix-full-body">
+                            <!-- Loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/architecture.js"></script>
+</body>
+</html>

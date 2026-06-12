@@ -1,43 +1,22 @@
 {
     "symbol": "USDJPY",
-    "timestamp": "2026-05-22T19:49:13.767499",
+    "timestamp": "2026-05-25T22:19:15.629021",
     "execution_efficiency": {
-        "average_spread_bps": 1.0,
-        "average_slippage_bps": 0.5,
-        "average_latency_bps": 0.5499999999999997,
-        "total_trades": 3,
-        "total_net_pnl": -2.0425102170911487,
-        "expectancy_dollars": -0.6808367390303829,
-        "cost_adjusted_expectancy": -1.1365725964031137
+        "average_spread_bps": 0.0,
+        "average_slippage_bps": 0.0,
+        "average_latency_bps": 0.0,
+        "total_trades": 0,
+        "total_net_pnl": 0.0,
+        "expectancy_dollars": 0.0,
+        "cost_adjusted_expectancy": 0.0
     },
     "ranking_distribution": {
-        "A+": 3,
+        "A+": 0,
         "A": 0,
         "B": 0,
         "C": 0,
-        "REJECT": 107
+        "REJECT": 0
     },
-    "session_profitability": {
-        "london": -2.0425102170911487
-    },
-    "edge_analysis": [
-        {
-            "regime": "sideway",
-            "direction": "long",
-            "total_signals": 18,
-            "executed": 2,
-            "gross_pnl": 8.64893491701682,
-            "net_pnl": 7.748864169781427,
-            "status": "SURVIVED"
-        },
-        {
-            "regime": "trend",
-            "direction": "long",
-            "total_signals": 92,
-            "executed": 1,
-            "gross_pnl": -9.324237561989776,
-            "net_pnl": -9.791374386872576,
-            "status": "UNPROFITABLE"
-        }
-    ]
+    "session_profitability": {},
+    "edge_analysis": []
 }

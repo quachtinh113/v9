@@ -1,16 +1,16 @@
 {
     "symbol": "GBPUSD",
-    "timestamp": "2026-05-22T19:47:55.198514",
+    "timestamp": "2026-05-25T22:18:35.610676",
     "initial_capital": 10000.0,
-    "ending_equity": 9997.888122881432,
-    "realized_pnl": -2.1118771185683727,
-    "profit_factor": 0.8898179291379257,
-    "max_drawdown_pct": 0.1913452314912723,
-    "max_consecutive_losses": 2,
-    "sharpe_ratio": -0.889782920379423,
-    "sortino_ratio": -45.97589741349685,
-    "monte_carlo_median_dd": 0.19400568246874977,
-    "monte_carlo_95_dd": 0.1973636605965315,
+    "ending_equity": 10000.0,
+    "realized_pnl": 0.0,
+    "profit_factor": Infinity,
+    "max_drawdown_pct": 0.0,
+    "max_consecutive_losses": 0,
+    "sharpe_ratio": 0.0,
+    "sortino_ratio": 0.0,
+    "monte_carlo_median_dd": 0.0,
+    "monte_carlo_95_dd": 0.0,
     "ruin_probability": 0.0,
-    "verdict": "DISABLED"
+    "verdict": "SANDBOX_ONLY"
 }
